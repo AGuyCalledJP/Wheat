@@ -1,0 +1,10 @@
+/Users/jaredpolonitza/Desktop/qpython/qpysdk/src/main/jni/com_googlecode_android_scripting_Exec.cpp:211:29: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+          char * argv[] = { "sdl" };
+                            ^
+/Users/jaredpolonitza/Desktop/qpython/qpysdk/src/main/jni/com_googlecode_android_scripting_Exec.cpp:213:9: warning: control reaches end of non-void function [-Wreturn-type]
+        };
+        ^
+/Users/jaredpolonitza/Desktop/qpython/qpysdk/src/main/jni/com_googlecode_android_scripting_Exec.cpp:225:1: warning: control reaches end of non-void function [-Wreturn-type]
+}
+^
+3 warnings generated.

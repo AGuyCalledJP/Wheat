@@ -1,0 +1,3 @@
+Android NDK: WARNING: Unsupported source file extensions in /Users/jaredpolonitza/Desktop/qpython/qpython/src/main/jni/Android.mk for module androidterm    
+Android NDK:   Android.mk    
+make: `/Users/jaredpolonitza/Desktop/qpython/qpython/build/intermediates/ndkBuild/debug/obj/local/x86/libandroidterm.so' is up to date.
