@@ -1,0 +1,327 @@
+
+<PermissionError>:
+    size_hint: 0.9, None
+    height: label.height + dp(40)
+    AnchorLayout:
+        Label:
+            id: label
+            size_hint_y: None
+            height: self.texture_size[1]
+            text: root.text
+            markup: True
+            color: 1, 1, 1, 1
+
+
+<FileLabel>:
+    orientation: 'horizontal'
+    on_filename: self.selected = False
+    canvas.before:
+        Color:
+            rgba: (0.7, 0.7, 1, 1) if root.state == 'down' else (0.8, 0.8, 1, 1) if root.selected else (0.95, 0.95, 0.95, 1) if root.shade else (1, 1, 1, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Label:
+        text: {'folder': 'F', 'file': 'd'}[root.file_type]
+        font_size: sp(20)
+        size_hint_x: None
+        width: dp(40)
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        # color: (0, 0, 1, 1) if root.file_type == 'folder' else (0, 1, 0, 1)
+        color: (0.3, 0.3, 0.3, 1)
+        font_name: 'assets/fontello.ttf'
+    Widget:
+        size_hint_x: None
+        width: sp(5)
+    Label:
+        text: root.filename if not root.selected else '[b]{}[/b]'.format(root.filename)
+        markup: root.selected
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+        
+
+<FileView>:
+    viewclass: 'FileLabel'
+    scroll_timeout: 30
+    scroll_distance: dp(1.5)
+    RecycleBoxLayout:
+        default_size: None, sp(35)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+
+
+<PyonicFileChooser>:
+    orientation: 'vertical'
+    current_selection: fileview.selection_instance
+    current_filename: fileview.selection_filename
+    folder: fileview.folder
+    # SettingsTitle:
+    #     text: 'RECENT FOLDERS'
+    # SettingsTitle:
+    #     text: 'CHOOSE FILE'
+    canvas:
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Widget:
+        size_hint_y: None
+        height: dp(2)
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: dp(40)
+        id: nav_button_container
+        ColouredButtonContainer:
+            id: cb3
+            color: (1, 1, 1, 1)
+            coloured_button_padding: 0.025 * min(self.size)
+            background_down: (0.2, 0.6431, 0.8078, 1.)
+            background_normal: (0.4, 0.4, 0.4, 0.8)
+            radius: dp(5)
+            on_release: py_only.active = not py_only.active
+            size_hint_x: None
+            width: max(nav_button_container.width / 3., py_only_button_container.width * 1.3)
+            GridLayout:
+                id: py_only_button_container
+                size_hint_y: None
+                height: cb3.height
+                size_hint_x: None
+                width: self.minimum_width
+                orientation: 'horizontal'
+                rows: 1
+                Label:
+                    text: '.py only'
+                    color: cb1.color
+                    size_hint_x: None
+                    width: self.texture_size[0]
+                Widget:
+                    size_hint_x: None
+                    width: dp(6)
+                # Label:
+                #     text: 'c'
+                #     color: (1.0, 0.7, 0.7, 1)
+                #     font_name: 'assets/fontello.ttf'
+                #     size_hint_x: None
+                #     width: self.texture_size[0]
+                #     font_size: dp(30)
+                ButtonCheckbox:
+                    id: py_only
+                    active: True
+                    size_hint_x: None
+                    width: 1.00 * self.height
+                    draw_colour: 0.95, 0.95, 0.95, 1
+                    text_colour: 1, 1, 1, 1
+                    handle_touch: False
+        ColouredButton:
+            color: (1, 1, 1, 1)
+            padding: 0.025 * min(self.size)
+            background_down: (0.2, 0.6431, 0.8078, 1.)
+            background_normal: (0.4, 0.4, 0.4, 0.8)
+            radius: dp(5)
+            font_size: sp(25)
+            text: 'Q'
+            font_name: 'assets/fontello.ttf'
+            on_release: fileview.go_home()
+        ColouredButton:
+            color: (1, 1, 1, 1)
+            padding: 0.025 * min(self.size)
+            background_down: (0.2, 0.6431, 0.8078, 1.)
+            background_normal: (0.4, 0.4, 0.4, 0.8)
+            radius: dp(5)
+            text: 'u'
+            font_size: sp(20)
+            font_name: 'assets/fontello.ttf'
+            on_release: fileview.go_up_folder()
+    Widget:
+        size_hint_y: None
+        height: dp(0)
+    AnchorLayout:
+        id: al
+        FileView:
+            id: fileview
+            size_hint: None, None
+            width: int(1.00 * al.width)
+            height: int(0.98 * al.height)
+            folder: root.folder
+            python_only: py_only.active
+            canvas.before:
+                Color:
+                    rgba: (0.95, 0.95, 0.95, 1)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            canvas.after:
+                Color:
+                    rgba: 0, 0, 0, 1
+                Line:
+                    points: self.x, self.y, self.x + self.width, self.y
+                    width: dp(1.5)
+                Line:
+                    points: self.x, self.y + self.height, self.x + self.width, self.y + self.height
+                    width: dp(1.5)
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: sp(40)
+        Widget:
+            size_hint_x: None
+            width: dp(20)
+        Label:
+            font_size: sp(25)
+            font_name: 'assets/fontello.ttf'
+            text: 'O'
+            size_hint_x: None
+            width: sp(50)
+            color: (0.3, 0.3, 0.3, 1)
+        Label:
+            text: fileview.folder .strip('/') + '/'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: sp(40)
+        Widget:
+            size_hint_x: None
+            width: dp(20)
+        Label:
+            font_size: sp(25)
+            font_name: 'assets/fontello.ttf'
+            text: 'D'
+            size_hint_x: None
+            width: sp(50)
+            color: (0.3, 0.3, 0.3, 1)
+        Label:
+            text: root.current_filename
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: sp(40)
+        Widget:
+            size_hint_x: None
+            width: dp(3)
+        ColouredButtonContainer:
+            id: cb1
+            text: 'cancel'
+            background_down: (0.2, 0.6431, 0.8078, 1.)
+            background_normal: (0.4, 0.4, 0.4, 0.8)
+            radius: dp(5)
+            color: (1, 1, 1, 1)
+            on_release: app.manager.go_back()
+            GridLayout:
+                size_hint_y: None
+                height: cb1.height
+                size_hint_x: None
+                width: self.minimum_width
+                orientation: 'horizontal'
+                rows: 1
+                Label:
+                    text: 'cancel'
+                    color: cb1.color
+                    size_hint_x: None
+                    width: self.texture_size[0]
+                Widget:
+                    size_hint_x: None
+                    width: dp(8)
+                Label:
+                    text: 'C'
+                    color: (1.0, 0.7, 0.7, 1)
+                    font_name: 'assets/fontello.ttf'
+                    size_hint_x: None
+                    width: self.texture_size[0]
+                    font_size: dp(30)
+        Widget:
+            size_hint_x: None
+            width: dp(5)
+        ColouredButtonContainer:
+            id: cb2
+            disabled: not fileview.selection_filename
+            background_normal: (0.4, 0.4, 0.4, 0.8) if not self.disabled else (0.4, 0.4, 0.4, 0.1)
+            background_down: 0.5, 0.5, 0.5, 1
+            radius: dp(5)
+            color: (1, 1, 1, 1)
+            on_release: root.return_selection()
+            GridLayout:
+                size_hint_y: None
+                height: cb2.height
+                size_hint_x: None
+                width: self.minimum_width
+                orientation: 'horizontal'
+                rows: 1
+                Label:
+                    text: root.open_button_text
+                    color: cb1.color
+                    size_hint_x: None
+                    width: self.texture_size[0]
+                Widget:
+                    size_hint_x: None
+                    width: dp(8)
+                Label:
+                    text: 't'
+                    color: (0.7, 1.0, 0.7, (1 if not cb2.disabled else 0.1))
+                    font_name: 'assets/fontello.ttf'
+                    size_hint_x: None
+                    width: self.texture_size[0]
+                    font_size: dp(30)
+        Widget:
+            size_hint_x: None
+            width: dp(3)
+    Widget:
+        size_hint_y: None
+        height: dp(2)
+
+<FileChooserScreen>:
+    name: 'filechooser'
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(40)
+            canvas:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Widget:
+                size_hint_x: None
+                width: dp(3)
+            ColouredButton:
+                size_hint_x: None
+                width: self.height
+                bold: True
+                font_name: 'assets/fontello.ttf'
+                text: 'B'
+                font_size: dp(20)
+                color: 1, 1, 1, 1
+                background_down: 0.2, 0.6431, 0.8078, 1
+                background_normal: 1, 1, 1, 0
+                on_release: app.manager.go_back()
+            Label:
+                text_size: None, self.height
+                text: 'File chooser' + (': {}'.format(root.purpose) if root.purpose else '')
+                font_size: dp(18)
+                padding_x: dp(10)
+                color: 1, 1, 1, 1
+                valign: 'middle'
+                halign: 'left'
+                size_hint_x: None
+                width: self.texture_size[0]
+            Widget:
+        PyonicFileChooser:
+            id: pyonicfilechooser
+            open_method: root.open_method
+            success_screen_name: root.success_screen_name
+            open_button_text: root.purpose

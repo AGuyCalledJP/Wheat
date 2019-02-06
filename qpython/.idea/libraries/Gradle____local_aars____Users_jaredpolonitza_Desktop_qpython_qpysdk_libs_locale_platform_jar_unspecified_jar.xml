@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: __local_aars__:/Users/jaredpolonitza/Desktop/qpython/qpysdk/libs/locale_platform.jar:unspecified@jar">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/qpysdk/libs/locale_platform.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

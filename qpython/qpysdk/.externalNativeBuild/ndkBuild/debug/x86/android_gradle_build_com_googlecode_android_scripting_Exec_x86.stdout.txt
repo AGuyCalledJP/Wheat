@@ -1,2 +1,0 @@
-[x86] Compile++      : com_googlecode_android_scripting_Exec <= com_googlecode_android_scripting_Exec.cpp
-[x86] SharedLibrary  : libcom_googlecode_android_scripting_Exec.so
