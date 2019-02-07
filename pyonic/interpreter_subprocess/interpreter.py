@@ -1,6 +1,12 @@
 import copy
 from time import sleep
 
+import sys
+import os
+from os.path import abspath, join, dirname
+file_dir = os.path.dirname("pyonic")
+sys.path.append(file_dir)
+
 __input = None
 
 def input_replacement(prompt=''):

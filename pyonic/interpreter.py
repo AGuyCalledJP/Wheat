@@ -20,6 +20,11 @@ from kivy.lang import Builder
 
 from kivy.clock import Clock
 
+import sys
+import os
+from os.path import abspath, join, dirname
+file_dir = os.path.dirname("pyonic")
+sys.path.append(file_dir)
 
 from time import time
 import traceback
