@@ -9,8 +9,6 @@ from kivy.uix.label import Label
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.codeinput import CodeInput
-from pygments.lexers import CythonLexer
 
 #Load kv file
 Builder.load_file('dynamicEX.kv')
@@ -22,6 +20,7 @@ class Screen1(Screen):
     layouts = []
 
     def remove(self):
+
         for i in self.layouts:
             if i.children[0].active:
                 self.ids.widget_list.remove_widget(i)
@@ -40,10 +39,11 @@ class Screen1(Screen):
         if self.layouts==[]:
             self.ids.widget_list.clear_widgets()
 
-        if len(self.ids.widget_list.children)<10:
+        if len(self.ids.widget_list.children)<5:
             self.count+=1
-            layout = GridLayout(cols=2)
-            layout.add_widget(CodeInput(lexer = CythonLexer()))
+            layout = GridLayout(cols=3)
+            layout.add_widget(Label(text='Test ' + str(self.count)))
+            layout.add_widget(TextInput())
             layout.add_widget(CheckBox())
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
@@ -59,7 +59,7 @@ class Screen1(Screen):
     def update_hints(self):
 
         for i in self.layouts:
-            i.children[1].hint_text = 'Input code here'
+            i.children[1].hint_text = 'Ex. ' + str(round(100/len(self.ids.widget_list.children),2)) + '%'
 
 #Initialize Screens and Start App
 class MyScreenManager(ScreenManager):
@@ -67,11 +67,11 @@ class MyScreenManager(ScreenManager):
     pass
 
 #Main application
-class Wheat(App):
+class SampleApp(App):
 
     def build(self):
         self.sm = MyScreenManager()
         return self.sm
 
 if __name__ == '__main__':
-    Wheat().run()
+    SampleApp().run()

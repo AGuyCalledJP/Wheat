@@ -1,0 +1,43 @@
+<MyScreenManager>:
+
+    Screen1:
+        name: 'screen1'
+
+<Screen1>:
+
+    BoxLayout:
+
+        orientation: 'vertical'
+
+        GridLayout:
+
+            cols: 2
+            padding: 20
+            spacing: 20
+            size_hint: 1, .1
+
+            Button:
+                text: 'Add Widget'
+                on_release: root.add()
+
+            Button:
+                text: 'Remove Widget'
+                on_release: root.remove()
+
+        ScrollView:
+
+            size_hint: 1, .5
+            do_scroll_x: False
+            padding: 20
+            spacing: 20
+
+            GridLayout:
+
+                id: widget_list
+                cols: 1
+                spacing: 5
+
+                GridLayout:
+                    rows: 1
+                    Label:
+                        text: 'Nothing Here'
