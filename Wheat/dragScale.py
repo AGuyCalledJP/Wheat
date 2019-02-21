@@ -4,7 +4,31 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
+from kivy.uix.codeinput import CodeInput
+from kivy.uix.checkbox import CheckBox
+from pygments.lexers import CythonLexer
+from kivy.uix.widget import Widget
+from kivy.animation import Animation
+from kivy.uix.switch import Switch
+from kivy.properties import BooleanProperty, ObjectProperty, NumericProperty
+from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
 
+class MyCodeInput(CodeInput):
+
+    def Deactivate(self):
+        self.disabled = True
+    
+    def Activate(self):
+        self.disabled = False
+
+class MyCheckBox(CheckBox):
+
+    def Deactivate(self):
+        self.disabled = True
+    
+    def Activate(self):
+        self.disabled = False
 
 class MyScatterLayout(ScatterLayout):
     move_lock = False
@@ -12,6 +36,7 @@ class MyScatterLayout(ScatterLayout):
     scale_lock_right = False
     scale_lock_top = False
     scale_lock_bottom = False
+    col = 1,1,1,1
     def on_touch_up(self, touch):
         self.move_lock = False
         self.scale_lock_left = False
@@ -137,24 +162,97 @@ class MyButton(Button):
         return False
 
 
+class WheatBlock(FloatLayout):
+
+    disp = 1
+    def __init__(self, **kwargs):
+        super(WheatBlock, self).__init__(**kwargs)
+        self.first = Button(text="Move", pos_hint = {'x': .85, 'y': 0}, size_hint = (.15,1), id = "switch") 
+        self.first.bind(on_press=self.flip)
+        self.code = MyCodeInput(lexer = CythonLexer(),pos_hint = {'x': .15, 'y': 0}, size_hint = (.70,1), id = "code")
+        self.check = MyCheckBox(pos_hint = {'x': 0, 'y': 0}, size_hint = (.15,1), id = "check")
+        self.s = MyScatterLayout(do_rotation=False, size_hint= (1,.3))
+        self.s.add_widget(self.check)
+        self.s.add_widget(self.code)
+        self.s.add_widget(self.first)
+        self.add_widget(self.s)
+
+    def flip(self, button):
+        if self.disp:
+            self.disp = 0
+        else:
+            self.disp = 1
+        self.flipTheSwitch()
+
+    def flipTheSwitch(self):
+        if self.disp:
+            self.check.Deactivate()
+            self.code.Deactivate()
+
+        else:
+            self.check.Activate()
+            self.code.Activate()
+
 class MyFloatLayout(FloatLayout):
     pass
 
 
 class ScatterApp(App):
     def build(self):
-        f = MyFloatLayout()
-        s = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 10))
-        s.add_widget(MyButton(id='mybutton', text='Test Button'))
-        f.add_widget(s)
-        s2 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 120))
-        s2.add_widget(MyButton())
-        f.add_widget(s2)
-        s3 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 230))
-        s3.add_widget(MyButton())
-        f.add_widget(s3)
+        # code = MyCodeInput(lexer = CythonLexer(),pos_hint = {'x': .15, 'y': 0}, size_hint = (.70,1), id = "code")
+        # check = CheckBox(pos_hint = {'x': 0, 'y': 0}, size_hint = (.15,1), id = "check")
+        # # switch = MySwitch(pos_hint = {'x': .85, 'y': 0}, size_hint = (.85,1), id = "switch")
+        # s = MyScatterLayout(do_rotation=False, size_hint= (1,.3))
+        f = WheatBlock()
+        # s.add_widget(check)
+        # s.add_widget(code)
+        # # s.add_widget(switch)
+        # f.add_widget(s)
+        # s2 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(300, 120))
+        # s2.add_widget(MyButton())
+        # f.add_widget(s2)
+        # s3 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 230))
+        # s3.add_widget(MyButton())
+        # f.add_widget(s3)
 
         return f
 
-
 ScatterApp().run()
+
+# class MySwitch(Switch):
+#     active = BooleanProperty(False)
+#     touch_control = ObjectProperty(None, allownone=True)
+#     touch_distance = NumericProperty(0)
+#     active_norm_pos = NumericProperty(0)
+#     def on_touch_down(self, touch):
+#         if self.disabled or self.touch_control is not None:
+#             return
+#         if not self.collide_point(*touch.pos):
+#             return
+#         touch.grab(self)
+#         self.touch_distance = 0
+#         self.touch_control = touch
+
+#         return True
+
+
+#     def on_touch_move(self, touch):
+#         if touch.grab_current is not self:
+#             return
+#         self.touch_distance = touch.x - touch.ox
+#         return True
+
+
+#     def on_touch_up(self, touch):
+#         if touch.grab_current is not self:
+#             return
+#         touch.ungrab(self)
+#         # depending of the distance, activate by norm pos or invert
+#         if abs(touch.ox - touch.x) < 5:
+#             self.active = not self.active
+#         else:
+#             self.active = self.active_norm_pos > 0.5
+#         Animation(active_norm_pos=int(self.active), t='out_quad',
+#                   d=.2).start(self)
+#         self.touch_control = None
+#         return True
