@@ -21,9 +21,12 @@ class MyCodeInput(CodeInput):
 
     def __init__(self, size, **kwargs):
         super(MyCodeInput, self).__init__(**kwargs)
-        print(size)
-        self.pos_hint = {'x': 0, 'y': 0} 
-        self.size_hint = (.85,1)
+        x = size[0]
+        y = size[1]
+        chunk = x * .15
+        self.size_hint = (None,None)
+        self.size = (x - chunk,y)
+        self.pos = (10,0)
         # self.height = size[1]
         # self.width = size[0] #- (size[0] * .15)
         self.lexer = CythonLexer()
@@ -34,15 +37,41 @@ class MyCodeInput(CodeInput):
     def Activate(self):
         self.disabled = False
     
-    def update(self):
-        self.size_hint = (.85,1)
+    def update(self, size):
+        x = size[0]
+        y = size[1]
+        chunk = x * .15
+        self.size_hint = (None,None)
+        self.size = (x - chunk,y)
+
+class MyButton(Button):
+
+    def __init__(self, size, **kwargs):
+        super(MyButton, self).__init__(**kwargs)
+        x = size[0]
+        y = size[1]
+        chunk = x * .85
+        self.size_hint = (None, None)
+        self.size = (x - chunk,y)
+        self.pos = (700,0)
+        # self.pos_hint = {'x': .85, 'y': 0}
+        # self.size_hint = (.15,1)
+        self.text = "Move"
+    
+    def update(self, size):
+        x = size[0]
+        y = size[1]
+        chunk = x * .85
+        self.size_hint = (None, None)
+        self.size = (x - chunk,y)
 
 class MyCheckBox(CheckBox):
 
     def __init__(self, **kwargs):
         super(MyCheckBox, self).__init__(**kwargs)
         self.pos_hint = {'x': 0, 'y': 0}
-        self.size_hint = (.15,1)
+        self.size_hint = (None, None)
+        self.size = (50,50)
         self.col = 1,1,1,1
 
     def Deactivate(self):
@@ -50,17 +79,6 @@ class MyCheckBox(CheckBox):
     
     def Activate(self):
         self.disabled = False
-    
-    def update(self):
-        self.size_hint = (.15,1)
-
-class MyButton(Button):
-
-    def __init__(self, **kwargs):
-        super(MyButton, self).__init__(**kwargs)
-        self.pos_hint = {'x': .85, 'y': 0}
-        self.size_hint = (.15,1)
-        self.text = "Move"
     
     def update(self):
         self.size_hint = (.15,1)
@@ -76,9 +94,12 @@ class MyScatterLayout(ScatterLayout):
 
     def __init__(self, **kwargs):
         super(MyScatterLayout, self).__init__(**kwargs)
-        self.move = MyButton(id = "switch") 
+        self.size = (800,400)
+        self.pos = (400,400)
+        self.size_hint = (None, None)
+        self.move = MyButton(self.size, id = "switch") 
         self.move.bind(on_press=self.flip)
-        self.code = MyCodeInput(self.size,id = "code")
+        self.code = MyCodeInput(self.size, id = "code")
         # self.check = MyCheckBox(id = "check")
         # self.add_widget(self.check)
         self.add_widget(self.code)
@@ -175,6 +196,9 @@ class MyScatterLayout(ScatterLayout):
             self.size[1] = self.size[1] + (sign * anchor_sign * 10)
             self.prev_y = touch.y
             changed = True
+        if changed:
+            self.code.update(self.size)
+            self.move.update(self.size)
         return changed
 
     def on_touch_down(self, touch):
@@ -217,7 +241,7 @@ class MyScatterLayout(ScatterLayout):
         touch.grab(self)
         self._touches.append(touch)
         self._last_touch_pos[touch] = touch.pos
-
+        print(self.size)
         return True
 
 class WheatBlock(FloatLayout):
@@ -226,7 +250,6 @@ class WheatBlock(FloatLayout):
         super(WheatBlock, self).__init__(**kwargs)
         self.s = MyScatterLayout(do_rotation=False)
         self.add_widget(self.s)
-        self.size_hint = (.5,.3)
 
 
 class ScatterApp(App):
