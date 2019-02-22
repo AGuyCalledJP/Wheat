@@ -4,66 +4,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
-from kivy.uix.codeinput import CodeInput
-from kivy.uix.checkbox import CheckBox
-from pygments.lexers import CythonLexer
-from kivy.uix.widget import Widget
-from kivy.animation import Animation
-from kivy.uix.switch import Switch
-from kivy.properties import BooleanProperty, ObjectProperty, NumericProperty
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
-from kivy.lang import Builder
 
-# Builder.load_file('dragScale.kv')
-
-class MyCodeInput(CodeInput):
-
-    def __init__(self, size, **kwargs):
-        super(MyCodeInput, self).__init__(**kwargs)
-        print(size)
-        self.pos_hint = {'x': 0, 'y': 0} 
-        self.size_hint = (.85,1)
-        # self.height = size[1]
-        # self.width = size[0] #- (size[0] * .15)
-        self.lexer = CythonLexer()
-
-    def Deactivate(self):
-        self.disabled = True
-    
-    def Activate(self):
-        self.disabled = False
-    
-    def update(self):
-        self.size_hint = (.85,1)
-
-class MyCheckBox(CheckBox):
-
-    def __init__(self, **kwargs):
-        super(MyCheckBox, self).__init__(**kwargs)
-        self.pos_hint = {'x': 0, 'y': 0}
-        self.size_hint = (.15,1)
-        self.col = 1,1,1,1
-
-    def Deactivate(self):
-        self.disabled = True
-    
-    def Activate(self):
-        self.disabled = False
-    
-    def update(self):
-        self.size_hint = (.15,1)
-
-class MyButton(Button):
-
-    def __init__(self, **kwargs):
-        super(MyButton, self).__init__(**kwargs)
-        self.pos_hint = {'x': .85, 'y': 0}
-        self.size_hint = (.15,1)
-        self.text = "Move"
-    
-    def update(self):
-        self.size_hint = (.15,1)
 
 class MyScatterLayout(ScatterLayout):
     move_lock = False
@@ -71,35 +12,6 @@ class MyScatterLayout(ScatterLayout):
     scale_lock_right = False
     scale_lock_top = False
     scale_lock_bottom = False
-    col = 1,1,1,1
-    disp = 1
-
-    def __init__(self, **kwargs):
-        super(MyScatterLayout, self).__init__(**kwargs)
-        self.move = MyButton(id = "switch") 
-        self.move.bind(on_press=self.flip)
-        self.code = MyCodeInput(self.size,id = "code")
-        # self.check = MyCheckBox(id = "check")
-        # self.add_widget(self.check)
-        self.add_widget(self.code)
-        self.add_widget(self.move)
-
-    def flip(self, button):
-        if self.disp:
-            self.disp = 0
-        else:
-            self.disp = 1
-        self.flipTheSwitch()
-
-    def flipTheSwitch(self):
-        if self.disp:
-            # self.check.Deactivate()
-            self.code.Deactivate()
-
-        else:
-            # self.check.Activate()
-            self.code.Activate()
-    
     def on_touch_up(self, touch):
         self.move_lock = False
         self.scale_lock_left = False
@@ -220,18 +132,29 @@ class MyScatterLayout(ScatterLayout):
 
         return True
 
-class WheatBlock(FloatLayout):
+class MyButton(Button):
+    def on_touch_down(self, touch):
+        return False
 
-    def __init__(self, **kwargs):
-        super(WheatBlock, self).__init__(**kwargs)
-        self.s = MyScatterLayout(do_rotation=False)
-        self.add_widget(self.s)
-        self.size_hint = (.5,.3)
+
+class MyFloatLayout(FloatLayout):
+    pass
 
 
 class ScatterApp(App):
     def build(self):
-        f = WheatBlock()
+        f = MyFloatLayout()
+        s = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 10))
+        s.add_widget(MyButton(id='mybutton', text='Test Button'))
+        f.add_widget(s)
+        s2 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 120))
+        s2.add_widget(MyButton())
+        f.add_widget(s2)
+        s3 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 230))
+        s3.add_widget(MyButton())
+        f.add_widget(s3)
+
         return f
+
 
 ScatterApp().run()
