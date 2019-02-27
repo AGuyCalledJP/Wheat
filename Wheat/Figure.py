@@ -5,6 +5,8 @@
     Both are widgets.
 """
 
+from kivy.uix.scatter import Scatter
+from kivy.uix.scatterlayout import ScatterLayout
 from enum import Enum
 #gonna need a whole load of imports to make this
 
@@ -16,6 +18,20 @@ class PointState(Enum):
     SELECTED = 1
 
 
+
+class VisualLayout(ScatterLayout):
+    pass
+
+class FigureLayout(VisualLayout):
+
+
+
+
+
+
+
+
+
 """
     A Figure contains a series of points that make up the shape they are meant to form. This can be a fully closed polygon, line segment, or point.
 """
@@ -24,10 +40,30 @@ class Figure(Widget):
         # traverse points and draw each one in figure
         for p in self.points:
             #draw point at p
+            with self.canvas:
+                Color(1,1,0) # YELLOW
+                d = 11.
+                Ellipse(pos= ((p.x - d/2), (p.y - d/2)), size= (d,d) )
+
+                Color(0,1,0) # RED
+                d = 10.
+                Ellipse(pos= ((p.x - d/2), (p.y - d/2)), size= (d,d) )
+
+                #TODO: Draw label on or around point?
         return
 
     def draw_line(self):
         #traverse points to draw line of figure
+        coords = []
+        int i = 0
+        for p in self.points:
+            coords[i] = p.x
+            coords[i+1] = p.y
+            i+=2
+
+        with self.canvas:
+            Color(1,1,1) #WHITE
+            Line(coords)
         return
 
     def draw_fig(self):
@@ -61,6 +97,30 @@ class Figure(Widget):
         # TODO: ASSERTIONS FOR VALID PARAMETERS
         self.points = points
         self.draw_fig()
+
+
+
+"""
+    Ellipses are drawn differently than figures (since we're drawing about a point, rather than along a series of points), leading to different logic behind the class.
+"""
+
+#TODO: Maybe find a way to put these under the same class.
+class FigEllipse(Widget):
+    def draw_fig(self):
+        pass
+
+    def __init__(self, xcenter, ycenter, xrad, yrad):
+        # TODO: ASSERTIONS FOR VALID PARAMETERS
+        self.xcenter = xcenter
+        self.ycenter = ycenter
+        self.xrad = xrad
+        self.yrad = yrad
+        # self.marked = False #TODO: may remove, indicator for if there are points/lines marked on figure
+
+
+
+
+
 
 
 """
