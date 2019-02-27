@@ -27,8 +27,6 @@ class MyCodeInput(CodeInput):
         self.size_hint = (None,None)
         self.size = (x - chunk,y)
         self.pos = (10,0)
-        # self.height = size[1]
-        # self.width = size[0] #- (size[0] * .15)
         self.lexer = CythonLexer()
 
     def Deactivate(self):
