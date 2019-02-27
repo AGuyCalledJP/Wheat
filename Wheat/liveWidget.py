@@ -4,84 +4,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
-from kivy.uix.codeinput import CodeInput
-from kivy.uix.checkbox import CheckBox
-from pygments.lexers import CythonLexer
-from kivy.uix.widget import Widget
-from kivy.animation import Animation
-from kivy.uix.switch import Switch
-from kivy.properties import BooleanProperty, ObjectProperty, NumericProperty
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
-from kivy.lang import Builder
 
-# Builder.load_file('dragScale.kv')
-
-class MyCodeInput(CodeInput):
-
-    def __init__(self, size, **kwargs):
-        super(MyCodeInput, self).__init__(**kwargs)
-        x = size[0]
-        y = size[1]
-        chunk = x * .15
-        self.size_hint = (None,None)
-        self.size = (x - chunk,y)
-        self.pos = (10,0)
-        # self.height = size[1]
-        # self.width = size[0] #- (size[0] * .15)
-        self.lexer = CythonLexer()
-
-    def Deactivate(self):
-        self.disabled = True
-    
-    def Activate(self):
-        self.disabled = False
-    
-    def update(self, size):
-        x = size[0]
-        y = size[1]
-        chunk = x * .15
-        self.size_hint = (None,None)
-        self.size = (x - chunk,y)
-
-class MyButton(Button):
-
-    def __init__(self, size, **kwargs):
-        super(MyButton, self).__init__(**kwargs)
-        x = size[0]
-        y = size[1]
-        chunk = x * .85
-        self.size_hint = (None, None)
-        self.size = (x - chunk,y)
-        self.pos = (700,0)
-        # self.pos_hint = {'x': .85, 'y': 0}
-        # self.size_hint = (.15,1)
-        self.text = "Move"
-    
-    def update(self, size):
-        x = size[0]
-        y = size[1]
-        chunk = x * .85
-        self.size_hint = (None, None)
-        self.size = (x - chunk,y)
-
-class MyCheckBox(CheckBox):
-
-    def __init__(self, **kwargs):
-        super(MyCheckBox, self).__init__(**kwargs)
-        self.pos_hint = {'x': 0, 'y': 0}
-        self.size_hint = (None, None)
-        self.size = (50,50)
-        self.col = 1,1,1,1
-
-    def Deactivate(self):
-        self.disabled = True
-    
-    def Activate(self):
-        self.disabled = False
-    
-    def update(self):
-        self.size_hint = (.15,1)
 
 class MyScatterLayout(ScatterLayout):
     move_lock = False
@@ -89,38 +12,6 @@ class MyScatterLayout(ScatterLayout):
     scale_lock_right = False
     scale_lock_top = False
     scale_lock_bottom = False
-    col = 1,1,1,1
-    disp = 1
-
-    def __init__(self, **kwargs):
-        super(MyScatterLayout, self).__init__(**kwargs)
-        self.size = (800,400)
-        self.pos = (400,400)
-        self.size_hint = (None, None)
-        self.move = MyButton(self.size, id = "switch") 
-        self.move.bind(on_press=self.flip)
-        self.code = MyCodeInput(self.size, id = "code")
-        # self.check = MyCheckBox(id = "check")
-        # self.add_widget(self.check)
-        self.add_widget(self.code)
-        self.add_widget(self.move)
-
-    def flip(self, button):
-        if self.disp:
-            self.disp = 0
-        else:
-            self.disp = 1
-        self.flipTheSwitch()
-
-    def flipTheSwitch(self):
-        if self.disp:
-            # self.check.Deactivate()
-            self.code.Deactivate()
-
-        else:
-            # self.check.Activate()
-            self.code.Activate()
-    
     def on_touch_up(self, touch):
         self.move_lock = False
         self.scale_lock_left = False
@@ -196,9 +87,6 @@ class MyScatterLayout(ScatterLayout):
             self.size[1] = self.size[1] + (sign * anchor_sign * 10)
             self.prev_y = touch.y
             changed = True
-        if changed:
-            self.code.update(self.size)
-            self.move.update(self.size)
         return changed
 
     def on_touch_down(self, touch):
@@ -241,20 +129,32 @@ class MyScatterLayout(ScatterLayout):
         touch.grab(self)
         self._touches.append(touch)
         self._last_touch_pos[touch] = touch.pos
-        print(self.size)
+
         return True
 
-class WheatBlock(FloatLayout):
+class MyButton(Button):
+    def on_touch_down(self, touch):
+        return False
 
-    def __init__(self, **kwargs):
-        super(WheatBlock, self).__init__(**kwargs)
-        self.s = MyScatterLayout(do_rotation=False)
-        self.add_widget(self.s)
+
+class MyFloatLayout(FloatLayout):
+    pass
 
 
 class ScatterApp(App):
     def build(self):
-        f = WheatBlock()
+        f = MyFloatLayout()
+        s = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 10))
+        s.add_widget(MyButton(id='mybutton', text='Test Button'))
+        f.add_widget(s)
+        s2 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 120))
+        s2.add_widget(MyButton())
+        f.add_widget(s2)
+        s3 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 230))
+        s3.add_widget(MyButton())
+        f.add_widget(s3)
+
         return f
+
 
 ScatterApp().run()
