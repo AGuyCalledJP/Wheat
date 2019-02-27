@@ -4,7 +4,8 @@
     Figure contains class structures for FigPoints, and Figures, which are collections of FigPoints with visual display functions.
     Both are widgets.
 """
-
+from kivy.uix.widget import Widget
+from kivy.app import App
 from kivy.uix.scatter import Scatter
 from kivy.uix.scatterlayout import ScatterLayout
 from enum import Enum
@@ -20,10 +21,12 @@ class PointState(Enum):
 
 
 class VisualLayout(ScatterLayout):
+    #GOTTA ADD SOME STUFF HERE
     pass
 
 class FigureLayout(VisualLayout):
-
+    #GOTTA ADD SOME STUFF HERE
+    pass
 
 
 
@@ -55,7 +58,7 @@ class Figure(Widget):
     def draw_line(self):
         #traverse points to draw line of figure
         coords = []
-        int i = 0
+        i = 0
         for p in self.points:
             coords[i] = p.x
             coords[i+1] = p.y
