@@ -252,10 +252,3 @@ class WheatBlock(FloatLayout):
         self.s = MyScatterLayout(do_rotation=False)
         self.add_widget(self.s)
 
-
-class ScatterApp(App):
-    def build(self):
-        f = WheatBlock()
-        return f
-
-ScatterApp().run()

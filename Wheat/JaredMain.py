@@ -12,6 +12,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.codeinput import CodeInput
 from kivy.uix.floatlayout import FloatLayout
 from pygments.lexers import CythonLexer
+from WheatBlock import WheatBlock
 
 import sys
 import os
