@@ -15,8 +15,6 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 
-# Builder.load_file('dragScale.kv')
-
 class MyCodeInput(CodeInput):
 
     def __init__(self, size, **kwargs):
@@ -26,7 +24,8 @@ class MyCodeInput(CodeInput):
         chunk = x * .15
         self.size_hint = (None,None)
         self.size = (x - chunk,y)
-        self.pos = (10,0)
+        # self.pos = (10,0)
+        self.pos_hint = {'x': .15, 'y': 0}
         self.lexer = CythonLexer()
 
     def Deactivate(self):
@@ -38,6 +37,8 @@ class MyCodeInput(CodeInput):
     def update(self, size):
         x = size[0]
         y = size[1]
+        print("code")
+        print(x)
         chunk = x * .15
         self.size_hint = (None,None)
         self.size = (x - chunk,y)
@@ -51,14 +52,16 @@ class MyButton(Button):
         chunk = x * .85
         self.size_hint = (None, None)
         self.size = (x - chunk,y)
-        self.pos = (700,0)
-        # self.pos_hint = {'x': .85, 'y': 0}
+        # self.pos = (690,0)
+        self.pos_hint = {'x': .85, 'y': 0}
         # self.size_hint = (.15,1)
         self.text = "Move"
     
     def update(self, size):
         x = size[0]
         y = size[1]
+        print("button")
+        print(x)
         chunk = x * .85
         self.size_hint = (None, None)
         self.size = (x - chunk,y)
