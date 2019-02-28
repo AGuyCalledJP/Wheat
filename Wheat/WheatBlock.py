@@ -21,7 +21,7 @@ class MyCodeInput(CodeInput):
         super(MyCodeInput, self).__init__(**kwargs)
         x = size[0]
         y = size[1]
-        chunk = x * .15
+        chunk = x * .30
         self.size_hint = (None,None)
         self.size = (x - chunk,y)
         # self.pos = (10,0)
@@ -39,7 +39,7 @@ class MyCodeInput(CodeInput):
         y = size[1]
         print("code")
         print(x)
-        chunk = x * .15
+        chunk = x * .30
         self.size_hint = (None,None)
         self.size = (x - chunk,y)
 
@@ -68,12 +68,14 @@ class MyButton(Button):
 
 class MyCheckBox(CheckBox):
 
-    def __init__(self, **kwargs):
+    def __init__(self, size, **kwargs):
         super(MyCheckBox, self).__init__(**kwargs)
         self.pos_hint = {'x': 0, 'y': 0}
+        x = size[0]
+        y = size[1]
+        chunk = x * .85
         self.size_hint = (None, None)
-        self.size = (50,50)
-        self.col = 1,1,1,1
+        self.size = (x - chunk,y)
 
     def Deactivate(self):
         self.disabled = True
@@ -81,8 +83,35 @@ class MyCheckBox(CheckBox):
     def Activate(self):
         self.disabled = False
     
-    def update(self):
-        self.size_hint = (.15,1)
+    def update(self, size):
+        self.pos_hint = {'x': 0, 'y': 0}
+        x = size[0]
+        y = size[1]
+        chunk = x * .85
+        self.size_hint = (None, None)
+        self.size = (x - chunk,y)
+
+class MyRunButton(Button):
+
+    def __init__(self, size, **kwargs):
+        super(MyRunButton, self).__init__(**kwargs)
+        x = size[0]
+        y = size[1]
+        chunk = x * .85
+        self.size_hint = (None, None)
+        self.size = (x - chunk,y/2)
+        # self.pos = (690,0)
+        self.pos_hint = {'x': .85, 'y': 0}
+        # self.size_hint = (.15,1)
+        self.text = "Run"
+    
+    def update(self, size):
+        x = size[0]
+        y = size[1]
+        chunk = x * .85
+        self.size_hint = (None, None)
+        self.size = (x - chunk,y/2)
+
 
 class MyScatterLayout(ScatterLayout):
     move_lock = False
@@ -98,13 +127,16 @@ class MyScatterLayout(ScatterLayout):
         self.size = (800,400)
         self.pos = (400,400)
         self.size_hint = (None, None)
-        self.move = MyButton(self.size, id = "switch") 
-        self.move.bind(on_press=self.flip)
+        self.check = MyCheckBox(self.size, id = "check")
         self.code = MyCodeInput(self.size, id = "code")
-        # self.check = MyCheckBox(id = "check")
-        # self.add_widget(self.check)
+        self.move = MyButton(self.size, id = "switch") 
+        self.run = MyRunButton(self.size, id = "run")
+        self.move.bind(on_press=self.flip)
+        self.add_widget(self.check)
         self.add_widget(self.code)
         self.add_widget(self.move)
+        self.add_widget(self.run)
+        
 
     def flip(self, button):
         if self.disp:
@@ -115,11 +147,11 @@ class MyScatterLayout(ScatterLayout):
 
     def flipTheSwitch(self):
         if self.disp:
-            # self.check.Deactivate()
+            self.check.Deactivate()
             self.code.Deactivate()
 
         else:
-            # self.check.Activate()
+            self.check.Activate()
             self.code.Activate()
     
     def on_touch_up(self, touch):
@@ -198,6 +230,7 @@ class MyScatterLayout(ScatterLayout):
             self.prev_y = touch.y
             changed = True
         if changed:
+            self.check.update(self.size)
             self.code.update(self.size)
             self.move.update(self.size)
         return changed
