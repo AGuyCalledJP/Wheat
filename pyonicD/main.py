@@ -19,6 +19,7 @@ from os.path import abspath, join, dirname
 file_dir = os.path.dirname("pyonicD")
 sys.path.append(file_dir)
 
+from pyonicD.Wheat import WheatScreen as Wheat
 from kivy.lang import Builder
 
 Builder.load_file('main.kv')

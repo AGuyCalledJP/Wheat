@@ -10,6 +10,7 @@ from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.modalview import ModalView
 from kivy.uix.scatter import Scatter
 from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics.transformation import Matrix
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
@@ -369,7 +370,7 @@ class InterpreterGui(BoxLayout):
         self.interpreter.bind(on_missing_labels=self.on_missing_labels)
         self.interpreter.bind(on_request_input=self.on_request_input)
         self.size_hint = None,None
-        self.size = 1600,1200
+        self.size = 1008, 756.0
 
         # self.interpreter = DummyInterpreter()
 
@@ -703,7 +704,6 @@ class MyScatterLayout(ScatterLayout):
             return super(MyScatterLayout, self).on_touch_up(touch)
 
     def transform_with_touch(self, touch):
-        print(self.size)
         changed = False
         x = self.bbox[0][0]
         y = self.bbox[0][1]
@@ -761,7 +761,6 @@ class MyScatterLayout(ScatterLayout):
             self.size[1] = self.size[1] + (sign * anchor_sign * 10)
             self.prev_y = touch.y
             changed = True
-        print(self.size)
         return changed
 
     def on_touch_down(self, touch):

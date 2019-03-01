@@ -31,15 +31,15 @@ import traceback
 import sys
 import os
 from os.path import abspath, join, dirname
-file_dir = os.path.dirname("pyonic")
+file_dir = os.path.dirname("pyonicD")
 sys.path.append(file_dir)
 
 file_dir = os.path.dirname("Wheat")
 sys.path.append(file_dir)
-from pyonic.interpreterwrapper import InterpreterWrapper
-from pyonic.jediinterface import get_completions, get_defs
-from pyonic.widgets import ColouredButton
-from WheatBlock2 import WheatBlock
+from pyonicD.interpreterwrapper import InterpreterWrapper
+from pyonicD.jediinterface import get_completions, get_defs
+from pyonicD.widgets import ColouredButton
+from WheatBlock import WheatBlock
 
 #Load kv file
 Builder.load_file('JaredMain.kv')
@@ -129,6 +129,8 @@ class Screen1(Screen):
 
         if len(self.ids.widget_list.children)<4:
             layout = WheatBlock()
+            print("type")
+            print(type(WheatBlock))
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
