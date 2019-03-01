@@ -18,9 +18,9 @@
     scrollview: scrollview
     scatter: wheatblock
     orientation: 'vertical'
-    canvas:
+    canvas.before:
         Color:
-            rgba: 0.9, 0.9, 0.9, 1
+            rgba: 1, 1, 1, 1.
         Rectangle:
             pos: self.pos
             size: self.size
@@ -44,16 +44,6 @@
                     cols: 1
                     id: output_window
                     filling_widget_minimum_height: 100
-                    canvas.before:
-                        Color:
-                            rgba: 0.55, 0.55, 0.55, 0.55
-                        Rectangle:
-                            pos: self.pos
-                            size: self.size
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            rectangle: [self.x, self.y, self.width, self.height]
             FloatLayout:
                 root: wheatblock
                 size_hint_y: None
@@ -65,10 +55,10 @@
                     id: settings
                     size_hint: None, None
                     height: root.height/4
-                    width: root.width/8
+                    width: root.width - (root.width * .9)
                     pos: 0,0
-                    background_normal: 1.0, 1.0, 1.0, 0
-                    background_down: 0, 0, 0, 1
+                    background_normal: 0.3, 0.3, 0.3, 1
+                    background_down: 0.1, 0.1, 0.1, 1
                     font_name: 'assets/fontello.ttf'
                     font_size: sp(34)
                     color: 1, 1, 1, 1
@@ -76,15 +66,17 @@
                     id: status_label
                     size_hint: None, None
                     height: root.height/4
-                    width: root.width/8
+                    width: root.width - (root.width * .9)
                     pos: 0,root.height/4
                     markup: True
+                    background_normal: 0.3, 0.3, 0.3, 1
                     text: '[b][color=#A2A2A2](Py {}.{})[/color]\nstatus:[/b]\n[b][color=#{}]{}[/color][/b]'.format(vinfo.major, vinfo.minor, root.status_label_colour, root.interpreter_state.replace('_', ' '))
                     color: 1, 1, 1, 1
                 InterpreterInput:
                     id: input
                     root: root
-                    size: wheatblock.width * .8, 0
+                    size_hint: (.8,1)
+                    #size: wheatblock.width * .8, 0
                     pos: wheatblock.width * .1, 1
                     disabled: root._lock_input
                     font_name: 'RobotoMono-Regular.ttf'
@@ -209,8 +201,8 @@
             radius: [(self.radius, self.radius) for _ in range(4)]
     
 
-<MonoLabel@Label>:
-    font_name: 'RobotoMono-Regular.ttf'
+# <MonoLabel@Label>:
+#     font_name: 'RobotoMono-Regular.ttf'
 
 <InputLabel>:
     size_hint_y: None

@@ -10,6 +10,7 @@ from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.modalview import ModalView
 from kivy.uix.scatter import Scatter
 from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics.transformation import Matrix
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
@@ -369,7 +370,7 @@ class InterpreterGui(BoxLayout):
         self.interpreter.bind(on_missing_labels=self.on_missing_labels)
         self.interpreter.bind(on_request_input=self.on_request_input)
         self.size_hint = None,None
-        self.size = 1600,1200
+        self.size = 1008, 756.0
 
         # self.interpreter = DummyInterpreter()
 
