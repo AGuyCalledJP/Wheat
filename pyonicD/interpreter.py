@@ -704,7 +704,6 @@ class MyScatterLayout(ScatterLayout):
             return super(MyScatterLayout, self).on_touch_up(touch)
 
     def transform_with_touch(self, touch):
-        print(self.size)
         changed = False
         x = self.bbox[0][0]
         y = self.bbox[0][1]
@@ -762,7 +761,6 @@ class MyScatterLayout(ScatterLayout):
             self.size[1] = self.size[1] + (sign * anchor_sign * 10)
             self.prev_y = touch.y
             changed = True
-        print(self.size)
         return changed
 
     def on_touch_down(self, touch):
