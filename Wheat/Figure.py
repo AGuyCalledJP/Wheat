@@ -8,6 +8,7 @@ from kivy.uix.widget import Widget
 from kivy.app import App
 from kivy.uix.scatter import Scatter
 from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.floatlayout import FloatLayout
 from enum import Enum
 #gonna need a whole load of imports to make this
 
@@ -17,6 +18,9 @@ from enum import Enum
 class PointState(Enum):
     UNSELECTED = 0
     SELECTED = 1
+
+
+POINT_RAD = 10.
 
 
 
@@ -45,11 +49,11 @@ class Figure(Widget):
             #draw point at p
             with self.canvas:
                 Color(1,1,0) # YELLOW
-                d = 11.
+                d = 2*(POINT_RAD + 1.) #outer boundary
                 Ellipse(pos= ((p.x - d/2), (p.y - d/2)), size= (d,d) )
 
                 Color(0,1,0) # RED
-                d = 10.
+                d = 2*POINT_RAD
                 Ellipse(pos= ((p.x - d/2), (p.y - d/2)), size= (d,d) )
 
                 #TODO: Draw label on or around point?
@@ -58,11 +62,10 @@ class Figure(Widget):
     def draw_line(self):
         #traverse points to draw line of figure
         coords = []
-        i = 0
+
         for p in self.points:
-            coords[i] = p.x
-            coords[i+1] = p.y
-            i+=2
+            coords.append(p.x)
+            coords.append(p.y)
 
         with self.canvas:
             Color(1,1,1) #WHITE
@@ -70,6 +73,8 @@ class Figure(Widget):
         return
 
     def draw_fig(self):
+        if(self.canvas):
+            self.canvas.clear() #remove all previous points and lines on this figure (this hopefully only effects one figure?)
         self.draw_line()
         self.draw_points()
         return
@@ -120,6 +125,8 @@ class FigEllipse(Widget):
         self.yrad = yrad
         # self.marked = False #TODO: may remove, indicator for if there are points/lines marked on figure
 
+        # add bounding box in shape of a circle?
+
 
 
 
@@ -130,9 +137,32 @@ class FigEllipse(Widget):
     A FigPoint is a widget used in the formation of Figures. It has an x-y position, a label, and a state.
 """
 class FigPoint(Widget):
-    # TODO: add content
+    # TODO: maybe use their pos tuple thing??
     def __init__(self, label, x, y, state=PointState.UNSELECTED):
         # TODO: ASSERTIONS FOR VALID PARAMETERS
         self.label = label
         self.x = x
         self.y = y
+
+    def collide_point(self,x,y): # override of existing
+        if( ((self.x - x)**2 + (self.y - y)**2) == POINT_RAD**2): #if the distance between the given point and this point is less than the radius of the visual circle around the point, we have collision
+            return True
+        else:
+            return False
+
+#ideas: inherit from rectangle and ellipse?
+
+
+class FigApp(App):
+    def build(self):
+        f = FloatLayout()
+        v = VisualLayout(do_rotation=False, size=(200,200), size_hint=(None, None), pos=(10, 10))
+        f.add_widget(v)
+        pointA = FigPoint(label="A", x=20, y=20)
+        pointB = FigPoint(label="B", x=30, y=60)
+        fig = Figure([pointA, pointB])
+        v.add_widget(fig)
+
+        return f
+
+FigApp().run()
