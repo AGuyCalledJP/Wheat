@@ -6,10 +6,16 @@
 """
 from kivy.uix.widget import Widget
 from kivy.app import App
+from kivy.lang import Builder
+
 from kivy.uix.scatter import Scatter
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.uix.floatlayout import FloatLayout
+
 from enum import Enum
+from kivy.properties import NumericProperty
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.image import Image
 #gonna need a whole load of imports to make this
 
 """
@@ -45,7 +51,7 @@ class FigureLayout(VisualLayout):
 class Figure(Widget):
     def draw_points(self):
         # traverse points and draw each one in figure
-        for p in self.points:
+        for p in self.children:
             #draw point at p
             with self.canvas:
                 Color(1,1,0) # YELLOW
@@ -63,7 +69,7 @@ class Figure(Widget):
         #traverse points to draw line of figure
         coords = []
 
-        for p in self.points:
+        for p in self.children:
             coords.append(p.x)
             coords.append(p.y)
 
@@ -84,26 +90,25 @@ class Figure(Widget):
         # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
         # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
         area = 0.0
-        for i, p in enumerate(self.points): #for all points, enumerated as indices i
-            x_diff = self.points[i+1].x - self.points[i].x
-            x_diff = self.points[i+1].y - self.points[i].y
-            area += self.points[i].x * y_diff - self.points[i].y * x_diff
+        for i, p in enumerate(self.children): #for all points, enumerated as indices i
+            x_diff = self.children[i+1].x - self.children[i].x
+            x_diff = self.children[i+1].y - self.children[i].y
+            area += self.children[i].x * y_diff - self.children[i].y * x_diff
         return 0.5 * area
 
     def calculatePerimeter(self):
         # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
         # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
         perimeter = 0.0
-        for i, p in enumerate(self.points): #for all points, enumerated as indices i
-            x_diff = self.points[i+1].x - self.points[i].x
-            x_diff = self.points[i+1].y - self.points[i].y
+        for i, p in enumerate(self.children): #for all points, enumerated as indices i
+            x_diff = self.children[i+1].x - self.children[i].x
+            x_diff = self.children[i+1].y - self.children[i].y
             perimeter += perimeter + (x_diff * x_diff + y_diff * y_diff)**0.5
         return perimeter
 
     # TODO: add content
-    def __init__(self, points):
+    def __init__(self):
         # TODO: ASSERTIONS FOR VALID PARAMETERS
-        self.points = points
         self.draw_fig()
 
 
@@ -150,19 +155,18 @@ class FigPoint(Widget):
         else:
             return False
 
-#ideas: inherit from rectangle and ellipse?
-
-
-class FigApp(App):
-    def build(self):
-        f = FloatLayout()
-        v = VisualLayout(do_rotation=False, size=(200,200), size_hint=(None, None), pos=(10, 10))
-        f.add_widget(v)
-        pointA = FigPoint(label="A", x=20, y=20)
-        pointB = FigPoint(label="B", x=30, y=60)
-        fig = Figure([pointA, pointB])
-        v.add_widget(fig)
-
-        return f
-
-FigApp().run()
+# class FigApp(App):
+#     def build(self):
+#         f = FloatLayout()
+#         v = VisualLayout(do_rotation=False, size=(200,200), size_hint=(None, None), pos=(10, 10))
+#         f.add_widget(v)
+#         pointA = FigPoint(label="A", x=20, y=20)
+#         pointB = FigPoint(label="B", x=30, y=60)
+#         fig = Figure()
+#         fig.add_widget(pointA, 0)
+#         fig.add_widget(pointB, 1)
+#         v.add_widget(fig)
+#
+#         return f
+#
+# FigApp().run()
