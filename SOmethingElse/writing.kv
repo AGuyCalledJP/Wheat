@@ -1,0 +1,43 @@
+<Manager>:
+    PaintScreen:
+        name: 'paint screen'
+<PaintScreen>:
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "blank-notebook-paper-template.jpg"
+#Old stuff ................................
+    BoxLayout:
+
+        orientation: 'vertical'
+
+        GridLayout:
+
+            cols: 4
+            padding: 20
+            spacing: 20
+            size_hint: 1, .1
+
+            Button:
+                text: 'Prev page'
+                on_release:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'paint screen'
+            Button:
+                text: 'Clear page'
+
+
+            Button:
+                text: 'Eraser'
+
+
+            Button:
+                text: 'Next page'
+                on_release:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'paint screen'
+        PaintWidget:
+            name: 'paint me'
+<PaintWidget>:
+    background_color: 0, 0, 0, 0
