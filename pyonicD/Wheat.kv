@@ -12,7 +12,7 @@
 
         GridLayout:
 
-            cols: 4
+            cols: 5
             padding: 20
             spacing: 20
             size_hint: 1, .1
@@ -25,8 +25,13 @@
                     root.manager.transition.direction = 'right'
             Button:
                 root: Wheat
-                text: 'Add Widget'
+                text: 'Python'
                 on_release: root.add()
+
+            Button:
+                root: Wheat
+                text: 'Function'
+                on_release: root.addFunc()
 
             Button:
                 root: Wheat
