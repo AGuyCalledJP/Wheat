@@ -354,6 +354,7 @@ class InterpreterGui(ScatterLayout):
     scale_lock_right = False
     scale_lock_top = False
     scale_lock_bottom = False
+    disp = 1
 
     def __init__(self, *args, **kwargs):
         super(InterpreterGui, self).__init__(*args, **kwargs)
@@ -384,6 +385,18 @@ class InterpreterGui(ScatterLayout):
         # Clock.schedule_interval(self._clear_output_label_queue, 1)
 
         Clock.schedule_once(self.post_init_check, 0)
+
+    def flip(self):
+        if self.disp == 1:
+            self.code_input.disabled = True;
+            self.scrollview.disabled = True;
+            self.output_window.disabled = True;
+            self.disp = 0
+        else:
+            self.code_input.disabled = False;
+            self.scrollview.disabled = False;
+            self.output_window.disabled = False;
+            self.disp = 1
 
     def post_init_check(self, *args):
         if App.get_running_app().ctypes_working:

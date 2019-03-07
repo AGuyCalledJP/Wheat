@@ -1,124 +1,102 @@
-# <InterpreterScreen>:
-#     name: 'interpreter'
-#     BoxLayout:
-#         orientation: 'vertical'
-#         InterpreterGui:
-    
-# <HeightButton>:
-#     size_hint_y: None
-
-# <HomeScreenButton>:
-#     color: 1, 1, 1, 1
-
+#Backend
 <InterpreterGui>:
     id: interpreter_gui
     output_window: output_window
     code_input: input
     scrollview: scrollview
     orientation: 'vertical'
-    # canvas.before:
-    #     Color:
-    #         rgba: 1, 1, 1, 1.
-    #     Rectangle:
-    #         pos: self.pos
-    #         size: self.size
+    #Header
+    FloatLayout: 
+        id: header
+        pos_hint: {'x': 0,'y': .9}
+        size_hint: 1,.1
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Button:
+            id: move
+            pos_hint: {'x': .7,'y': 0}
+            size_hint: .3,1
+            text: 'Move'
+            on_press: interpreter_gui.flip()
+
+    #OutputWindow
     FloatLayout:
-        parent_obj: interpreter_gui
-        id: wheatblock
+        pos_hint: {'x': 0,'y': .45}
+        size_hint: 1,.45
         NonDefocusingScrollView:
-            pos_hint: {'x': 0, 'y': .5}
-            size_hint: 1,.5
             id: scrollview
             bar_width: dp(10)
+            pos_hint: {'x': 0,'y': 0}
+            size_hint: 1,1
             InitiallyFullGridLayout: #output window
                 cols: 1
                 id: output_window
+                pos_hint: {'x': 0,'y': 0}
+                size_hint: 1,1
                 filling_widget_minimum_height: 100
-        FloatLayout:
-            size_hint: 1,.5
+    #Left Bar
+    FloatLayout:
+        pos_hint: {'x':0, 'y':0}
+        size_hint: .1,.45
+        InterpreterMenuButton:
+            root: interpreter_gui
+            parent_obj: interpreter_gui
+            text: 'E'
+            id: settings
             pos_hint: {'x':0, 'y':0}
-            InterpreterMenuButton:
-                root: root
-                text: 'E'
-                id: settings
-                size_hint: .1,.5
+            size_hint: 1,.5
+            background_normal: 0.3, 0.3, 0.3, 1
+            background_down: 0.1, 0.1, 0.1, 1
+            font_name: 'assets/fontello.ttf'
+            font_size: sp(34)
+            color: 1, 1, 1, 1
+        Label:
+            id: status_label
+            pos_hint: {'x':0, 'y':.5}
+            size_hint: 1,.5
+            markup: True
+            background_normal: 0.3, 0.3, 0.3, 1
+            text: '[b][color=#A2A2A2](Py {}.{})[/color]\nstatus:[/b]\n[b][color=#{}]{}[/color][/b]'.format(vinfo.major, vinfo.minor, root.status_label_colour, root.interpreter_state.replace('_', ' '))
+            color: 1, 1, 1, 1
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1.
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+    #Input
+    FloatLayout:
+        pos_hint: {'x':.1, 'y':0}
+        size_hint: .8,.45
+        InterpreterInput:
+            id: input
+            pos_hint: {'x':0, 'y':0}
+            size_hint: 1,1
+            disabled: interpreter_gui._lock_input
+            font_name: 'RobotoMono-Regular.ttf'
+
+    #Right Bar
+    FloatLayout:
+        pos_hint: {'x':.9, 'y':0}
+        size_hint: .1,.45
+        NoTouchCarousel:
+            id: carousel
+            pos_hint: {'x':0, 'y':0}
+            size_hint: 1,1
+            NonDefocusingButton:
+                id: enter_button
+                text: 'N'
                 pos_hint: {'x':0, 'y':0}
+                size_hint: 1,1
+                font_name: 'assets/fontello.ttf'
+                font_size: sp(20)
+                on_release: interpreter_gui.interpret_line_from_code_input()
                 background_normal: 0.3, 0.3, 0.3, 1
                 background_down: 0.1, 0.1, 0.1, 1
-                font_name: 'assets/fontello.ttf'
-                font_size: sp(34)
-                color: 1, 1, 1, 1
-            Label:
-                id: status_label
-                size_hint: .1,.5
-                pos_hint: {'x':0, 'y':.5}
-                markup: True
-                background_normal: 0.3, 0.3, 0.3, 1
-                text: '[b][color=#A2A2A2](Py {}.{})[/color]\nstatus:[/b]\n[b][color=#{}]{}[/color][/b]'.format(vinfo.major, vinfo.minor, root.status_label_colour, root.interpreter_state.replace('_', ' '))
-                color: 1, 1, 1, 1
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 1, 1.
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-            InterpreterInput:
-                id: input
-                root: root
-                size_hint: .8,1
-                pos_hint: {'x': .1, 'y': 0}
-                disabled: root._lock_input
-                font_name: 'RobotoMono-Regular.ttf'
-            NoTouchCarousel:
-                id: carousel
-                size_hint:.1,.5
-                pos_hint: {'x': .9, 'y': .5}
-                loop: True
-                NonDefocusingButton:
-                    id: enter_button
-                    text: 'N'
-                    size_hint: 1,1
-                    pos_hint: {'x':0, 'y': 0}
-                    font_name: 'assets/fontello.ttf'
-                    font_size: sp(20)
-                    on_release: root.interpret_line_from_code_input()
-                    background_normal: 0.3, 0.3, 0.3, 1
-                    background_down: 0.1, 0.1, 0.1, 1
-                    radius: 0
-                    padding: 0
-            NoTouchCarousel:
-                id: disable
-                pos_hint: {'x': .9, 'y': 0}
-                size_hint: .05, .5
-                loop: True
-                NonDefocusingButton:
-                    id: dis
-                    text: "M"
-                    size_hint: 1,1
-                    pos_hint: {'x':0, 'y': 0}
-                    font_size: sp(20)
-                    on_release: input.disabled = True; enter_button.disabled = True; scrollview.disabled = True; status_label.disabled = True; settings.disabled = True
-                    background_normal: 0.3, 0.3, 0.3, 1
-                    background_down: 0.1, 0.1, 0.1, 1
-                    radius: 0
-                    padding: 0
-            NoTouchCarousel:
-                id: enable
-                size_hint: .05,.5
-                pos_hint: {'x': .95, 'y': 0}
-                loop: True
-                NonDefocusingButton:
-                    id: en
-                    root: root
-                    size_hint: 1,1
-                    pos_hint: {'x':0, 'y': 0}
-                    text: "P"
-                    font_size: sp(20)
-                    on_release: input.disabled = False; enter_button.disabled = False; scrollview.disabled = False; status_label.disabled = False; settings.disabled = False
-                    background_normal: 0.3, 0.3, 0.3, 1
-                    background_down: 0.1, 0.1, 0.1, 1
-                    radius: 0
-                    padding: 0
+                radius: 0
+                padding: 0
 
 <NonDefocusingButton>:
     color: (1, 1, 1, 1)
