@@ -4,7 +4,12 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
+from kivy.lang import Builder
 
+
+
+#Load kv file
+Builder.load_file('liveWidget.kv')
 
 class MyScatterLayout(ScatterLayout):
     move_lock = False
@@ -12,6 +17,15 @@ class MyScatterLayout(ScatterLayout):
     scale_lock_right = False
     scale_lock_top = False
     scale_lock_bottom = False
+
+    def __init__(self, *args, **kwargs):
+        super(MyScatterLayout, self).__init__(*args, **kwargs)
+        self.size_hint =  (None, None)
+        self.size = (150,150)
+        self.pos = (10,10)
+        b = MyButton(id='mybutton', text='Test Button')
+        self.add_widget(b)
+
     def on_touch_up(self, touch):
         self.move_lock = False
         self.scale_lock_left = False
@@ -144,15 +158,15 @@ class MyFloatLayout(FloatLayout):
 class ScatterApp(App):
     def build(self):
         f = MyFloatLayout()
-        s = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 10))
-        s.add_widget(MyButton(id='mybutton', text='Test Button'))
-        f.add_widget(s)
-        s2 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 120))
-        s2.add_widget(MyButton())
-        f.add_widget(s2)
-        s3 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 230))
-        s3.add_widget(MyButton())
-        f.add_widget(s3)
+        # s = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 10))
+        # s.add_widget(MyButton(id='mybutton', text='Test Button'))
+        # f.add_widget(s)
+        # s2 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 120))
+        # s2.add_widget(MyButton())
+        # f.add_widget(s2)
+        # s3 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 230))
+        # s3.add_widget(MyButton())
+        # f.add_widget(s3)
 
         return f
 
