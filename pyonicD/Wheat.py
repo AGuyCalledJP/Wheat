@@ -34,9 +34,7 @@ from os.path import abspath, join, dirname
 file_dir = os.path.dirname("pyonicD")
 sys.path.append(file_dir)
 from pyonicD.interpreter import InterpreterGui
-
-# file_dir = os.path.dirname("Wheat")
-# sys.path.append(file_dir)
+from pyonicD.FunctionPlotter import FunctionPlotter
 
 #Load kv file
 Builder.load_file('Wheat.kv')
@@ -45,11 +43,7 @@ class WheatScreen(Screen):
 
     count = 1
     layouts = []
-    fPos = [{'y':0},{'y':.3},{'y':.6},{'y':.9},{'y':.8}]
-    fS = [(1,.3),(1,.3),(1,.3),(1,.3),(1,.3)]
-    checkBox1 = [{'x': 0, 'y': 0},{'x': 0, 'y': .3},{'x': 0, 'y': .6},{'x': 0, 'y': .9},{'x': 0, 'y': .8}]
-    codeBlocks = [{'x': .15, 'y': 0},{'x': .15, 'y': .3},{'x': .15, 'y': .6},{'x': .15, 'y': .9},{'x': .15, 'y': .8}]
-    checkBox2 = [{'x': .85, 'y': 0}, {'x': .85, 'y': .3}, {'x': .85, 'y': .6}, {'x': .85, 'y': .9}, {'x': .85, 'y': .8}]
+
     def remove(self):
         if self.count > 1:
             self.count -= 1
@@ -65,12 +59,26 @@ class WheatScreen(Screen):
             print("nothing here")
 
     def add(self):
+        print(self.size)
+        if self.layouts==[]:
+            self.ids.widget_list.clear_widgets()
+
+        if len(self.ids.widget_list.children)<4:
+            layout = FloatLayout(size_hint=(None,None), size = self.size)
+            print(layout.size)
+            layout.add_widget(InterpreterGui())
+            self.count += 1
+            self.ids.widget_list.add_widget(layout)
+            self.layouts.append(layout)
+
+    def addFunc(self):
 
         if self.layouts==[]:
             self.ids.widget_list.clear_widgets()
 
         if len(self.ids.widget_list.children)<4:
-            layout = InterpreterGui()
+            layout = FloatLayout(size_hint=(None,None))
+            layout.add_widget(FunctionPlotter());
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)

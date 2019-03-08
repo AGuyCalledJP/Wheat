@@ -1,31 +1,29 @@
 from kivy.uix.scatter import Scatter
-from kivy.uix.button import Button
-from kivy.uix.floatlayout import FloatLayout
-from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics.transformation import Matrix
-from kivy.lang import Builder
+import sys
+import os
+from os.path import abspath, join, dirname
+file_dir = os.path.dirname("pyonicD")
+sys.path.append(file_dir)
 
+from pyonicD.Keyboard import Keyboard
 
-
-#Load kv file
-Builder.load_file('liveWidget.kv')
-
-class MyScatterLayout(ScatterLayout):
+class FunctionWrap(ScatterLayout):
     move_lock = False
     scale_lock_left = False
     scale_lock_right = False
     scale_lock_top = False
     scale_lock_bottom = False
+    col = 1,1,1,1
+    disp = 1
 
-    def __init__(self, *args, **kwargs):
-        super(MyScatterLayout, self).__init__(*args, **kwargs)
-        self.size_hint =  (None, None)
-        self.size = (150,150)
-        self.pos = (10,10)
-        b = MyButton(id='mybutton', text='Test Button')
-        self.add_widget(b)
-
+    def __init__(self, **kwargs):
+        super(FunctionWrap, self).__init__(**kwargs)
+        self.size_hint = None,None
+        self.size = 1008, 756.0
+    
     def on_touch_up(self, touch):
         self.move_lock = False
         self.scale_lock_left = False
@@ -41,7 +39,7 @@ class MyScatterLayout(ScatterLayout):
             y = round(y, 0)
             y = y * 10
             self.pos = x, y
-            return super(MyScatterLayout, self).on_touch_up(touch)
+            return super(FunctionWrap, self).on_touch_up(touch)
 
     def transform_with_touch(self, touch):
         changed = False
@@ -143,32 +141,4 @@ class MyScatterLayout(ScatterLayout):
         touch.grab(self)
         self._touches.append(touch)
         self._last_touch_pos[touch] = touch.pos
-
         return True
-
-class MyButton(Button):
-    def on_touch_down(self, touch):
-        return False
-
-
-class MyFloatLayout(FloatLayout):
-    pass
-
-
-class ScatterApp(App):
-    def build(self):
-        f = MyFloatLayout()
-        # s = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 10))
-        # s.add_widget(MyButton(id='mybutton', text='Test Button'))
-        # f.add_widget(s)
-        # s2 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 120))
-        # s2.add_widget(MyButton())
-        # f.add_widget(s2)
-        # s3 = MyScatterLayout(do_rotation=False, size=(150, 100), size_hint=(None, None), pos=(10, 230))
-        # s3.add_widget(MyButton())
-        # f.add_widget(s3)
-
-        return f
-
-
-ScatterApp().run()

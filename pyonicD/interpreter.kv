@@ -1,188 +1,127 @@
-
-<InterpreterScreen>:
-    name: 'interpreter'
-    BoxLayout:
-        orientation: 'vertical'
-        InterpreterGui:
-    
-<HeightButton>:
-    size_hint_y: None
-
-<HomeScreenButton>:
-    color: 1, 1, 1, 1
-
+#Backend
 <InterpreterGui>:
     id: interpreter_gui
     output_window: output_window
     code_input: input
-    scrollview: scrollview
-    scatter: wheatblock
-    orientation: 'vertical'
+    #scrollview: scrollview
+    # canvas.before:
+    #     Color:
+    #         rgba: 1, 1, 1, 1.
+    #     Rectangle:
+    #         pos: self.pos
+    #         size: self.size
+    #OutputWindow
     FloatLayout:
-        MyScatterLayout:
-            parent_obj: interpreter_gui
-            id: wheatblock
-            pos: (0,0)
-            NonDefocusingScrollView:
-                root: wheatblock
-                pos_hint: {'x': 0, 'y': .5}
-                height: root.height/2
-                width: root.width
-                id: scrollview
-                bar_width: dp(10)
-                InitiallyFullGridLayout: #output window
-                    root: wheatblock
-                    size_hint: None, None
-                    height: root.height/2
-                    width: root.width
-                    pos_hint: 1, .5
-                    cols: 1
-                    id: output_window
-                    filling_widget_minimum_height: 100
-                    canvas.before:
-            FloatLayout:
-                root: wheatblock
-                size_hint_y: None
-                height: root.height/2
-                width: root.width
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+            Color:
+                rgba: 1, 1, 1, 1.
+        FloatLayout:
+            id: out
+            pos_hint: {'x': 0,'y': .55}
+            size_hint: 1,.45
+            # ScrollView:
+            #     id: scrollview
+            #     bar_width: dp(10)
+            #     pos_hint: {'x': 0,'y': 0}
+            #     size_hint: 1,1
+            InitiallyFullGridLayout: #output window
+                cols: 1
+                id: output_window
+                pos_hint: {'x': 0,'y': 0}
+                size_hint: 1,1
+                filling_widget_minimum_height: 100
+        
+        #Header
+        FloatLayout: 
+            id: header
+            pos_hint: {'x': 0,'y': .45}
+            size_hint: 1,.1
+            Button:
+                id: move
+                pos_hint: {'x': .7,'y': 0}
+                size_hint: .3,1
+                text: 'Move'
+                on_press: interpreter_gui.flip()
+
+        #Left Bar
+        FloatLayout:
+            pos_hint: {'x':0, 'y':0}
+            size_hint: .1,.45
+            canvas.before:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            InterpreterMenuButton:
+                root: interpreter_gui
+                parent_obj: interpreter_gui
+                text: 'E'
+                id: settings
+                pos_hint: {'x':0, 'y':0}
+                size_hint: 1,.5
+                background_normal: 0.3, 0.3, 0.3, 1
+                background_down: 0.1, 0.1, 0.1, 1
+                font_name: 'assets/fontello.ttf'
+                font_size: sp(34)
+                color: 1, 1, 1, 1
+            Label:
+                id: status_label
+                pos_hint: {'x':0, 'y':.5}
+                size_hint: 1,.5
+                markup: True
+                background_normal: 0.3, 0.3, 0.3, 1
+                text: '[b][color=#A2A2A2](Py {}.{})[/color]\nstatus:[/b]\n[b][color=#{}]{}[/color][/b]'.format(vinfo.major, vinfo.minor, root.status_label_colour, root.interpreter_state.replace('_', ' '))
+                color: 1, 1, 1, 1
                 canvas.before:
                     Color:
                         rgba: 1, 1, 1, 1.
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                InterpreterMenuButton:
-                    root: wheatblock
-                    text: 'E'
-                    id: settings
-                    size_hint: None, None
-                    height: root.height/4
-                    width: root.width - (root.width * .9)
-                    pos: 0,0
+        #Input
+        FloatLayout:
+            pos_hint: {'x':.1, 'y':0}
+            size_hint: .8,.45
+            canvas.before:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            InterpreterInput:
+                id: input
+                pos_hint: {'x':0, 'y':0}
+                size_hint: 1,1
+                disabled: interpreter_gui._lock_input
+                font_name: 'RobotoMono-Regular.ttf'
+
+        #Right Bar
+        FloatLayout:
+            pos_hint: {'x':.9, 'y':0}
+            size_hint: .1,.45
+            canvas.before:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            NoTouchCarousel:
+                id: carousel
+                pos_hint: {'x':0, 'y':0}
+                size_hint: 1,1
+                NonDefocusingButton:
+                    id: enter_button
+                    text: 'N'
+                    pos_hint: {'x':0, 'y':0}
+                    size_hint: 1,1
+                    font_name: 'assets/fontello.ttf'
+                    font_size: sp(20)
+                    on_release: interpreter_gui.interpret_line_from_code_input()
                     background_normal: 0.3, 0.3, 0.3, 1
                     background_down: 0.1, 0.1, 0.1, 1
-                    font_name: 'assets/fontello.ttf'
-                    font_size: sp(34)
-                    color: 1, 1, 1, 1
-                Label:
-                    id: status_label
-                    size_hint: None, None
-                    height: root.height/4
-                    width: root.width - (root.width * .9)
-                    pos: 0,root.height/4
-                    markup: True
-                    background_normal: 0.3, 0.3, 0.3, 1
-                    text: '[b][color=#A2A2A2](Py {}.{})[/color]\nstatus:[/b]\n[b][color=#{}]{}[/color][/b]'.format(vinfo.major, vinfo.minor, root.status_label_colour, root.interpreter_state.replace('_', ' '))
-                    color: 1, 1, 1, 1
-                InterpreterInput:
-                    id: input
-                    root: root
-                    size_hint: (.8,1)
-                    #size: wheatblock.width * .8, 0
-                    pos: wheatblock.width * .1, 1
-                    disabled: root._lock_input
-                    font_name: 'RobotoMono-Regular.ttf'
-                NoTouchCarousel:
-                    root: wheatblock
-                    id: carousel
-                    width: enter_button.texture_size[0] * 3
-                    size_hint: None, None
-                    height: root.height / 4
-                    width: root.width - (root.width * .9)
-                    pos: (root.width - (root.width * .1)), root.height/4
-                    loop: True
-                    NonDefocusingButton:
-                        id: enter_button
-                        text: 'N'
-                        font_name: 'assets/fontello.ttf'
-                        font_size: sp(20)
-                        on_release: root.interpret_line_from_code_input()
-                        background_normal: 0.3, 0.3, 0.3, 1
-                        background_down: 0.1, 0.1, 0.1, 1
-                        radius: 0
-                        padding: 0
-                NoTouchCarousel:
-                    root: wheatblock
-                    id: disable
-                    size_hint: None, None
-                    height: root.height / 8
-                    width: (root.width - (root.width * .9)) / 2
-                    pos: (root.width - (root.width * .1)), root.height / 8
-                    loop: True
-                    NonDefocusingButton:
-                        id: dis
-                        text: "M"
-                        # font_name: 'assets/fontello.ttf'
-                        font_size: sp(20)
-                        on_release: input.disabled = True; enter_button.disabled = True; scrollview.disabled = True; status_label.disabled = True; settings.disabled = True
-                        background_normal: 0.3, 0.3, 0.3, 1
-                        background_down: 0.1, 0.1, 0.1, 1
-                        radius: 0
-                        padding: 0
-                NoTouchCarousel:
-                    root: wheatblock
-                    id: enable
-                    size_hint: None, None
-                    height: root.height / 8
-                    width: (root.width - (root.width * .9)) / 2
-                    pos: (root.width - (root.width * .05)) , root.height / 8
-                    loop: True
-                    NonDefocusingButton:
-                        id: en
-                        text: "P"
-                        # font_name: 'assets/fontello.ttf'
-                        font_size: sp(20)
-                        on_release: input.disabled = False; enter_button.disabled = False; scrollview.disabled = False; status_label.disabled = False; settings.disabled = False
-                        background_normal: 0.3, 0.3, 0.3, 1
-                        background_down: 0.1, 0.1, 0.1, 1
-                        radius: 0
-                        padding: 0
-                NoTouchCarousel:
-                    root: wheatblock
-                    id: grow
-                    size_hint: None, None
-                    height: root.height / 8
-                    width: (root.width - (root.width * .9)) / 2
-                    pos: (root.width - (root.width * .1)), 0
-                    loop: True
-                    NonDefocusingButton:
-                        id: dis
-                        text: "G"
-                        # font_name: 'assets/fontello.ttf'
-                        font_size: sp(20)
-                        on_release: root.size = root.size[0] + 16, root.size[1] + 12
-                        background_normal: 0.3, 0.3, 0.3, 1
-                        background_down: 0.1, 0.1, 0.1, 1
-                        radius: 0
-                        padding: 0
-                NoTouchCarousel:
-                    root: wheatblock
-                    id: shrink
-                    size_hint: None, None
-                    height: root.height / 8
-                    width: (root.width - (root.width * .9)) / 2
-                    pos: (root.width - (root.width * .05)), 0
-                    loop: True
-                    NonDefocusingButton:
-                        id: en
-                        text: "S"
-                        # font_name: 'assets/fontello.ttf'
-                        font_size: sp(20)
-                        on_release: root.size = root.size[0] - 16, root.size[1] - 12
-                        background_normal: 0.3, 0.3, 0.3, 1
-                        background_down: 0.1, 0.1, 0.1, 1
-                        radius: 0
-                        padding: 0
+                    radius: 0
+                    padding: 0
 
 <NonDefocusingButton>:
     color: (1, 1, 1, 1)
-
-<KeyboardButton>:
-    color: (1, 1, 1, 1)
-    padding: 0.025 * min(self.size)
-    background_down: (0.2, 0.6431, 0.8078, 1.)
-    background_normal: (0.6, 0.6, 0.6, 0.8)
-    radius: dp(5)
 
 <ColouredButton>:
     canvas.before:
@@ -448,7 +387,7 @@
         text_size: self.size
         padding_x: dp(10)
         valign: 'middle'
-        on_release: root.parent_obj.root.parent_obj.clear_output(); root.dismiss(immediate=False)
+        on_release: root.parent_obj.root.clear_output(); root.dismiss(immediate=False)
     Widget:
         size_hint_y: None
         height: dp(2)
@@ -459,7 +398,7 @@
         height: dp(40)
         text_size: self.size
         valign: 'middle'
-        on_release: root.parent_obj.root.parent_obj.query_restart(); root.dismiss(immediate=False)
+        on_release: root.parent_obj.root.query_restart(); root.dismiss(immediate=False)
     Widget:
         size_hint_y: None
         height: dp(2)
@@ -470,7 +409,7 @@
         text_size: self.size
         padding_x: dp(10)
         valign: 'middle'
-        on_release: root.parent_obj.root.parent_obj.exec_file(); root.dismiss(immediate=False)
+        on_release: root.parent_obj.root.exec_file(); root.dismiss(immediate=False)
     Widget:
         size_hint_y: None
         height: dp(2)
