@@ -305,8 +305,9 @@ class InterpreterInput(InputWidget):
 class InterpreterGui(ScatterLayout):
     output_window = ObjectProperty()
     code_input = ObjectProperty()
-    scrollview = ObjectProperty()
+    #scrollview = ObjectProperty()
     scatter = ObjectProperty()
+    b = ObjectProperty()
 
     subprocesses = []
     off = False
@@ -378,7 +379,6 @@ class InterpreterGui(ScatterLayout):
         self.interpreter.bind(on_request_input=self.on_request_input)
         self.size_hint = None,None
         self.size = 1008, 756.0
-        self.pos = (0,0)
         # self.interpreter = DummyInterpreter()
 
         # Clock.schedule_interval(self._dequeue_output_label, 0.05)
@@ -388,14 +388,14 @@ class InterpreterGui(ScatterLayout):
 
     def flip(self):
         if self.disp == 1:
-            self.code_input.disabled = True;
-            self.scrollview.disabled = True;
-            self.output_window.disabled = True;
+            self.code_input.disabled = True
+            #self.scrollview.disabled = True
+            self.output_window.disabled = True
             self.disp = 0
         else:
-            self.code_input.disabled = False;
-            self.scrollview.disabled = False;
-            self.output_window.disabled = False;
+            self.code_input.disabled = False
+            #self.scrollview.disabled = False
+            self.output_window.disabled = False
             self.disp = 1
 
     def post_init_check(self, *args):
@@ -510,17 +510,17 @@ class InterpreterGui(ScatterLayout):
     def add_user_message_label(self, text, **kwargs):
         l = UserMessageLabel(text=text, **kwargs)
         self.output_window.add_widget(l)
-        self.scrollview.scroll_to(l)
+        #self.scrollview.scroll_to(l)
 
     def add_doc_label(self, text, **kwargs):
         l = DocLabel(text=text, **kwargs)
         self.output_window.add_widget(l)
-        self.scrollview.scroll_to(l)
+        #self.scrollview.scroll_to(l)
 
     def add_input_label(self, text, index):
         l = InputLabel(text=text, index=index, root=self)
         self.output_window.add_widget(l)
-        self.scrollview.scroll_to(l)
+        #self.scrollview.scroll_to(l)
 
     def add_output_label(self, text, stream='stdout'):
         self._output_label_queue.append((text, stream))
@@ -529,8 +529,8 @@ class InterpreterGui(ScatterLayout):
     def _add_output_label(self, text, stream='stdout', scroll_to=True):
         l = OutputLabel(text=text, stream=stream)
         self.output_window.add_widget(l)
-        if scroll_to:
-            self.scrollview.scroll_to(l)
+        # if scroll_to:
+        #     self.scrollview.scroll_to(l)
         return l
 
     def _dequeue_output_label(self, dt):
@@ -548,8 +548,8 @@ class InterpreterGui(ScatterLayout):
             label_text = self._output_label_queue.pop(0)
             label = self._add_output_label(*label_text, scroll_to=False)
         print('Rendered {} labels in {}'.format(i, time() - t))
-        Animation.stop_all(self.scrollview, 'scroll_x', 'scroll_y')
-        self.scrollview.scroll_to(label)
+        # Animation.stop_all(self.scrollview, 'scroll_x', 'scroll_y')
+        # self.scrollview.scroll_to(label)
 
         self.dequeue_scheduled.cancel()
         self.dequeue_scheduled = None
@@ -615,13 +615,13 @@ class InterpreterGui(ScatterLayout):
         self.add_break()
         l = NotificationLabel(text=text)
         self.output_window.add_widget(l)
-        self.scrollview.scroll_to(l)
+        #self.scrollview.scroll_to(l)
         self.add_break()
 
     def add_break(self):
         b = BreakMarker()
         self.output_window.add_widget(b)
-        self.scrollview.scroll_to(b)
+        #self.scrollview.scroll_to(b)
 
     def insert_previous_code(self, index, clear=False):
         if clear:
@@ -781,6 +781,7 @@ class InterpreterGui(ScatterLayout):
         return changed
 
     def on_touch_down(self, touch):
+        print("hit")
         x, y = touch.x, touch.y
         self.prev_x = touch.x
         self.prev_y = touch.y

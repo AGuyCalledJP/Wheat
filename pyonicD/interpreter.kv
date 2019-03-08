@@ -3,100 +3,122 @@
     id: interpreter_gui
     output_window: output_window
     code_input: input
-    scrollview: scrollview
-    orientation: 'vertical'
-    #Header
-    FloatLayout: 
-        id: header
-        pos_hint: {'x': 0,'y': .9}
-        size_hint: 1,.1
+    #scrollview: scrollview
+    # canvas.before:
+    #     Color:
+    #         rgba: 1, 1, 1, 1.
+    #     Rectangle:
+    #         pos: self.pos
+    #         size: self.size
+    #OutputWindow
+    FloatLayout:
         canvas.before:
             Rectangle:
                 pos: self.pos
                 size: self.size
-        Button:
-            id: move
-            pos_hint: {'x': .7,'y': 0}
-            size_hint: .3,1
-            text: 'Move'
-            on_press: interpreter_gui.flip()
-
-    #OutputWindow
-    FloatLayout:
-        pos_hint: {'x': 0,'y': .45}
-        size_hint: 1,.45
-        NonDefocusingScrollView:
-            id: scrollview
-            bar_width: dp(10)
-            pos_hint: {'x': 0,'y': 0}
-            size_hint: 1,1
+            Color:
+                rgba: 1, 1, 1, 1.
+        FloatLayout:
+            id: out
+            pos_hint: {'x': 0,'y': .55}
+            size_hint: 1,.45
+            # ScrollView:
+            #     id: scrollview
+            #     bar_width: dp(10)
+            #     pos_hint: {'x': 0,'y': 0}
+            #     size_hint: 1,1
             InitiallyFullGridLayout: #output window
                 cols: 1
                 id: output_window
                 pos_hint: {'x': 0,'y': 0}
                 size_hint: 1,1
                 filling_widget_minimum_height: 100
-    #Left Bar
-    FloatLayout:
-        pos_hint: {'x':0, 'y':0}
-        size_hint: .1,.45
-        InterpreterMenuButton:
-            root: interpreter_gui
-            parent_obj: interpreter_gui
-            text: 'E'
-            id: settings
+        
+        #Header
+        FloatLayout: 
+            id: header
+            pos_hint: {'x': 0,'y': .45}
+            size_hint: 1,.1
+            Button:
+                id: move
+                pos_hint: {'x': .7,'y': 0}
+                size_hint: .3,1
+                text: 'Move'
+                on_press: interpreter_gui.flip()
+
+        #Left Bar
+        FloatLayout:
             pos_hint: {'x':0, 'y':0}
-            size_hint: 1,.5
-            background_normal: 0.3, 0.3, 0.3, 1
-            background_down: 0.1, 0.1, 0.1, 1
-            font_name: 'assets/fontello.ttf'
-            font_size: sp(34)
-            color: 1, 1, 1, 1
-        Label:
-            id: status_label
-            pos_hint: {'x':0, 'y':.5}
-            size_hint: 1,.5
-            markup: True
-            background_normal: 0.3, 0.3, 0.3, 1
-            text: '[b][color=#A2A2A2](Py {}.{})[/color]\nstatus:[/b]\n[b][color=#{}]{}[/color][/b]'.format(vinfo.major, vinfo.minor, root.status_label_colour, root.interpreter_state.replace('_', ' '))
-            color: 1, 1, 1, 1
+            size_hint: .1,.45
             canvas.before:
-                Color:
-                    rgba: 1, 1, 1, 1.
                 Rectangle:
                     pos: self.pos
                     size: self.size
-    #Input
-    FloatLayout:
-        pos_hint: {'x':.1, 'y':0}
-        size_hint: .8,.45
-        InterpreterInput:
-            id: input
-            pos_hint: {'x':0, 'y':0}
-            size_hint: 1,1
-            disabled: interpreter_gui._lock_input
-            font_name: 'RobotoMono-Regular.ttf'
-
-    #Right Bar
-    FloatLayout:
-        pos_hint: {'x':.9, 'y':0}
-        size_hint: .1,.45
-        NoTouchCarousel:
-            id: carousel
-            pos_hint: {'x':0, 'y':0}
-            size_hint: 1,1
-            NonDefocusingButton:
-                id: enter_button
-                text: 'N'
+            InterpreterMenuButton:
+                root: interpreter_gui
+                parent_obj: interpreter_gui
+                text: 'E'
+                id: settings
                 pos_hint: {'x':0, 'y':0}
-                size_hint: 1,1
-                font_name: 'assets/fontello.ttf'
-                font_size: sp(20)
-                on_release: interpreter_gui.interpret_line_from_code_input()
+                size_hint: 1,.5
                 background_normal: 0.3, 0.3, 0.3, 1
                 background_down: 0.1, 0.1, 0.1, 1
-                radius: 0
-                padding: 0
+                font_name: 'assets/fontello.ttf'
+                font_size: sp(34)
+                color: 1, 1, 1, 1
+            Label:
+                id: status_label
+                pos_hint: {'x':0, 'y':.5}
+                size_hint: 1,.5
+                markup: True
+                background_normal: 0.3, 0.3, 0.3, 1
+                text: '[b][color=#A2A2A2](Py {}.{})[/color]\nstatus:[/b]\n[b][color=#{}]{}[/color][/b]'.format(vinfo.major, vinfo.minor, root.status_label_colour, root.interpreter_state.replace('_', ' '))
+                color: 1, 1, 1, 1
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1.
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+        #Input
+        FloatLayout:
+            pos_hint: {'x':.1, 'y':0}
+            size_hint: .8,.45
+            canvas.before:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            InterpreterInput:
+                id: input
+                pos_hint: {'x':0, 'y':0}
+                size_hint: 1,1
+                disabled: interpreter_gui._lock_input
+                font_name: 'RobotoMono-Regular.ttf'
+
+        #Right Bar
+        FloatLayout:
+            pos_hint: {'x':.9, 'y':0}
+            size_hint: .1,.45
+            canvas.before:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            NoTouchCarousel:
+                id: carousel
+                pos_hint: {'x':0, 'y':0}
+                size_hint: 1,1
+                NonDefocusingButton:
+                    id: enter_button
+                    text: 'N'
+                    pos_hint: {'x':0, 'y':0}
+                    size_hint: 1,1
+                    font_name: 'assets/fontello.ttf'
+                    font_size: sp(20)
+                    on_release: interpreter_gui.interpret_line_from_code_input()
+                    background_normal: 0.3, 0.3, 0.3, 1
+                    background_down: 0.1, 0.1, 0.1, 1
+                    radius: 0
+                    padding: 0
 
 <NonDefocusingButton>:
     color: (1, 1, 1, 1)

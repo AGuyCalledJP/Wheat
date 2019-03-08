@@ -129,6 +129,8 @@ class FunctionPlotter(ScatterLayout):
         return changed
 
     def on_touch_down(self, touch):
+        print("func hittin")
+        print(self.size)
         x, y = touch.x, touch.y
         self.prev_x = touch.x
         self.prev_y = touch.y
