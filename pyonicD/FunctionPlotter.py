@@ -59,12 +59,14 @@ class FunctionPlotter(ScatterLayout):
     col = 1,1,1,1
     disp = 1
     text = "1"
-
+    l = []
+    i = []
+    f = []
 
 
     def __init__(self, **kwargs):
         super(FunctionPlotter, self).__init__(**kwargs)
-        self.equation_text = "x**2"
+        self.equation_text = "i**2"
         self.size_hint = None,None
         self.size = 1008, 756.0
 
@@ -77,15 +79,15 @@ class FunctionPlotter(ScatterLayout):
         plt.subplots_adjust(bottom=0.2)
 
         #setting initial x limits and precision
-        x = np.arange(-100.0, 100.0, 0.001)
+        self.i = np.arange(-100.0, 100.0, 0.001)
 
         #setting initial function and plotting
         def callback(instance):
             autolabel(rects1)
             canvas.draw()
-        y = x ** 2
-        initial_text = "x ** 2"
-        self.l = plt.plot(x, y, linewidth=3)
+        self.f = self.i ** 2
+        initial_text = "i ** 2"
+        self.l, = plt.plot(self.i, self.f, linewidth=3)
 
         self.ax.set_ylim(-10, 10)
         self.ax.set_xlim(-10, 10)
@@ -101,6 +103,9 @@ class FunctionPlotter(ScatterLayout):
 
 
     def clickedSubmit(self):
+        print(self.l)
+        print(self.equation_text)
+        i = self.i
         ydata = eval(self.equation_text)
         self.l.set_ydata(ydata)
         self.ax.set_ylim(-10, 10)
