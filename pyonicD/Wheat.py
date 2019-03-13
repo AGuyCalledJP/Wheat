@@ -44,6 +44,8 @@ class WheatScreen(Screen):
 
     count = 1
     layouts = []
+    d = 1
+    draw = ObjectProperty()
 
     def remove(self):
         if self.count > 1:
@@ -83,3 +85,11 @@ class WheatScreen(Screen):
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
+
+    def drawToggle(self):
+        if self.d == 1:
+            self.draw.disabled = True
+            self.d = 0
+        else:
+            self.draw.disabled = False
+            self.d = 1

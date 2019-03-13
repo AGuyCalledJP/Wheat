@@ -1,5 +1,6 @@
 <WheatScreen>:
     id: Wheat
+    draw: pad
     canvas.before:
         Rectangle:
             pos: self.pos
@@ -30,10 +31,10 @@
             text: 'Function'
             on_release: root.addFunc()
 
-        Button:
-            root: Wheat
-            text: 'Remove Widget'
-            on_release: root.remove()
+        # Button:
+        #     root: Wheat
+        #     text: 'Remove Widget'
+        #     on_release: root.remove()
 
         Button:
             root: Wheat
@@ -42,8 +43,14 @@
             on_release:
                 root.manager.current = "screen2"
                 root.manager.transition.direction = 'left'
+        
+        Button:
+            root: Wheat
+            text: 'Draw'
+            on_release: root.drawToggle()
 
     Draw:
+        id: pad
         size_hint: 1, .9
         pos_hint: {'x': 0, 'y': 0}
         orientation: 'vertical'

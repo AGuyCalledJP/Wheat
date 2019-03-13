@@ -6,6 +6,9 @@ from kivy.uix.boxlayout import BoxLayout
 Builder.load_file('draw.kv')
 
 class Draw(BoxLayout):
+    pass
+        
+class Paint(Widget):
     def on_touch_down(self, touch):
         with self.canvas:
             Color(0,0,0)
