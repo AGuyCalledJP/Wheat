@@ -6,50 +6,48 @@
             size: self.size
             source: "blank-notebook-paper-template.jpg"
 
-    BoxLayout:
+    GridLayout:
 
+        cols: 5
+        padding: 20
+        spacing: 20
+        size_hint: 1, .1
+        pos_hint: {'x': 0, 'y': .9}
+
+        Button:
+            root: Wheat
+            text: 'Prev page'
+            on_release:
+                root.manager.current = "screen1"
+                root.manager.transition.direction = 'right'
+        Button:
+            root: Wheat
+            text: 'Python'
+            on_release: root.add()
+
+        Button:
+            root: Wheat
+            text: 'Function'
+            on_release: root.addFunc()
+
+        Button:
+            root: Wheat
+            text: 'Remove Widget'
+            on_release: root.remove()
+
+        Button:
+            root: Wheat
+            text: 'Next page'
+
+            on_release:
+                root.manager.current = "screen2"
+                root.manager.transition.direction = 'left'
+
+    Draw:
+        size_hint: 1, .9
+        pos_hint: {'x': 0, 'y': 0}
         orientation: 'vertical'
 
-        GridLayout:
+    FloatLayout:
 
-            cols: 5
-            padding: 20
-            spacing: 20
-            size_hint: 1, .1
-
-            Button:
-                root: Wheat
-                text: 'Prev page'
-                on_release:
-                    root.manager.current = "screen1"
-                    root.manager.transition.direction = 'right'
-            Button:
-                root: Wheat
-                text: 'Python'
-                on_release: root.add()
-
-            Button:
-                root: Wheat
-                text: 'Function'
-                on_release: root.addFunc()
-
-            Button:
-                root: Wheat
-                text: 'Remove Widget'
-                on_release: root.remove()
-
-            Button:
-                root: Wheat
-                text: 'Next page'
-
-                on_release:
-                    root.manager.current = "screen2"
-                    root.manager.transition.direction = 'left'
-        ScrollView:
-            
-            do_scroll_x: False
-            do_scroll_y: True
-
-            FloatLayout:
-
-                id: widget_list
+        id: widget_list

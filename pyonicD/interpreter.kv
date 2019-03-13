@@ -3,30 +3,12 @@
     id: interpreter_gui
     output_window: output_window
     code_input: input
-    #scrollview: scrollview
-    # canvas.before:
-    #     Color:
-    #         rgba: 1, 1, 1, 1.
-    #     Rectangle:
-    #         pos: self.pos
-    #         size: self.size
     #OutputWindow
     FloatLayout:
-        canvas.before:
-            Rectangle:
-                pos: self.pos
-                size: self.size
-            Color:
-                rgba: 1, 1, 1, 1.
         FloatLayout:
             id: out
             pos_hint: {'x': 0,'y': .55}
             size_hint: 1,.45
-            # ScrollView:
-            #     id: scrollview
-            #     bar_width: dp(10)
-            #     pos_hint: {'x': 0,'y': 0}
-            #     size_hint: 1,1
             InitiallyFullGridLayout: #output window
                 cols: 1
                 id: output_window

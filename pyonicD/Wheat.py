@@ -35,6 +35,7 @@ file_dir = os.path.dirname("pyonicD")
 sys.path.append(file_dir)
 from pyonicD.interpreter import InterpreterGui
 from pyonicD.FunctionPlotter import FunctionPlotter
+from pyonicD.draw import Draw
 
 #Load kv file
 Builder.load_file('Wheat.kv')
