@@ -10,11 +10,10 @@
     #         pos: self.pos
     #         size: self.size
 
-    #soon to be the option to remove as well
-    FloatLayout: 
+    FloatLayout:
         id: header
-        pos_hint: {'x': 0,'y': .9}
-        size_hint: 1,.1
+        pos_hint: {'x' : 0, 'y' : .9}
+        size_hint: 1, 0.1
         canvas.before:
             Rectangle:
                 pos: self.pos
@@ -26,118 +25,200 @@
             text: 'Move'
             on_press: functionplotter.flip()
 
-    #Put the function Plotter in this one
     FloatLayout:
-        pos_hint: {'x': 0,'y': 0}
-        size_hint: .5,.9
-        Function:
-            id: func_plot
-            canvas.before:
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-    FloatLayout:
-        pos_hint: {'x': .5,'y': 0}
-        size_hint: .5,.9
-        canvas.before:
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        Keyboard:
-            id: key
-            cols: 5
-            Button:
-                text: 'sqrt'
-                on_press: functionplotter.ClickedPi()
-            Button:
-                text: 'sin'
-                on_press: functionplotter.ClickedSin()
-            Button:
-                text: 'cos'
-                on_press: functionplotter.ClickedCos()
-            Button:
-                text: 'tan'
-                on_press: functionplotter.ClickedTan()
-            Button:
-                text: 'pi'
-                on_press: functionplotter.ClickedPi()
+        id: total
+        pos_hint: {'x' : 0, 'y': 0}
+        size_hint: 1, 0.9
 
-            Button:
-                text: '^'
-                on_press: functionplotter.ClickedExp()
-            Button:
-                text: 'x^-1'
-                on_press: functionplotter.ClickedInv()
-            Button:
-                text: '('
-                on_press: functionplotter.ClickedLeftP()
-            Button:
-                text: ')'
-                on_press: functionplotter.ClickedRightP()
-            Button:
-                text: '/'
-                on_press: functionplotter.ClickedDiv()
+        BoxLayout:
+            orientation: 'horizontal'
+            pos_hint: {'x' : 0, 'y': 0}
+            size_hint: 1,1
 
-            Button:
-                text: '^2'
-                on_press: functionplotter.ClickedSquared()
-            Button:
-                text: '7'
-                on_press: functionplotter.Clicked7()
-            Button:
-                text: '8'
-                on_press: functionplotter.Clicked8()
-            Button:
-                text: '9'
-                on_press: functionplotter.Clicked9()
-            Button:
-                text: '*'
-                on_press: functionplotter.ClickedTimes()
+            Function:
+                pos_hint: {'x': 0,'y': 0}
+                size_hint: 1,1
+                id: func_plot
+                canvas.before:
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
 
-            Button:
-                text: 'x'
-                on_press: functionplotter.Clickedx()
-            Button:
-                text: '4'
-                on_press: functionplotter.Clicked4()
-            Button:
-                text: '5'
-                on_press: functionplotter.Clicked5()
-            Button:
-                text: '6'
-                on_press: functionplotter.Clicked6()
-            Button:
-                text: '-'
-                on_press: functionplotter.ClickedMinus()
+                BoxLayout:
+                    orientation: 'vertical'
+                    pos_hint: {'x': 0,'y': 0}
+                    size_hint: 1,1
 
-            Button:
-                text: '<-'
-                on_press: functionplotter.ClickedDel()
-            Button:
-                text: '1'
-                on_press: functionplotter.Clicked1()
-            Button:
-                text: '2'
-                on_press: functionplotter.Clicked2()
-            Button:
-                text: '3'
-                on_press: functionplotter.Clicked3()
-            Button:
-                text: '+'
-                on_press: functionplotter.ClickedPlus()
+                    id: destination
 
-            Button:
-                text: 'Clear'
-                on_press: functionplotter.ClickedClear()
-            Button:
-                text: '0'
-                on_press: functionplotter.Clicked0()
-            Button:
-                text: '.'
-                on_press: functionplotter.ClickedPoint()
-            Button:
-                text: '(-)'
-                on_press: functionplotter.ClickedNeg()
-            Button:
-                text: 'Enter'
-                on_press: functionplotter.ClickedEnter()
+                Equation:
+                    id: equation
+                    pos_hint: {'x': 0.1, 'y': 0.09}
+                    size_hint: 0.8,0.05
+                    multiline: False
+                    text: root.equation_text
+
+
+            Keyboard:
+                canvas.before:
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                id: key
+                cols: 5
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    color: 0,0,0,1
+                    text: 'sqrt'
+                    on_press: functionplotter.ClickedSqrt()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: 'sin'
+                    on_press: functionplotter.ClickedSin()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: 'cos'
+                    on_press: functionplotter.ClickedCos()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: 'tan'
+                    on_press: functionplotter.ClickedTan()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: 'pi'
+                    on_press: functionplotter.ClickedPi()
+
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '^'
+                    on_press: functionplotter.ClickedExp()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: 'x^-1'
+                    on_press: functionplotter.ClickedInv()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '('
+                    on_press: functionplotter.ClickedLeftP()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: ')'
+                    on_press: functionplotter.ClickedRightP()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '/'
+                    on_press: functionplotter.ClickedDiv()
+
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '^2'
+                    on_press: functionplotter.ClickedSquared()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '7'
+                    on_press: functionplotter.Clicked7()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '8'
+                    on_press: functionplotter.Clicked8()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '9'
+                    on_press: functionplotter.Clicked9()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '*'
+                    on_press: functionplotter.ClickedTimes()
+
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: 'x'
+                    on_press: functionplotter.Clickedx()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '4'
+                    on_press: functionplotter.Clicked4()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '5'
+                    on_press: functionplotter.Clicked5()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '6'
+                    on_press: functionplotter.Clicked6()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '-'
+                    on_press: functionplotter.ClickedMinus()
+
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '<-'
+                    on_press: functionplotter.ClickedDel()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '1'
+                    on_press: functionplotter.Clicked1()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '2'
+                    on_press: functionplotter.Clicked2()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '3'
+                    on_press: functionplotter.Clicked3()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '+'
+                    on_press: functionplotter.ClickedPlus()
+
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: 'Clear'
+                    on_press: functionplotter.ClickedClear()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '0'
+                    on_press: functionplotter.Clicked0()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '.'
+                    on_press: functionplotter.ClickedPoint()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: '(-)'
+                    on_press: functionplotter.ClickedNeg()
+                Button:
+                    background_normal: ''
+                    background_color: root.c1, root.c2, root.c3, root.c4
+                    text: 'Enter'
+                    on_press: functionplotter.ClickedEnter()
