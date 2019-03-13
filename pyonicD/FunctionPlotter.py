@@ -58,16 +58,53 @@ class FunctionPlotter(ScatterLayout):
     scale_lock_bottom = False
     col = 1,1,1,1
     disp = 1
-    text = ""
+    text = "1"
+
 
 
     def __init__(self, **kwargs):
         super(FunctionPlotter, self).__init__(**kwargs)
-        self.equation_text = "testing"
+        self.equation_text = "x**2"
         self.size_hint = None,None
         self.size = 1008, 756.0
 
-        self.ids.destination.add_widget(Button(text = 'hahahah'))
+        ##########################################################################
+        # Actual MatPlotLib Graphing                                             #
+        ##########################################################################
+        fig, self.ax = plt.subplots()
+
+        #setting distance from bottom for plot
+        plt.subplots_adjust(bottom=0.2)
+
+        #setting initial x limits and precision
+        x = np.arange(-100.0, 100.0, 0.001)
+
+        #setting initial function and plotting
+        def callback(instance):
+            autolabel(rects1)
+            canvas.draw()
+        y = x ** 2
+        initial_text = "x ** 2"
+        self.l = plt.plot(x, y, linewidth=3)
+
+        self.ax.set_ylim(-10, 10)
+        self.ax.set_xlim(-10, 10)
+
+        canvas = fig.canvas
+
+
+        #nav1 = NavigationToolbar2Kivy(self.canvas)
+
+        ##########################################################################
+
+        self.ids.destination.add_widget(canvas)
+
+
+    def clickedSubmit(self):
+        ydata = eval(self.equation_text)
+        self.l.set_ydata(ydata)
+        self.ax.set_ylim(-10, 10)
+        plt.draw()
 
     def on_touch_up(self, touch):
         self.move_lock = False
@@ -210,6 +247,10 @@ class FunctionPlotter(ScatterLayout):
         self.equation_text += "-"
     def ClickedEnter(self):
         print(self.equation_text)
+        ydata = eval(str(self.equation_text))
+        l.set_ydata(ydata)
+        ax.set_ylim(-10, 10)
+        plt.draw()
 
     # Line 2
     ########

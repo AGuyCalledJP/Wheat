@@ -44,19 +44,25 @@
                         pos: self.pos
                         size: self.size
 
-                Equation:
-                    id: equation
-                    pos_hint: {'x': 0.1, 'y': 0.07}
-                    size_hint: 0.8,0.07
-                    multiline: 'false'
-                    text: root.equation_text
-
                 BoxLayout:
                     orientation: 'vertical'
                     pos_hint: {'x': 0,'y': 0}
                     size_hint: 1,1
 
                     id: destination
+
+                Equation:
+                    id: equation
+                    pos_hint: {'x': 0.1, 'y': 0.07}
+                    size_hint: 0.8,0.07
+                    multiline: False
+                    text: root.equation_text
+
+                Button:
+                    pos_hint: {'x': 0.9, 'y': 0.07}
+                    size_hint: 0.1,0.07
+                    text: 'Submit'
+                    on_press: root.clickedSubmit()
 
 
             Keyboard:
