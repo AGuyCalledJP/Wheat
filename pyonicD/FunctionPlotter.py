@@ -47,6 +47,16 @@ class Equation(TextInput):
 
 class FunctionPlotter(ScatterLayout):
 
+    c1 = NumericProperty()
+    c2 = NumericProperty()
+    c3 = NumericProperty()
+    c4 = NumericProperty()
+
+    c1 = 1
+    c2 = .3
+    c3 = .4
+    c4 = .85
+
     equation_text = StringProperty()
     #use this to reference the keyboard that exists in the kivy through the code
     keyboard = ObjectProperty()
@@ -58,15 +68,12 @@ class FunctionPlotter(ScatterLayout):
     scale_lock_bottom = False
     col = 1,1,1,1
     disp = 1
-    text = "1"
-    l = []
-    i = []
-    f = []
+    text = ""
 
 
     def __init__(self, **kwargs):
         super(FunctionPlotter, self).__init__(**kwargs)
-        self.equation_text = "i**2"
+        self.equation_text = "x**2"
         self.size_hint = None,None
         self.size = 1008, 756.0
 
@@ -86,26 +93,21 @@ class FunctionPlotter(ScatterLayout):
             autolabel(rects1)
             canvas.draw()
         self.f = self.i ** 2
-        initial_text = "i ** 2"
-        self.l, = plt.plot(self.i, self.f, linewidth=3)
+        initial_text = "x ** 2"
+        self.l, = plt.plot(self.i, self.f, color = 'r', linewidth=3)
 
         self.ax.set_ylim(-10, 10)
         self.ax.set_xlim(-10, 10)
 
         canvas = fig.canvas
-
-
-        #nav1 = NavigationToolbar2Kivy(self.canvas)
-
-        ##########################################################################
-
         self.ids.destination.add_widget(canvas)
 
 
+        ##########################################################################
+
+
     def clickedSubmit(self):
-        print(self.l)
-        print(self.equation_text)
-        i = self.i
+        x = self.i
         ydata = eval(self.equation_text)
         self.l.set_ydata(ydata)
         self.ax.set_ylim(-10, 10)
@@ -251,10 +253,10 @@ class FunctionPlotter(ScatterLayout):
     def ClickedNeg(self):
         self.equation_text += "-"
     def ClickedEnter(self):
-        print(self.equation_text)
-        ydata = eval(str(self.equation_text))
-        l.set_ydata(ydata)
-        ax.set_ylim(-10, 10)
+        x = self.i
+        ydata = eval(self.equation_text)
+        self.l.set_ydata(ydata)
+        self.ax.set_ylim(-10, 10)
         plt.draw()
 
     # Line 2
