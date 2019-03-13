@@ -126,7 +126,7 @@ class PyonicApp(App):
 
     def on_setting__autocompletion(self, instance, value):
         print('app autocompletion', value)
-    
+
     def build(self):
         self.settings_retrieved = False  # used to prevent setting
                                          # updates until they have

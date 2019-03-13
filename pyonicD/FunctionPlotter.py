@@ -3,6 +3,16 @@ from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 
+import matplotlib
+matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
+from matplotlib.figure import Figure
+from matplotlib.widgets import TextBox
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvas,\
+                                                NavigationToolbar2Kivy
+from matplotlib.transforms import Bbox
+import matplotlib.pyplot as plt
+import numpy as np
+
 from kivy.uix.button import Button
 from kivy.graphics import Color, Line, Rectangle
 
@@ -32,8 +42,12 @@ class Function(FloatLayout):
 class Keyboard(GridLayout):
     pass
 
+class Equation(TextInput):
+    pass
+
 class FunctionPlotter(ScatterLayout):
 
+    equation_text = StringProperty()
     #use this to reference the keyboard that exists in the kivy through the code
     keyboard = ObjectProperty()
     function = ObjectProperty()
@@ -46,11 +60,15 @@ class FunctionPlotter(ScatterLayout):
     disp = 1
     text = ""
 
+
     def __init__(self, **kwargs):
         super(FunctionPlotter, self).__init__(**kwargs)
+        self.equation_text = "testing"
         self.size_hint = None,None
         self.size = 1008, 756.0
-    
+
+        self.ids.destination.add_widget(Button(text = 'hahahah'))
+
     def on_touch_up(self, touch):
         self.move_lock = False
         self.scale_lock_left = False
@@ -183,78 +201,77 @@ class FunctionPlotter(ScatterLayout):
             self.disp = 1
 
     def ClickedClear(self):
-        self.text = ""
+        self.equation_text = ""
     def Clicked0(self):
-        self.text += "0"
+        self.equation_text += "0"
     def ClickedPoint(self):
-        self.text += "."
+        self.equation_text += "."
     def ClickedNeg(self):
-        self.text += "-"
+        self.equation_text += "-"
     def ClickedEnter(self):
-        print(self.text)
+        print(self.equation_text)
 
     # Line 2
     ########
     def ClickedDel(self):
-        self.text = self.text[:-1]
+        self.equation_text = self.equation_text[:-1]
     def Clicked1(self):
-        self.text += "1"
+        self.equation_text += "1"
     def Clicked2(self):
-        self.text += "2"
+        self.equation_text += "2"
     def Clicked3(self):
-        self.text += "3"
+        self.equation_text += "3"
     def ClickedPlus(self):
-        self.text += " + "
+        self.equation_text += " + "
 
     # Line 3
     ########
     def Clickedx(self):
-        self.text += "x"
+        self.equation_text += "x"
     def Clicked4(self):
-        self.text += "4"
+        self.equation_text += "4"
     def Clicked5(self):
-        self.text += "5"
+        self.equation_text += "5"
     def Clicked6(self):
-        self.text += "6"
+        self.equation_text += "6"
     def ClickedMinus(self):
-        self.text += " - "
+        self.equation_text += " - "
 
     # Line 4
     ########
     def ClickedSquared(self):
-        self.text += "**2"
+        self.equation_text += "**2"
     def Clicked7(self):
-        self.text += "7"
+        self.equation_text += "7"
     def Clicked8(self):
-        self.text += "8"
+        self.equation_text += "8"
     def Clicked9(self):
-        self.text += "9"
+        self.equation_text += "9"
     def ClickedTimes(self):
-        self.text += "*"
+        self.equation_text += "*"
 
     # Line 5
     ########
     def ClickedExp(self):
-        self.text += "**"
+        self.equation_text += "**"
     def ClickedInv(self):
-        self.text += "**(-1)"
+        self.equation_text += "**(-1)"
     def ClickedLeftP(self):
-        self.text += "("
+        self.equation_text += "("
     def ClickedRightP(self):
-        self.text += ")"
+        self.equation_text += ")"
     def ClickedDiv(self):
-        self.text += "/"
+        self.equation_text += "/"
 
     # Line 6
     ########
     def ClickedSqrt(self):
-        self.text += "**(-1/2)"
+        self.equation_text += "**(-1/2)"
     def ClickedSin(self):
-        self.text += "sin"
+        self.equation_text += "sin"
     def ClickedCos(self):
-        self.text += "cos"
+        self.equation_text += "cos"
     def ClickedTan(self):
-        self.text += "tan"
+        self.equation_text += "tan"
     def ClickedPi(self):
-        self.text += "pi"
-
+        self.equation_text += "pi"
