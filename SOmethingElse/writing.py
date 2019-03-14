@@ -35,7 +35,9 @@ class PaintWidget(Widget):
     def on_touch_down(self, touch):
         with self.canvas:
             Color(0,0,0)
-            touch.ud['line'] = Line(points=(touch.x, touch.y), width = 2.5)
+            lineWidth = 2.5;
+            Ellipse(pos=(touch.x - lineWidth, touch.y - lineWidth), size=(2* lineWidth,2 * lineWidth))
+            touch.ud['line'] = Line(points=(touch.x, touch.y), width = lineWidth)
 
     def on_touch_move(self, touch):
         touch.ud['line'].points += [touch.x,touch.y]
@@ -103,6 +105,9 @@ class PaintApp(App):
     def build(self):
         self.sm = Manager()
         return self.sm
+
+    def clear_canvas(self):
+        self.sm.PaintScreen.PaintWidget.canvas.clear();
 
 if __name__ == '__main__':
     PaintApp().run()
