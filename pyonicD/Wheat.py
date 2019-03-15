@@ -93,3 +93,59 @@ class WheatScreen(Screen):
         else:
             self.draw.disabled = False
             self.d = 1
+
+#-------------------------------- Identical Copy of Above---------------
+
+class WheatScreen2(Screen):
+
+    count = 1
+    layouts = []
+    d = 1
+    draw = ObjectProperty()
+
+    def remove(self):
+        if self.count > 1:
+            self.count -= 1
+        for i in self.layouts:
+            main = i
+            contained = i.children[0].children[0].children
+            for i in contained:
+                if i.id == "check":
+                    if i.active:
+                        self.ids.widget_list.remove_widget(main)
+
+        if self.layouts!=[]:
+            print("nothing here")
+
+    def add(self):
+        print(self.size)
+        if self.layouts==[]:
+            self.ids.widget_list.clear_widgets()
+
+        if len(self.ids.widget_list.children)<4:
+            layout = FloatLayout(size_hint=(None,None), size = self.size)
+            print(layout.size)
+            layout.add_widget(InterpreterGui())
+            self.count += 1
+            self.ids.widget_list.add_widget(layout)
+            self.layouts.append(layout)
+
+    def addFunc(self):
+
+        if self.layouts==[]:
+            self.ids.widget_list.clear_widgets()
+
+        if len(self.ids.widget_list.children)<4:
+            layout = FloatLayout(size_hint=(None,None))
+            layout.add_widget(FunctionPlotter());
+            self.count += 1
+            self.ids.widget_list.add_widget(layout)
+            self.layouts.append(layout)
+
+    def drawToggle(self):
+        if self.d == 1:
+            self.draw.disabled = True
+            self.d = 0
+        else:
+            self.draw.disabled = False
+            self.d = 1
