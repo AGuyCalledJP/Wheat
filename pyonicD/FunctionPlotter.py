@@ -51,11 +51,14 @@ class FunctionPlotter(ScatterLayout):
     c2 = NumericProperty()
     c3 = NumericProperty()
     c4 = NumericProperty()
+    fontSizer = NumericProperty()
 
     c1 = 1
     c2 = .3
     c3 = .4
     c4 = .85
+
+    fontSizer = 24
 
     equation_text = StringProperty()
     #use this to reference the keyboard that exists in the kivy through the code
