@@ -10,7 +10,7 @@
 
     GridLayout:
 
-        cols: 5
+        cols: 6
         padding: 20
         spacing: 20
         size_hint: 1, .1
@@ -32,10 +32,10 @@
             text: 'Function'
             on_release: root.addFunc()
 
-        # Button:
-        #     root: Wheat
-        #     text: 'Remove Widget'
-        #     on_release: root.remove()
+        Button:
+            root: Wheat
+            text: 'Calculator'
+            on_release: root.addCalc()
 
         Button:
             root: Wheat

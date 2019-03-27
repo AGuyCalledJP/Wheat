@@ -28,7 +28,7 @@ Builder.load_file('Calculator.kv')
 class Keyboard(GridLayout):
     pass
 
-class Calculator(FloatLayout):
+class Calculator(ScatterLayout):
 
     c1 = NumericProperty()
     c2 = NumericProperty()
@@ -73,7 +73,7 @@ class Calculator(FloatLayout):
             y = round(y, 0)
             y = y * 10
             self.pos = x, y
-            return super(FunctionPlotter, self).on_touch_up(touch)
+            return super(Calculator, self).on_touch_up(touch)
 
     def transform_with_touch(self, touch):
         changed = False
