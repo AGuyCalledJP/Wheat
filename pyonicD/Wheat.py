@@ -50,21 +50,25 @@ class WheatScreen(Screen):
     draw = ObjectProperty()
 
     def remove(self):
-        if self.count > 1:
-            self.count -= 1
+        # if self.count > 1:
+        #     self.count -= 1
         for i in self.layouts:
             main = i
-            contained = i.children[0].children[0].children
-            for i in contained:
-                if i.id == "check":
-                    if i.active:
-                        self.ids.widget_list.remove_widget(main)
+            contained = i.children[0].ids.check
+            if contained.active:
+                self.ids.widget_list.remove_widget(main)
+            # for i in contained:
+            #     print(i)
+            #     if i.id == "header":
+            #         print("we close")
+            #     if i.id == "check":
+            #         if i.active:
+            #             self.ids.widget_list.remove_widget(main)
 
         if self.layouts!=[]:
             print("nothing here")
 
     def add(self):
-        print(self.size)
         if self.layouts==[]:
             self.ids.widget_list.clear_widgets()
 
@@ -77,7 +81,6 @@ class WheatScreen(Screen):
             self.layouts.append(layout)
 
     def addFunc(self):
-
         if self.layouts==[]:
             self.ids.widget_list.clear_widgets()
 

@@ -5,6 +5,7 @@
     code_input: input
     #OutputWindow
     FloatLayout:
+        id: top_box
         FloatLayout:
             id: out
             pos_hint: {'x': 0,'y': .55}
@@ -27,9 +28,20 @@
                 size_hint: .3,1
                 text: 'Move'
                 on_press: interpreter_gui.flip()
+            CheckBox:
+                id: check
+                pos_hint: {'x': 0,'y': 0}
+                size_hint: .3,1
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1.
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
 
         #Left Bar
         FloatLayout:
+            id: left
             pos_hint: {'x':0, 'y':0}
             size_hint: .1,.45
             canvas.before:
@@ -64,6 +76,7 @@
                         size: self.size
         #Input
         FloatLayout:
+            id: in
             pos_hint: {'x':.1, 'y':0}
             size_hint: .8,.45
             canvas.before:
@@ -79,6 +92,7 @@
 
         #Right Bar
         FloatLayout:
+            id: right
             pos_hint: {'x':.9, 'y':0}
             size_hint: .1,.45
             canvas.before:

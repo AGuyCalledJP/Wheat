@@ -375,10 +375,6 @@ class InterpreterGui(ScatterLayout):
         self.interpreter.bind(on_request_input=self.on_request_input)
         self.size_hint = None,None
         self.size = 1008, 756.0
-        # self.interpreter = DummyInterpreter()
-
-        # Clock.schedule_interval(self._dequeue_output_label, 0.05)
-        # Clock.schedule_interval(self._clear_output_label_queue, 1)
 
         Clock.schedule_once(self.post_init_check, 0)
 
