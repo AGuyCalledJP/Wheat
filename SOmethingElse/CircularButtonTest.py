@@ -24,10 +24,6 @@ class PointButton(ButtonBehavior, Image):
         self.size = Image(source=self.source).texture.size
         self.selected = False
 
-
-
-
-
     def on_press(self):
         #TODO: case checking what mode we're in before "selecting" point
         if(self.selected == False):
@@ -36,8 +32,6 @@ class PointButton(ButtonBehavior, Image):
         else:
             self.source = 'visual_assets/fig_point.png'
             self.selected = False
-
-
 
 
 class PointLayout(ScatterLayout): #container for individual point, controls movement

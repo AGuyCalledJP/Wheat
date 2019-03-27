@@ -37,6 +37,7 @@ from pyonicD.interpreter import InterpreterGui
 from pyonicD.FunctionPlotter import FunctionPlotter
 from pyonicD.draw import Draw
 from pyonicD.Calculator import Calculator
+from pyonicD.Geometry import Geometry
 
 #Load kv file
 Builder.load_file('Wheat.kv')
@@ -94,6 +95,17 @@ class WheatScreen(Screen):
         if len(self.ids.widget_list.children)<4:
             layout = FloatLayout(size_hint=(None,None))
             layout.add_widget(Calculator());
+            self.count += 1
+            self.ids.widget_list.add_widget(layout)
+            self.layouts.append(layout)
+    
+    def addGeo(self):
+        if self.layouts==[]:
+            self.ids.widget_list.clear_widgets()
+
+        if len(self.ids.widget_list.children)<4:
+            layout = FloatLayout(size_hint=(None,None))
+            layout.add_widget(Geometry());
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)

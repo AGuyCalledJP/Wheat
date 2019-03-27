@@ -231,10 +231,6 @@ class InterpreterInput(InputWidget):
 
         App.get_running_app().bind(on_pause=self.on_pause)
 
-    #     self.text = '''for i in range(5):
-    # print(i)
-    # time.sleep(1)'''
-
     def on_request_completions(self):
         pass
 

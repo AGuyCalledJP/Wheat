@@ -10,7 +10,7 @@
 
     GridLayout:
 
-        cols: 6
+        cols: 7
         padding: 20
         spacing: 20
         size_hint: 1, .1
@@ -36,6 +36,11 @@
             root: Wheat
             text: 'Calculator'
             on_release: root.addCalc()
+            
+        Button:
+            root: Wheat
+            text: 'Geometry'
+            on_release: root.addGeo()
 
         Button:
             root: Wheat
