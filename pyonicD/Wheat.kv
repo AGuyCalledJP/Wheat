@@ -22,20 +22,6 @@
             on_release:
                 root.manager.transition.direction = 'right'
                 root.manager.current = "Wheat1"
-        # Button:
-        #     root: Wheat
-        #     text: 'Python'
-        #     on_release: root.add()
-
-        # Button:
-        #     root: Wheat
-        #     text: 'Function'
-        #     on_release: root.addFunc()
-
-        # Button:
-        #     root: Wheat
-        #     text: 'Calculator'
-        #     on_release: root.addCalc()
 
         WheatBlocksDropDownMenuButton:
             text: 'E'
@@ -46,21 +32,11 @@
             font_name: 'assets/fontello.ttf'
             font_size: sp(34)
             color: 1, 1, 1, 1
-            
-        # Button:
-        #     root: Wheat
-        #     text: 'Geometry'
-        #     on_release:
 
         Button:
             root: Wheat
             text: 'Draw'
             on_release: root.drawToggle()
-
-        # Button:
-        #     root: Wheat
-        #     text: 'Remove'
-        #     on_release: root.remove()
 
         Button:
             root: Wheat
@@ -75,9 +51,7 @@
         size_hint: 1, .9
         pos_hint: {'x': 0, 'y': 0}
         orientation: 'vertical'
-
     FloatLayout:
-
         id: widget_list
 #-------------------------------- Identical Copy of Above---------------
 <WheatScreen2>:

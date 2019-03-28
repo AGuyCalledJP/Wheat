@@ -352,6 +352,7 @@ class InterpreterGui(ScatterLayout):
     scale_lock_top = False
     scale_lock_bottom = False
     disp = 1
+    outDisp = 3
 
     def __init__(self, *args, **kwargs):
         super(InterpreterGui, self).__init__(*args, **kwargs)
@@ -409,9 +410,15 @@ class InterpreterGui(ScatterLayout):
             self.halting = False
 
     def on_stdout(self, interpreter, text):
+        kids = self.output_window.children
+        if len(kids) > self.outDisp:
+            self.output_window.remove_widget(kids[-2])
         self.add_output_label(text, 'stdout')
 
     def on_stderr(self, interpreter, text):
+        kids = self.output_window.children
+        if len(kids) > self.outDisp:
+            self.output_window.remove_widget(kids[-2])
         self.add_output_label(text, 'stderr')
 
     def on_notification(self, interpreter, text):
@@ -498,28 +505,41 @@ class InterpreterGui(ScatterLayout):
 
     def add_user_message_label(self, text, **kwargs):
         l = UserMessageLabel(text=text, **kwargs)
+        kids = self.output_window.children
+        if len(kids) > self.outDisp:
+            self.output_window.remove_widget(kids[-2])
         self.output_window.add_widget(l)
         #self.scrollview.scroll_to(l)
 
     def add_doc_label(self, text, **kwargs):
         l = DocLabel(text=text, **kwargs)
+        kids = self.output_window.children
+        if len(kids) > self.outDisp:
+            self.output_window.remove_widget(kids[-2])
         self.output_window.add_widget(l)
         #self.scrollview.scroll_to(l)
 
     def add_input_label(self, text, index):
+        kids = self.output_window.children
+        if len(kids) > self.outDisp:
+            self.output_window.remove_widget(kids[-2])
         l = InputLabel(text=text, index=index, root=self)
         self.output_window.add_widget(l)
         #self.scrollview.scroll_to(l)
 
     def add_output_label(self, text, stream='stdout'):
+        kids = self.output_window.children
+        if len(kids) > self.outDisp:
+            self.output_window.remove_widget(kids[-2])
         self._output_label_queue.append((text, stream))
         # self._dequeue_output_label(0)
 
     def _add_output_label(self, text, stream='stdout', scroll_to=True):
         l = OutputLabel(text=text, stream=stream)
+        kids = self.output_window.children
+        if len(kids) > self.outDisp:
+            self.output_window.remove_widget(kids[-2])
         self.output_window.add_widget(l)
-        # if scroll_to:
-        #     self.scrollview.scroll_to(l)
         return l
 
     def _dequeue_output_label(self, dt):
