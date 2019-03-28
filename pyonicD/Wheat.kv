@@ -10,7 +10,7 @@
 
     GridLayout:
 
-        cols: 8
+        cols: 4
         padding: 20
         spacing: 20
         size_hint: 1, .1
@@ -22,35 +22,45 @@
             on_release:
                 root.manager.transition.direction = 'right'
                 root.manager.current = "Wheat1"
-        Button:
-            root: Wheat
-            text: 'Python'
-            on_release: root.add()
+        # Button:
+        #     root: Wheat
+        #     text: 'Python'
+        #     on_release: root.add()
 
-        Button:
-            root: Wheat
-            text: 'Function'
-            on_release: root.addFunc()
+        # Button:
+        #     root: Wheat
+        #     text: 'Function'
+        #     on_release: root.addFunc()
 
-        Button:
+        # Button:
+        #     root: Wheat
+        #     text: 'Calculator'
+        #     on_release: root.addCalc()
+
+        WheatBlocksDropDownMenuButton:
+            text: 'E'
+            id: widget_menu
             root: Wheat
-            text: 'Calculator'
-            on_release: root.addCalc()
+            background_normal: 0.3, 0.3, 0.3, 1
+            background_down: 0.1, 0.1, 0.1, 1
+            font_name: 'assets/fontello.ttf'
+            font_size: sp(34)
+            color: 1, 1, 1, 1
             
-        Button:
-            root: Wheat
-            text: 'Geometry'
-            on_release: root.addGeo()
+        # Button:
+        #     root: Wheat
+        #     text: 'Geometry'
+        #     on_release:
 
         Button:
             root: Wheat
             text: 'Draw'
             on_release: root.drawToggle()
 
-        Button:
-            root: Wheat
-            text: 'Remove'
-            on_release: root.remove()
+        # Button:
+        #     root: Wheat
+        #     text: 'Remove'
+        #     on_release: root.remove()
 
         Button:
             root: Wheat
@@ -131,3 +141,61 @@
     FloatLayout:
 
         id: widget_list
+
+<WheatBlocksDropDownMenu>:
+    id: drop
+    DropDownButton:
+        text: 'Python'
+        size_hint_y: None
+        height: dp(40)
+        text_size: self.size
+        padding_x: dp(10)
+        valign: 'middle'
+        on_release: root.parent_obj.root.add()
+    Widget:
+        size_hint_y: None
+        height: dp(2)
+    DropDownButton:
+        text: 'Function'
+        size_hint_y: None
+        height: dp(40)
+        text_size: self.size
+        padding_x: dp(10)
+        valign: 'middle'
+        on_release: root.parent_obj.root.addFunc()
+    Widget:
+        size_hint_y: None
+        height: dp(2)
+    DropDownButton:
+        text: 'Calculator'
+        size_hint_y: None
+        height: dp(40)
+        text_size: self.size
+        padding_x: dp(10)
+        valign: 'middle'
+        on_release: root.parent_obj.root.addCalc()
+    Widget:
+        size_hint_y: None
+        height: dp(2)
+    DropDownButton:
+        text: 'Geometry'
+        size_hint_y: None
+        height: dp(40)
+        text_size: self.size
+        padding_x: dp(10)
+        valign: 'middle'
+        on_release: root.parent_obj.root.addGeo()
+    Widget:
+        size_hint_y: None
+        height: dp(2)
+    DropDownButton:
+        text: 'Remove'
+        size_hint_y: None
+        height: dp(40)
+        text_size: self.size
+        padding_x: dp(10)
+        valign: 'middle'
+        on_release: root.parent_obj.root.remove()
+    Widget:
+        size_hint_y: None
+        height: dp(2)

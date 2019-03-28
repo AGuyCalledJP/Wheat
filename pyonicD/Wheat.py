@@ -26,7 +26,7 @@ from kivy.clock import Clock
 from kivy.uix.modalview import ModalView
 from time import time
 import traceback
-
+import menu
 
 import sys
 import os
@@ -176,3 +176,9 @@ class WheatScreen2(Screen):
         else:
             self.draw.disabled = False
             self.d = 1
+
+class WheatBlocksDropDownMenu(menu.MenuDropDown):
+    pass
+
+class WheatBlocksDropDownMenuButton(menu.MenuButton):
+    dropdown_cls = ObjectProperty(WheatBlocksDropDownMenu)
