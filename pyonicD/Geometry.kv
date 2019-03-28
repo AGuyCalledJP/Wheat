@@ -1,8 +1,44 @@
 <Geometry>:
-    id: Geometry
+    id: geometry
     canvas.before:
         Color:
             rgba: 1,1,1,1.
         Rectangle:
             pos: self.pos
             size: self.size
+
+    FloatLayout:
+        id: header
+        pos_hint: {'x' : 0, 'y' : .9}
+        size_hint: 1, 0.1
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1.
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        # Button:
+        #     id: move
+        #     pos_hint: {'x': .7,'y': 0}
+        #     size_hint: .3,1
+        #     text: 'Move'
+        #     on_press: functionplotter.flip()
+        CheckBox:
+            id: check
+            pos_hint: {'x': 0,'y': 0}
+            size_hint: .3,1
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1.
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+    FloatLayout:
+        id: body
+        pos_hint: {'x' : 0, 'y' : 0}
+        size_hint: 1, 0.9
+        PointLayout:
+
+<PointLayout>:
+    id: point

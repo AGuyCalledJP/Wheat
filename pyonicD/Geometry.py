@@ -30,8 +30,8 @@ class Geometry(ScatterLayout):
         super(Geometry, self).__init__(*args, **kwargs)
         self.size_hint = None,None
         self.size = 1008, 756.0
-        internals = PointLayout()
-        self.add_widget(internals)
+        # internals = PointLayout()
+        # self.add_widget(internals)
 
     def transform_with_touch(self, touch):
         changed = False
