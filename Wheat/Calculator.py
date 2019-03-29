@@ -199,11 +199,8 @@ class Calculator(ScatterLayout):
     def ClickedNeg(self):
         self.equation_text += "-"
     def ClickedEnter(self):
-        x = self.i
-        ydata = eval(self.equation_text)
-        self.l.set_ydata(ydata)
-        self.ax.set_ylim(-10, 10)
-        plt.draw()
+        ans = eval(self.equation_text)
+        self.equation_text = str(ans)
 
     # Line 2
     ########

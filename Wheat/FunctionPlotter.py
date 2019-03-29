@@ -77,7 +77,7 @@ class FunctionPlotter(ScatterLayout):
     def __init__(self, **kwargs):
         super(FunctionPlotter, self).__init__(**kwargs)
         self.equation_text = "x**2"
-        self.size_hint = .5,.5
+        self.size_hint = .8,.6
 
         ##########################################################################
         # Actual MatPlotLib Graphing                                             #

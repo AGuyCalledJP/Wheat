@@ -59,18 +59,21 @@
 
                 Equation:
                     id: equation
-                    pos_hint: {'x': 0.1, 'y': 0.09}
-                    size_hint: 0.8,0.05
+                    pos_hint: {'x': 0.1, 'y': 0.02}
+                    size_hint: 0.8,0.08
                     multiline: False
                     text: root.equation_text
 
 
             Keyboard:
                 canvas.before:
+                    Color:
+                        rgba: 0,0,0,1
                     Rectangle:
                         pos: self.pos
                         size: self.size
                 id: key
+                spacing: 1
                 cols: 5
                 Button:
                     background_normal: ''
