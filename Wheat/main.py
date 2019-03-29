@@ -19,7 +19,7 @@ from os.path import abspath, join, dirname
 file_dir = os.path.dirname("Wheat")
 sys.path.append(file_dir)
 
-from Wheat.wheat import WheatScreen as Wheat
+from Wheat.home import WheatScreen as Wheat
 from kivy.lang import Builder
 
 Builder.load_file('main.kv')

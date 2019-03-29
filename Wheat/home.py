@@ -40,7 +40,7 @@ from Wheat.Calculator import Calculator
 from Wheat.Geometry import Geometry
 
 #Load kv file
-# Builder.load_file('wheat.kv')
+Builder.load_file('home.kv')
 
 class WheatScreen(Screen):
 
