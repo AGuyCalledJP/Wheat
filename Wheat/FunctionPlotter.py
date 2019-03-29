@@ -77,8 +77,7 @@ class FunctionPlotter(ScatterLayout):
     def __init__(self, **kwargs):
         super(FunctionPlotter, self).__init__(**kwargs)
         self.equation_text = "x**2"
-        self.size_hint = None,None
-        self.size = 1008, 756.0
+        self.size_hint = .5,.5
 
         ##########################################################################
         # Actual MatPlotLib Graphing                                             #
@@ -117,6 +116,7 @@ class FunctionPlotter(ScatterLayout):
         plt.draw()
 
     def on_touch_up(self, touch):
+        self.size_hint = None,None
         self.move_lock = False
         self.scale_lock_left = False
         self.scale_lock_right = False
@@ -134,6 +134,7 @@ class FunctionPlotter(ScatterLayout):
             return super(FunctionPlotter, self).on_touch_up(touch)
 
     def transform_with_touch(self, touch):
+        self.size_hint = None,None
         changed = False
         x = self.bbox[0][0]
         y = self.bbox[0][1]
@@ -194,6 +195,7 @@ class FunctionPlotter(ScatterLayout):
         return changed
 
     def on_touch_down(self, touch):
+        self.size_hint = None,None
         x, y = touch.x, touch.y
         self.prev_x = touch.x
         self.prev_y = touch.y

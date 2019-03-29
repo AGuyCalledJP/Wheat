@@ -85,7 +85,7 @@ class WheatScreen(Screen):
             self.ids.widget_list.clear_widgets()
 
         if len(self.ids.widget_list.children)<4:
-            layout = FloatLayout(size_hint=(None,None))
+            layout =  FloatLayout(size_hint=(None,None), size = self.size)
             layout.add_widget(FunctionPlotter());
             self.count += 1
             self.ids.widget_list.add_widget(layout)
@@ -96,7 +96,7 @@ class WheatScreen(Screen):
             self.ids.widget_list.clear_widgets()
 
         if len(self.ids.widget_list.children)<4:
-            layout = FloatLayout(size_hint=(None,None))
+            layout =  FloatLayout(size_hint=(None,None), size = self.size)
             layout.add_widget(Calculator());
             self.count += 1
             self.ids.widget_list.add_widget(layout)
@@ -107,7 +107,7 @@ class WheatScreen(Screen):
             self.ids.widget_list.clear_widgets()
 
         if len(self.ids.widget_list.children)<4:
-            layout = FloatLayout(size_hint=(None,None))
+            layout =  FloatLayout(size_hint=(None,None), size = self.size)
             layout.add_widget(Geometry());
             self.count += 1
             self.ids.widget_list.add_widget(layout)

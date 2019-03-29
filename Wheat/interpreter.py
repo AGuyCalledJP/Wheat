@@ -374,8 +374,8 @@ class InterpreterGui(ScatterLayout):
         self.interpreter.bind(on_user_message=self.on_user_message)
         self.interpreter.bind(on_missing_labels=self.on_missing_labels)
         self.interpreter.bind(on_request_input=self.on_request_input)
-        self.size_hint = None,None
-        self.size = 1008, 756.0
+        self.size_hint = .5,.5
+        # self.size = 1008, 756.0
 
         Clock.schedule_once(self.post_init_check, 0)
 
@@ -710,6 +710,7 @@ class InterpreterGui(ScatterLayout):
         self.scale_lock_right = False
         self.scale_lock_top = False
         self.scale_lock_bottom = False
+        self.size_hint = None,None
         if touch.grab_current is self:
             touch.ungrab(self)
             x = self.pos[0] / 10
@@ -722,6 +723,7 @@ class InterpreterGui(ScatterLayout):
             return super(InterpreterGui, self).on_touch_up(touch)
 
     def transform_with_touch(self, touch):
+        self.size_hint = None,None
         changed = False
         x = self.bbox[0][0]
         y = self.bbox[0][1]
@@ -784,6 +786,7 @@ class InterpreterGui(ScatterLayout):
         return changed
 
     def on_touch_down(self, touch):
+        self.size_hint = None,None
         x, y = touch.x, touch.y
         self.prev_x = touch.x
         self.prev_y = touch.y

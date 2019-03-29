@@ -54,11 +54,11 @@ class Calculator(ScatterLayout):
 
     def __init__(self, **kwargs):
         super(Calculator, self).__init__(**kwargs)
-        self.size_hint = None,None
-        self.size = 1008, 756.0
+        self.size_hint = .5,.5
 
 
     def on_touch_up(self, touch):
+        self.size_hint = None,None
         self.move_lock = False
         self.scale_lock_left = False
         self.scale_lock_right = False
@@ -76,6 +76,7 @@ class Calculator(ScatterLayout):
             return super(Calculator, self).on_touch_up(touch)
 
     def transform_with_touch(self, touch):
+        self.size_hint = None,None
         changed = False
         x = self.bbox[0][0]
         y = self.bbox[0][1]
@@ -136,6 +137,7 @@ class Calculator(ScatterLayout):
         return changed
 
     def on_touch_down(self, touch):
+        self.size_hint = None,None
         x, y = touch.x, touch.y
         self.prev_x = touch.x
         self.prev_y = touch.y

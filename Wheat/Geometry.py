@@ -28,12 +28,32 @@ class Geometry(ScatterLayout):
 
     def __init__(self, *args, **kwargs):
         super(Geometry, self).__init__(*args, **kwargs)
-        self.size_hint = None,None
-        self.size = 1008, 756.0
+        self.size_hint = .5,.5
         # internals = PointLayout()
         # self.add_widget(internals)
 
+    def on_touch_up(self, touch):
+        self.size_hint = None, None
+        self.move_lock = False
+        self.scale_lock_left = False
+        self.scale_lock_right = False
+        self.scale_lock_top = False
+        self.scale_lock_bottom = False
+        self.size_hint = None,None
+        if touch.grab_current is self:
+            touch.ungrab(self)
+            x = self.pos[0] / 10
+            x = round(x, 0)
+            x = x * 10
+            y = self.pos[1] / 10
+            y = round(y, 0)
+            y = y * 10
+            self.pos = x, y
+            return super(Geometry, self).on_touch_up(touch)
+
+
     def transform_with_touch(self, touch):
+        self.size_hint = None,None
         changed = False
         x = self.bbox[0][0]
         y = self.bbox[0][1]
@@ -96,6 +116,7 @@ class Geometry(ScatterLayout):
             return changed
 
     def on_touch_down(self, touch):
+        self.size_hint = None,None
         x, y = touch.x, touch.y
         self.prev_x = touch.x
         self.prev_y = touch.y
@@ -143,7 +164,7 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
     def draw_unsel(self):
         with self.canvas:
             Color(1,1,1)
-            Ellipse(pos = self.pos, size=(30,30))
+            # Ellipse(pos = self.pos, size=(30,30))
 
 
     def __init__(self, **kwargs):
