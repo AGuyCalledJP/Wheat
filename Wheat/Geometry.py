@@ -138,6 +138,24 @@ class Geometry(ScatterLayout):
         touch.pop()
 
 
+from kivy.app import App
+from kivy.uix.image import Image
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.widget import Widget
+from kivy.graphics import Color
+from kivy.graphics import Rectangle
+from kivy.graphics import Ellipse
+
+from kivy.uix.scatter import Scatter
+from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
+from kivy.app import App
+from kivy.uix.scatterlayout import ScatterLayout
+from kivy.graphics.transformation import Matrix
+
+
+POINT_SIZE = .01
+
 class PointButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
         super(PointButton, self).__init__(**kwargs)
@@ -164,7 +182,7 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
     def draw_unsel(self):
         with self.canvas:
             Color(1,1,1)
-            # Ellipse(pos = self.pos, size=(30,30))
+            Ellipse(pos = self.pos, size=(30,30))
 
 
     def __init__(self, **kwargs):
@@ -173,20 +191,17 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
         self.source = 'visual_assets/fig_point.png'
         self.size = Image(source=self.source).texture.size
         self.radius = (Image(source=self.source).texture.size[0])/2
-        # self.size_hint_x = .1
-        # self.size_hint_y = .1
-        with self.canvas:
-            Color(.5,1,0)
-            Ellipse(pos=self.pos, size=(self.radius*2,self.radius*2))
+        self.size_hint_x = None
+        self.size_hint_y = None
+        self.point_x = self.pos[0] + self.radius # visual center of point (center of the image)
+        self.point_y = self.pos[1] + self.radius # visual center of point (center of the image)
 
-        print(self.size)
-        print(self.pos)
 
-    # def collide_point(self, x, y):
-    #
-    #     if((x - self.x)**2 + (y - self.y)**2 < self.radius**2):
-    #         return True
-    #     return False
+    def collide_point(self, x, y):
+
+        if((x - self.point_x)**2 + (y - self.point_y)**2 < self.radius**2):
+            return True
+        return False
 
 
     def on_touch_down(self, touch):
@@ -201,10 +216,8 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos):
             if touch.button == 'left':
-
-                # process after movement or something?
+                # move complete TODO: find some way to have figure update for this
                 pass
-        print(self.pos)
         return super(PointLayout, self).on_touch_up(touch)
 
 
@@ -213,5 +226,7 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
             if touch.button == 'left':
                 self.x = self.x + touch.pos[0] - self.last_touch[0] # Add the x distance between this mouse event and the last
                 self.y = self.y + touch.pos[1] - self.last_touch[1] # Add the y distance between this mouse event and the last
+                self.point_x = self.pos[0] + self.radius
+                self.point_y = self.pos[1] + self.radius
                 self.last_touch = touch.pos # Update the last position of the mouse
         return super(PointLayout, self).on_touch_move(touch)
