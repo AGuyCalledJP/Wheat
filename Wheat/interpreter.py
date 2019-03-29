@@ -28,7 +28,7 @@ from kivy.clock import Clock
 import sys
 import os
 from os.path import abspath, join, dirname
-file_dir = os.path.dirname("pyonicD")
+file_dir = os.path.dirname("Wheat")
 sys.path.append(file_dir)
 
 from time import time
@@ -39,8 +39,8 @@ if platform == 'android':
     import pydoc_data
     from jediinterface import get_completions, get_defs
 else:
-    from pyonicD.interpreterwrapper import InterpreterWrapper
-    from pyonicD.jediinterface import get_completions, get_defs
+    from Wheat.interpreterwrapper import InterpreterWrapper
+    from Wheat.jediinterface import get_completions, get_defs
 
 import menu
 

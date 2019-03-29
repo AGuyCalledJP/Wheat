@@ -16,10 +16,10 @@ import os
 from functools import partial
 
 from os.path import abspath, join, dirname
-file_dir = os.path.dirname("pyonicD")
+file_dir = os.path.dirname("Wheat")
 sys.path.append(file_dir)
 
-from pyonicD.Wheat import WheatScreen as Wheat
+from Wheat.wheat import WheatScreen as Wheat
 from kivy.lang import Builder
 
 Builder.load_file('main.kv')
@@ -35,13 +35,13 @@ if platform == 'android':
     from filechooser import FileChooserScreen
     # import pipinterface
 else:
-    import pyonicD.widgets  # noqa
-    import pyonicD.menu  # noqa
-    import pyonicD.interpreter  # noqa
-    import pyonicD.settings  # noqa
-    #import pyonicD.editor  # noqa
-    import pyonicD.utils  # noqa
-    from pyonicD.filechooser import FileChooserScreen # noqa
+    import Wheat.widgets  # noqa
+    import Wheat.menu  # noqa
+    import Wheat.interpreter  # noqa
+    import Wheat.settings  # noqa
+    #import Wheat.editor  # noqa
+    import Wheat.utils  # noqa
+    from Wheat.filechooser import FileChooserScreen # noqa
     # from pyonic import pipinterface  # noqa
 
 openable_screen_index = {'filechooser': FileChooserScreen}

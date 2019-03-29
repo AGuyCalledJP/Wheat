@@ -16,7 +16,7 @@ if sys.version_info.major >= 3:
     if platform == 'android':
         import osc
     else:
-        from pyonicD import osc
+        from Wheat import osc
 
     package_name = 'net.inclem.pyonicinterpreter3'
 else:

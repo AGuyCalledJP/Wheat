@@ -4,7 +4,7 @@ from time import sleep
 import sys
 import os
 from os.path import abspath, join, dirname
-file_dir = os.path.dirname("pyonicD")
+file_dir = os.path.dirname("Wheat")
 sys.path.append(file_dir)
 
 __input = None
@@ -75,8 +75,8 @@ if sys.version_info.major >= 3:
         import osc
         import utils
     else:
-        from pyonicD import osc
-        from pyonicD import utils
+        from Wheat import osc
+        from Wheat import utils
 else:
     unicode_type = unicode
     from kivy.lib import osc

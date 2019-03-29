@@ -31,13 +31,13 @@ import menu
 import sys
 import os
 from os.path import abspath, join, dirname
-file_dir = os.path.dirname("pyonicD")
+file_dir = os.path.dirname("Wheat")
 sys.path.append(file_dir)
-from pyonicD.interpreter import InterpreterGui
-from pyonicD.FunctionPlotter import FunctionPlotter
-from pyonicD.draw import Draw
-from pyonicD.Calculator import Calculator
-from pyonicD.Geometry import Geometry
+from Wheat.interpreter import InterpreterGui
+from Wheat.FunctionPlotter import FunctionPlotter
+from Wheat.draw import Draw
+from Wheat.Calculator import Calculator
+from Wheat.Geometry import Geometry
 
 #Load kv file
 Builder.load_file('Wheat.kv')
