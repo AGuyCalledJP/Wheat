@@ -51,6 +51,7 @@
         size_hint: 1, .9
         pos_hint: {'x': 0, 'y': 0}
         orientation: 'vertical'
+
     FloatLayout:
         id: widget_list
 #-------------------------------- Identical Copy of Above---------------
@@ -78,20 +79,20 @@
             on_release:
                 root.manager.transition.direction = 'right'
                 root.manager.current = "Wheat1"
-        Button:
-            root: Wheat
-            text: 'Python'
-            on_release: root.add()
-
-        Button:
-            root: Wheat
-            text: 'Function'
-            on_release: root.addFunc()
+        # Button:
+        #     root: Wheat
+        #     text: 'Python'
+        #     on_release: root.add()
 
         # Button:
         #     root: Wheat
-        #     text: 'Remove Widget'
-        #     on_release: root.remove()
+        #     text: 'Function'
+        #     on_release: root.addFunc()
+
+        # # Button:
+        # #     root: Wheat
+        # #     text: 'Remove Widget'
+        # #     on_release: root.remove()
 
         Button:
             root: Wheat

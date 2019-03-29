@@ -102,7 +102,7 @@ class SettingsStore(JsonStore):
             raise
 
 
-class PyonicApp(App):
+class WheatApp(App):
 
     subprocesses = []
 
@@ -261,4 +261,4 @@ class PyonicApp(App):
 
 
 if __name__ == "__main__":
-    PyonicApp().run()
+    WheatApp().run()
