@@ -6,7 +6,8 @@
         Rectangle:
             pos: self.pos
             size: self.size
-
+#TODO: layout that contains figures needs to be shrank inwards in all directions because points will clip off the edge
+#TODO: layout that contains figures shouldn't also contain checkbox
     FloatLayout:
         id: header
         pos_hint: {'x' : 0, 'y' : .9}
@@ -26,10 +27,10 @@
         CheckBox:
             id: check
             pos_hint: {'x': 0,'y': 0}
-            size_hint: .3,1
+            size_hint: .1,1
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 1.
+                    rgba: .5, 0, 0, 1. #MAROON-.5
                 Rectangle:
                     pos: self.pos
                     size: self.size
