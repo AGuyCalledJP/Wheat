@@ -66,6 +66,7 @@
                     pos: self.pos
                     size: self.size
             GridLayout:
+                padding: 5
                 cols: 1
                 id: mode_buttons
                 pos_hint: {'x' : 0, 'y' : .66}
@@ -76,7 +77,27 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
+                Button:
+                    id: add_mode_button
+                    text: "Add Mode"
+                    color: 1,1,1,1
+                    # padding: 5
+                    background_color: [.8,.1,.2,1]
+                Button:
+                    id: select_mode_button
+                    text: "Move Mode"
+                    color: 1,1,1,1
+                    # padding: 5
+                    background_color: [.8,.1,.2,1]
+                Button:
+                    id: select_mode_button
+                    text: "Select Mode"
+                    color: 1,1,1,1
+                    # padding: 5
+                    background_color: [.8,.1,.2,1]
+
             GridLayout:
+                padding: 5
                 cols: 1
                 id: operation_buttons
                 pos_hint: {'x' : 0, 'y' : 0}
@@ -87,7 +108,36 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
+                Button:
+                    id: distance_button
+                    text: "Find Distance"
+                    color: 1,1,1,1
+                    # padding: 5
+                    background_color: [.8,.1,.2,1]
+                Button:
+                    id: angle_button
+                    text: "Find Angle"
+                    color: 1,1,1,1
+                    # padding: 5
+                    background_color: [.8,.1,.2,1]
+                Button:
+                    id: area_button
+                    text: "Find Area"
+                    color: 1,1,1,1
+                    # padding: 5
+                    background_color: [.8,.1,.2,1]
 
-
+                Button:
+                    id: perimeter_button
+                    text: "Find Perimeter"
+                    color: 1,1,1,1
+                    # padding: 5
+                    background_color: [.8,.1,.2,1]
+                Button:
+                    id: center_button
+                    text: "Find Center"
+                    color: 1,1,1,1
+                    # padding: 5
+                    background_color: [.8,.1,.2,1]
 <PointLayout>:
     id: point

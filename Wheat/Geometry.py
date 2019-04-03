@@ -13,6 +13,9 @@ from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
 from kivy.lang import Builder
+from kivy.properties import (ObjectProperty, NumericProperty,
+                             OptionProperty, BooleanProperty,
+                             StringProperty, ListProperty)
 
 
 img_source = 'visual_assets/fig_point.png'
