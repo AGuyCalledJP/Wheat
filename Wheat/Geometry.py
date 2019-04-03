@@ -32,6 +32,16 @@ class Geometry(ScatterLayout):
     scale_lock_top = False
     scale_lock_bottom = False
 
+    ####    KV FORMATTING PROPERTIES    ####
+    button_bg_color = [.8,.1,.2,1]
+    button_tx_color = [1,1,1,1] #white
+
+    left_pane_bg_color = [.4, 0, 0, 1.]
+
+    right_pane_bg_color = [0,0,0,1]
+    separator_color = left_pane_bg_color
+
+
     def __init__(self, *args, **kwargs):
         super(Geometry, self).__init__(*args, **kwargs)
         self.size_hint = .7,.7
