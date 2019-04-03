@@ -31,7 +31,7 @@ class Geometry(ScatterLayout):
 
     def __init__(self, *args, **kwargs):
         super(Geometry, self).__init__(*args, **kwargs)
-        self.size_hint = .5,.5
+        self.size_hint = .7,.7
         # internals = PointLayout()
         # self.add_widget(internals)
 
@@ -174,7 +174,7 @@ class Figure(Widget):
 
 
     def calculateArea(self):
-        
+
         # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
         # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
         area = 0.0

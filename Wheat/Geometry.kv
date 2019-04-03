@@ -6,24 +6,16 @@
         Rectangle:
             pos: self.pos
             size: self.size
-#TODO: layout that contains figures needs to be shrank inwards in all directions because points will clip off the edge
-#TODO: layout that contains figures shouldn't also contain checkbox
     FloatLayout:
         id: header
         pos_hint: {'x' : 0, 'y' : .9}
         size_hint: 1, 0.1
         canvas.before:
             Color:
-                rgba: 1, 1, 1, 1.
+                rgba: 0,0,0,.3
             Rectangle:
                 pos: self.pos
                 size: self.size
-        # Button:
-        #     id: move
-        #     pos_hint: {'x': .7,'y': 0}
-        #     size_hint: .3,1
-        #     text: 'Move'
-        #     on_press: functionplotter.flip()
         CheckBox:
             id: check
             pos_hint: {'x': 0,'y': 0}
@@ -35,11 +27,67 @@
                     pos: self.pos
                     size: self.size
 
+#TODO: layout that contains figures needs to be shrank inwards in all directions because points will clip off the edge
+#TODO: layout that contains figures shouldn't also contain checkbox
     FloatLayout:
         id: body
         pos_hint: {'x' : 0, 'y' : 0}
         size_hint: 1, 0.9
-        PointLayout:
+        # PointLayout:
+        BoxLayout:
+            id: left_pane
+            pos_hint: {'x' : 0 ,'y' : 0}
+            size_hint: .66,1
+            padding: 30
+            canvas.before:
+                Color:
+                    rgba: .4, 0, 0, 1.
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            FloatLayout:
+                id: interactive_space
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1.
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                PointLayout:
+
+        FloatLayout:
+            id: right_pane
+            pos_hint: {'x' : .66 ,'y' : 0}
+            size_hint: .34,1
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1.
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            GridLayout:
+                cols: 1
+                id: mode_buttons
+                pos_hint: {'x' : 0, 'y' : .66}
+                size_hint: 1, .34
+                canvas.before:
+                    Color:
+                        rgba: 0, 1, 0, 1.
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            GridLayout:
+                cols: 1
+                id: operation_buttons
+                pos_hint: {'x' : 0, 'y' : 0}
+                size_hint: 1, .66
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 1, 1.
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
 
 <PointLayout>:
     id: point
