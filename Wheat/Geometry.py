@@ -205,6 +205,7 @@ class Geometry(ScatterLayout):
 
     def check_boundaries(self, x,y):
         ## TODO: given x and y, are we within the interactive_space
+        print("<"+str(x)+","+str(y)+">")
         pass
 
 
