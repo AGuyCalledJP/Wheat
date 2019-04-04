@@ -18,6 +18,7 @@ from kivy.properties import (ObjectProperty, NumericProperty,
                              StringProperty, ListProperty)
 
 
+img_source_selected = 'visual_assets/fig_point_selected.png'
 img_source = 'visual_assets/fig_point.png'
 img_size = Image(source=img_source).texture.size
 
@@ -291,7 +292,7 @@ class PointButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
         super(PointButton, self).__init__(**kwargs)
 
-        self.source = 'visual_assets/fig_point.png'
+        self.source = img_source
         self.size = Image(source=self.source).texture.size
         self.selected = False
 
@@ -300,10 +301,10 @@ class PointButton(ButtonBehavior, Image):
     '''
     def select(self):
         if(self.selected == False):
-            self.source = 'visual_assets/fig_point_selected.png'
+            self.source = img_source_selected
             self.selected = True
         else:
-            self.source = 'visual_assets/fig_point.png'
+            self.source = img_source
             self.selected = False
 
     '''
@@ -323,7 +324,7 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
     def __init__(self, **kwargs):
         super(PointLayout, self).__init__(**kwargs)
         self.add_widget(PointButton())
-        self.source = 'visual_assets/fig_point.png'
+        self.source = img_source
         self.size = Image(source=self.source).texture.size
         self.radius = (Image(source=self.source).texture.size[0])/2 #radius of point, based off size of image (image is assumed to be a square canvas with a circle of diameter equal to image width and height)
         self.size_hint_x = None
