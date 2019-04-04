@@ -32,15 +32,29 @@ class Geometry(ScatterLayout):
     scale_lock_top = False
     scale_lock_bottom = False
 
+    ########################################
     ####    KV FORMATTING PROPERTIES    ####
+    white = [1,1,1,1]
+    black = [0,0,0,1]
+
     button_bg_color = [.8,.1,.2,1]
-    button_tx_color = [1,1,1,1] #white
-
     left_pane_bg_color = [.4, 0, 0, 1.]
-
-    right_pane_bg_color = [0,0,0,1]
     separator_color = left_pane_bg_color
+    ########################################
+    ########################################
 
+
+
+    ########################################
+    ####        MENU PROPERTIES         ####
+
+    mode_state = OptionProperty('adding', options=['moving',
+                                                   'selecting',
+                                                   'adding'])
+    hiding_buttons = BooleanProperty(False)
+
+    ########################################
+    ########################################
 
     def __init__(self, *args, **kwargs):
         super(Geometry, self).__init__(*args, **kwargs)
@@ -152,6 +166,21 @@ class Geometry(ScatterLayout):
             self._bring_to_front(touch)
             return True
         touch.pop()
+
+
+    def hide_buttons(self):
+        #look up right pane
+        if hiding_buttons:
+            #set size_hint of right pane to 0
+            pass
+        else:
+            #set size_hint to original value
+            pass
+        pass
+
+    def check_boundaries(self, x,y):
+        ## TODO: given x and y, are we within the interactive_space
+        pass
 
 
 
