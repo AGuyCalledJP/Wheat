@@ -21,15 +21,24 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        Button:
+        ToggleButton:
+            state: "normal"
             id: hide_right_button
             pos_hint: {'x': .46, 'y': 0}
             size_hint: .2, 1
             text: "Hide Buttons"
             background_color: geometry.button_bg_color
             color: geometry.white
-            # on_release: geometry.hide_buttons()
-            on_release: right_pane.hide_widget() #FIXME: hides everything :\
+            on_press:
+                header.size_hint_x = right_pane.hide_pane()
+                # hide_right_button.text = "Unhide"
+                hide_right_button.size_hint_x = .303
+                hide_right_button.pos_hint_x = .697
+            on_release:
+                header.size_hint_x = right_pane.hide_pane(dohide=False)
+                # hide_right_button.text ="Hide Buttons"
+                hide_right_button.pos_hint_x = .46
+                hide_right_button.size_hint_x = .2
 
     FloatLayout:
         id: body
@@ -57,7 +66,7 @@
                         size: self.size
                 PointLayout:
 
-        FloatLayout:
+        RightPane
             id: right_pane
             padding: 5
             pos_hint: {'x' : .66 ,'y' : 0}
@@ -151,5 +160,5 @@
                     color: geometry.white
                     # padding: 5
                     background_color: geometry.button_bg_color
-<PointLayout>:
-    id: point
+# <PointLayout>:
+#     id: point

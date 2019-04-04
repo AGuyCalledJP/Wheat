@@ -180,14 +180,6 @@ class Geometry(ScatterLayout):
         touch.pop()
 
 
-    def hide_widget(wid, dohide=True):
-        if hasattr(wid, 'saved_attrs'):
-            if not dohide:
-                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
-                del wid.saved_attrs
-        elif dohide:
-            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
-            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
 
 #TODO: hiding does not work
     # def hide_buttons(self):
@@ -214,6 +206,28 @@ class Geometry(ScatterLayout):
     def check_boundaries(self, x,y):
         ## TODO: given x and y, are we within the interactive_space
         pass
+
+
+
+class RightPane(FloatLayout):
+
+    def hide_pane(wid, dohide=True):
+        if hasattr(wid, 'saved_attrs'):
+            if not dohide:
+                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+                del wid.saved_attrs
+                return 1
+        #capture sizing information, opacity, disabled status, and set to 0's/None/True to hide the pane
+        elif dohide:
+            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+            return .66
+
+    # def on_hide(wid):
+    #     pass
+    # def off_hide(wid):
+    #     pass
+
 
 
 
