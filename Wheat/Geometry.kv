@@ -1,0 +1,155 @@
+<Geometry>:
+    id: geometry
+    FloatLayout:
+        id: header
+        padding: 5
+        pos_hint: {'x' : 0, 'y' : .9}
+        size_hint: 1, 0.1
+        canvas.before:
+            Color:
+                rgba: geometry.left_pane_bg_color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        CheckBox:
+            id: check
+            pos_hint: {'x': 0,'y': 0}
+            size_hint: .1,1
+            canvas.before:
+                Color:
+                    rgba: geometry.button_bg_color
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Button:
+            id: hide_right_button
+            pos_hint: {'x': .46, 'y': 0}
+            size_hint: .2, 1
+            text: "Hide Buttons"
+            background_color: geometry.button_bg_color
+            color: geometry.white
+            # on_release: geometry.hide_buttons()
+            on_release: geometry.hide_widget() #FIXME: hides everything :\
+
+    FloatLayout:
+        id: body
+        pos_hint: {'x' : 0, 'y' : 0}
+        size_hint: 1, 0.9
+        # PointLayout:
+        BoxLayout:
+            id: left_pane
+            pos_hint: {'x' : 0 ,'y' : 0}
+            size_hint: .66,1
+            padding: 30
+            canvas.before:
+                Color:
+                    rgba: geometry.left_pane_bg_color
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            FloatLayout:
+                id: interactive_space
+                canvas.before:
+                    Color:
+                        rgba: geometry.white
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                PointLayout:
+
+        FloatLayout:
+            id: right_pane
+            padding: 5
+            pos_hint: {'x' : .66 ,'y' : 0}
+            size_hint: .34,1
+            canvas.before:
+                Color:
+                    rgba: geometry.white
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            GridLayout:
+                padding: 5
+                cols: 1
+                id: mode_buttons
+                pos_hint: {'x' : 0, 'y' : .67}
+                size_hint: 1, .33
+                canvas.before:
+                    Color:
+                        rgba: geometry.black
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Button:
+                    id: add_mode_button
+                    text: "Add Mode"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                Button:
+                    id: select_mode_button
+                    text: "Move Mode"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                Button:
+                    id: select_mode_button
+                    text: "Select Mode"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+            Label:
+                id: separating_line
+                pos_hint: {'x' : 0, 'y' : .66}
+                size_hint: 1, .01
+                canvas.before:
+                    Color:
+                        rgba: geometry.separator_color
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            GridLayout:
+                padding: 5
+                cols: 1
+                id: operation_buttons
+                pos_hint: {'x' : 0, 'y' : 0}
+                size_hint: 1, .66
+                canvas.before:
+                    Color:
+                        rgba: geometry.black
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Button:
+                    id: distance_button
+                    text: "Find Distance"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                Button:
+                    id: angle_button
+                    text: "Find Angle"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                Button:
+                    id: area_button
+                    text: "Find Area"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+
+                Button:
+                    id: perimeter_button
+                    text: "Find Perimeter"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                Button:
+                    id: center_button
+                    text: "Find Center"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+<PointLayout>:
+    id: point
