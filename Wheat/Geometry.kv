@@ -28,7 +28,8 @@
             text: "Hide Buttons"
             background_color: geometry.button_bg_color
             color: geometry.white
-            on_press: geometry.hiding_buttons = not geometry.hiding_buttons
+            # on_release: geometry.hide_buttons()
+            on_release: geometry.hide_widget() #FIXME: hides everything :\
 
     FloatLayout:
         id: body
@@ -50,7 +51,7 @@
                 id: interactive_space
                 canvas.before:
                     Color:
-                        rgba: 1, 1, 1, 1.
+                        rgba: geometry.white
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -63,7 +64,7 @@
             size_hint: .34,1
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 1.
+                    rgba: geometry.white
                 Rectangle:
                     pos: self.pos
                     size: self.size

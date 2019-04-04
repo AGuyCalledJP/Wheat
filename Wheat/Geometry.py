@@ -34,6 +34,8 @@ class Geometry(ScatterLayout):
 
     ########################################
     ####    KV FORMATTING PROPERTIES    ####
+
+    #Colours for use within geometry.kv
     white = [1,1,1,1]
     black = [0,0,0,1]
 
@@ -43,15 +45,23 @@ class Geometry(ScatterLayout):
     ########################################
     ########################################
 
-
-
     ########################################
     ####        MENU PROPERTIES         ####
 
-    mode_state = OptionProperty('adding', options=['moving',
-                                                   'selecting',
-                                                   'adding'])
-    hiding_buttons = BooleanProperty(False)
+    #the different modes the user can be in within the geometry app, defaults to adding
+    mode_state = OptionProperty('adding', options=['moving','selecting','adding'])
+
+    #TODO: Hiding does not work at the moment
+    # #are we hiding the buttons?
+    # self.hiding_buttons = BooleanProperty(False)
+
+    ########################################
+    ########################################
+
+    ########################################
+    ####       FIGURE PROPERTIES        ####
+
+    num_selected = NumericProperty() #number of points selected within select mode
 
     ########################################
     ########################################
@@ -61,6 +71,8 @@ class Geometry(ScatterLayout):
         self.size_hint = .7,.7
         # internals = PointLayout()
         # self.add_widget(internals)
+
+
 
     def on_touch_up(self, touch):
         self.size_hint = None, None
@@ -80,7 +92,6 @@ class Geometry(ScatterLayout):
             y = y * 10
             self.pos = x, y
             return super(Geometry, self).on_touch_up(touch)
-
 
     def transform_with_touch(self, touch):
         self.size_hint = None,None
@@ -168,20 +179,40 @@ class Geometry(ScatterLayout):
         touch.pop()
 
 
-    def hide_buttons(self):
-        #look up right pane
-        if hiding_buttons:
-            #set size_hint of right pane to 0
-            pass
-        else:
-            #set size_hint to original value
-            pass
-        pass
+    def hide_widget(wid, dohide=True):
+        if hasattr(wid, 'saved_attrs'):
+            if not dohide:
+                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+                del wid.saved_attrs
+        elif dohide:
+            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+
+#TODO: hiding does not work
+    # def hide_buttons(self):
+    #     #look up right pane
+    #     if self.hiding_buttons:
+    #         #set right pane contents' sizes to 0, and header bar to fit only on left pane
+    #         self.ids.header.size_hint_x = self.ids.left_pane.size_hint_x
+    #         self.ids.right_pane.size_hint_y = 0
+    #         for kids in self.ids.right_pane.children:
+    #             self.ids.right_pane.size_hint_y = 0
+    #         self.hiding_buttons = True
+    #         pass
+    #     else:
+    #         #set size_hint to original value
+    #         self.ids.header.size_hint_x = 1
+    #         self.ids.right_pane.size_hint_y = .31
+    #         for kids in self.ids.right_pane.children:
+    #             self.ids.right_pane.size_hint_y = .31
+    #         self.hiding_buttons = False
+    #         pass
+    #     pass
+
 
     def check_boundaries(self, x,y):
         ## TODO: given x and y, are we within the interactive_space
         pass
-
 
 
 
