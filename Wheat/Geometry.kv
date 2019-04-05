@@ -1,16 +1,5 @@
 <Geometry>:
     id: geometry
-<<<<<<< HEAD
-    interaction_space: body
-    canvas.before:
-        Color:
-            rgba: 1,1,1,1.
-        Rectangle:
-            pos: self.pos
-            size: self.size
-
-=======
->>>>>>> f098cf60a4e7d41cab2d15f05883df7e8f04ea80
     FloatLayout:
         id: header
         padding: 5
@@ -32,8 +21,6 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-<<<<<<< HEAD
-=======
         ToggleButton:
             state: "normal"
             id: hide_right_button
@@ -53,23 +40,10 @@
                 hide_right_button.pos_hint_x = .46
                 hide_right_button.size_hint_x = .2
 
->>>>>>> f098cf60a4e7d41cab2d15f05883df7e8f04ea80
     FloatLayout:
         id: body
         pos_hint: {'x' : 0, 'y' : 0}
         size_hint: 1, 0.9
-<<<<<<< HEAD
-        FloatLayout:
-            id: left
-            pos_hint: {'x' : 0, 'y' : 0}
-            size_hint: .5, 1
-            PointLayout:
-        FloatLayout:
-            id: right
-            pos_hint: {'x' : .5, 'y' : 0}
-            size_hint: .5, 1
-
-=======
         # PointLayout:
         BoxLayout:
             id: left_pane
@@ -91,9 +65,8 @@
                         pos: self.pos
                         size: self.size
                 PointLayout:
->>>>>>> f098cf60a4e7d41cab2d15f05883df7e8f04ea80
 
-        RightPane
+        RightPane:
             id: right_pane
             padding: 5
             pos_hint: {'x' : .66 ,'y' : 0}
