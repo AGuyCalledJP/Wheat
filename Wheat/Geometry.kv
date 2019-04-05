@@ -92,7 +92,8 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
-
+                #TODO: figure out how to alter togglebuttons so they can't all be deselected.
+                #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
                 ToggleButton:
                     id: add_mode_button
                     state: 'down'
@@ -107,8 +108,10 @@
                         area_button.hide_opp()
                         perimeter_button.hide_opp()
                         center_button.hide_opp()
-                        print(geometry.mode_state)
-
+                        make_figure_button.hide_make(False)
+                        cancel_figure_button.hide_make(False)
+                #TODO: figure out how to alter togglebuttons so they can't all be deselected.
+                #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
                 ToggleButton:
                     id: move_mode_button
                     group: "modes"
@@ -122,8 +125,10 @@
                         area_button.hide_opp()
                         perimeter_button.hide_opp()
                         center_button.hide_opp()
-                        print(geometry.mode_state)
-
+                        make_figure_button.hide_make()
+                        cancel_figure_button.hide_make()
+                #TODO: figure out how to alter togglebuttons so they can't all be deselected.
+                #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
                 ToggleButton:
                     id: select_mode_button
                     group: "modes"
@@ -137,7 +142,8 @@
                         area_button.hide_opp(False)
                         perimeter_button.hide_opp(False)
                         center_button.hide_opp(False)
-                        print(geometry.mode_state)
+                        make_figure_button.hide_make()
+                        cancel_figure_button.hide_make()
 
 
             Label:
@@ -163,6 +169,16 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
+                MakeFigureButton:
+                    id: make_figure_button
+                    text: "Make Figure"
+                    color: geometry.white
+                    background_color: geometry.button_bg_color
+                MakeFigureButton:
+                    id: cancel_figure_button
+                    text: "Cancel Figure Creation"
+                    color: geometry.white
+                    background_color: geometry.button_bg_color
 
                 OppButton:
                     id: distance_button

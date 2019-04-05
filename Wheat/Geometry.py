@@ -21,6 +21,7 @@ from kivy.properties import (ObjectProperty, NumericProperty,
                              StringProperty, ListProperty)
 
 
+
 img_source_selected = 'visual_assets/fig_point_selected.png'
 img_source = 'visual_assets/fig_point.png'
 img_size = Image(source=img_source).texture.size
@@ -31,11 +32,6 @@ Builder.load_file('Geometry.kv')
 
 class Geometry(FloatLayout):
 
-    # move_lock = False
-    # scale_lock_left = False
-    # scale_lock_right = False
-    # scale_lock_top = False
-    # scale_lock_bottom = False
 
     ########################################
     ####    KV FORMATTING PROPERTIES    ####
@@ -65,7 +61,6 @@ class Geometry(FloatLayout):
             return False
         else:
             self.mode_state = mode
-            print("changedto "+str(self.mode_state))
             return True
 
     def touch_interactive_space(self, *args):
@@ -74,6 +69,9 @@ class Geometry(FloatLayout):
         #check mode
         if self.mode_state == 'adding':
             #try adding point at touchpoint
+                #are we in the middle of making a figure?
+                    #if so, points get added to figure
+                #otherwise, create a new figure, add point to it
             pass
         else:
             #check if contact at point, if so continue
@@ -139,6 +137,23 @@ class OppButton(Button):
 
 
 
+class MakeFigureButton(Button):
+    def hide_make(wid, dohide=True):
+        if hasattr(wid, 'saved_attrs'):
+            if not dohide:
+                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+                del wid.saved_attrs
+        #capture sizing information, opacity, disabled status, and set to 0's/None/True to hide the pane
+        elif dohide:
+            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+
+    def __init__(self, **kwargs):
+        super(MakeFigureButton, self).__init__(**kwargs)
+        self.hide_make()
+
+
+
 
 """
     A Figure contains a series of points that make up the shape they are meant to form. This can be a fully closed polygon, line segment, or point.
@@ -198,6 +213,7 @@ class Figure(Widget):
 
     # TODO: add content
     def __init__(self, points):
+        super(Figure, self).__init__(**kwargs)
         for p in points:
             self.add_point(p[0],p[1])
         self.draw_fig()
@@ -303,6 +319,12 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
 
 ######## The below code was in the Geometry class for scatter layout movements. Because the class should not move within current design intentions, this has been commented out.
 ######## I've moved the code here in case we end up needing it
+
+    # move_lock = False
+    # scale_lock_left = False
+    # scale_lock_right = False
+    # scale_lock_top = False
+    # scale_lock_bottom = False
 
     # def on_touch_up(self, touch):
     #     self.size_hint = None, None
