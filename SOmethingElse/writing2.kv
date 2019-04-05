@@ -1,0 +1,46 @@
+<Manager>:
+    PaintScreen:
+        name: 'paint screen'
+<PaintScreen>:
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "blank-notebook-paper-template.jpg"
+    FloatLayout:
+#        Clear:
+#            text: 'Clear writing'
+#            pos_hint: {'x':0, 'y': 0}
+#            size_hint: (None, None)
+#            on_release: painter.clear_canvas()
+#Old stuff ................................
+    BoxLayout:
+
+        orientation: 'vertical'
+
+        GridLayout:
+
+            cols: 4
+            padding: 20
+            spacing: 20
+            size_hint: 1, .1
+
+            Button:
+                text: 'Prev page'
+                on_release:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'paint screen'
+            Button:
+                text: 'Clear writing'
+                on_release: painter.clear_canvas()
+            Button:
+                text: 'Undo stroke'
+                on_release: painter.undo()
+            Button:
+                text: 'Redo stroke'
+                on_release:
+                    painter.redo()
+
+        PaintWidget:
+            id: painter
+            name: 'paint me'
