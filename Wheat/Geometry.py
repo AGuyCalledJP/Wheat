@@ -63,8 +63,14 @@ class Geometry(FloatLayout):
             self.mode_state = mode
             return True
 
+    def connect_interactive_space(self, interactive_space):
+        self.interactive_space = interactive_space
+
     def touch_interactive_space(self, *args):
+        #retrieve touch event
+        contact_point = args[1].pos
         #check if x and y in bounds of interactive_space (possibly unnecessary)
+        print(self.interactive_space)
 
         #check mode
         if self.mode_state == 'adding':
@@ -98,6 +104,7 @@ class Geometry(FloatLayout):
         #the different modes the user can be in within the geometry app, defaults to adding
         self.mode_state = OptionProperty('adding', options=('moving','selecting','adding'))
         self.mode_state = 'adding' ## NOTE: this shouldn't need to be here because the type literally HAS A DEFAULT FIELD but it won't work without it
+        self.interactive_space = None
 
     class Interactive_Space(FloatLayout):
         pass
