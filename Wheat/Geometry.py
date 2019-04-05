@@ -135,6 +135,10 @@ class OppButton(Button):
             wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
             wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
 
+    def __init__(self, **kwargs):
+        super(OppButton, self).__init__(**kwargs)
+        self.hide_opp() #start hidden, use when we have add functionality working
+
 
 
 class MakeFigureButton(Button):
@@ -150,7 +154,7 @@ class MakeFigureButton(Button):
 
     def __init__(self, **kwargs):
         super(MakeFigureButton, self).__init__(**kwargs)
-        self.hide_make()
+        # self.hide_make() #start hidden, use when we have add functionality working
 
 
 
