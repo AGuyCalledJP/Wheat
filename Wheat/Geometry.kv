@@ -65,6 +65,7 @@
                         pos: self.pos
                         size: self.size
                 on_touch_down:
+                    geometry.connect_interactive_space(interactive_space)
                     geometry.touch_interactive_space(*args)
 
 
@@ -105,7 +106,7 @@
                     background_color: geometry.button_bg_color
                     on_press:
                         geometry.change_mode('adding')
-                        distance_button.hide_opp()
+                        distance_button.hide_opp() ## NOTE: for some reason trying to consolidate these hide opps into hides on the layouts breaks everything
                         angle_button.hide_opp()
                         area_button.hide_opp()
                         perimeter_button.hide_opp()
