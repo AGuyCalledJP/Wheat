@@ -5,6 +5,9 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color
 from kivy.graphics import Rectangle
 from kivy.graphics import Ellipse
+from kivy.properties import (ObjectProperty, NumericProperty,
+                             OptionProperty, BooleanProperty,
+                             StringProperty, ListProperty)
 
 from kivy.uix.scatter import Scatter
 from kivy.uix.button import Button
@@ -18,6 +21,8 @@ from kivy.properties import (ObjectProperty, NumericProperty,
                              StringProperty, ListProperty)
 
 
+
+img_source_selected = 'visual_assets/fig_point_selected.png'
 img_source = 'visual_assets/fig_point.png'
 img_size = Image(source=img_source).texture.size
 
@@ -25,12 +30,8 @@ img_size = Image(source=img_source).texture.size
 
 Builder.load_file('Geometry.kv')
 
-class Geometry(ScatterLayout):
-    move_lock = False
-    scale_lock_left = False
-    scale_lock_right = False
-    scale_lock_top = False
-    scale_lock_bottom = False
+class Geometry(FloatLayout):
+
 
     ########################################
     ####    KV FORMATTING PROPERTIES    ####
@@ -45,18 +46,6 @@ class Geometry(ScatterLayout):
     ########################################
     ########################################
 
-    ########################################
-    ####        MENU PROPERTIES         ####
-
-    #the different modes the user can be in within the geometry app, defaults to adding
-    mode_state = OptionProperty('adding', options=['moving','selecting','adding'])
-
-    #TODO: Hiding does not work at the moment
-    # #are we hiding the buttons?
-    # self.hiding_buttons = BooleanProperty(False)
-
-    ########################################
-    ########################################
 
     ########################################
     ####       FIGURE PROPERTIES        ####
@@ -66,154 +55,113 @@ class Geometry(ScatterLayout):
     ########################################
     ########################################
 
+    def change_mode(self, mode):
+        if (mode != 'adding') and (mode != 'selecting') and (mode != 'moving'):
+            print("ERROR: Invalid move change attempted, this should never happen.")
+            return False
+        else:
+            self.mode_state = mode
+            return True
+
+    def connect_interactive_space(self, interactive_space):
+        self.interactive_space = interactive_space
+
+    def touch_interactive_space(self, *args):
+        #retrieve touch event
+        contact_point = args[1].pos
+        #check if x and y in bounds of interactive_space (possibly unnecessary)
+        print(self.interactive_space)
+
+        #check mode
+        if self.mode_state == 'adding':
+            #try adding point at touchpoint
+                #are we in the middle of making a figure?
+                    #if so, points get added to figure
+                #otherwise, create a new figure, add point to it
+            pass
+        else:
+            #check if contact at point, if so continue
+            if True:
+                if self.mode_state == 'selecting':
+                     #if so select and add to some structure
+                    pass
+                elif self.mode_state == 'moving':
+                    #move point position, redraw figure
+                    pass
+                else:
+                    print("ERROR: Invalid mode_state interaction") #FIXME: remove if it turns out this never happens (it shouldn't)
+            #otherwise, do nothing
+
+
+
+
     def __init__(self, *args, **kwargs):
         super(Geometry, self).__init__(*args, **kwargs)
         self.size_hint = .7,.7
         # internals = PointLayout()
         # self.add_widget(internals)
 
+        #the different modes the user can be in within the geometry app, defaults to adding
+        self.mode_state = OptionProperty('adding', options=('moving','selecting','adding'))
+        self.mode_state = 'adding' ## NOTE: this shouldn't need to be here because the type literally HAS A DEFAULT FIELD but it won't work without it
+        self.interactive_space = None
+
+    class Interactive_Space(FloatLayout):
+        pass
 
 
-    def on_touch_up(self, touch):
-        self.size_hint = None, None
-        self.move_lock = False
-        self.scale_lock_left = False
-        self.scale_lock_right = False
-        self.scale_lock_top = False
-        self.scale_lock_bottom = False
-        self.size_hint = None,None
-        if touch.grab_current is self:
-            touch.ungrab(self)
-            x = self.pos[0] / 10
-            x = round(x, 0)
-            x = x * 10
-            y = self.pos[1] / 10
-            y = round(y, 0)
-            y = y * 10
-            self.pos = x, y
-            return super(Geometry, self).on_touch_up(touch)
-
-    def transform_with_touch(self, touch):
-        self.size_hint = None,None
-        changed = False
-        x = self.bbox[0][0]
-        y = self.bbox[0][1]
-        width = self.bbox[1][0]
-        height = self.bbox[1][1]
-        mid_x = x + width / 2
-        mid_y = y + height / 2
-        inner_width = width * 0.5
-        inner_height = height * 0.5
-        left = mid_x - (inner_width / 2)
-        right = mid_x + (inner_width / 2)
-        top = mid_y + (inner_height / 2)
-        bottom = mid_y - (inner_height / 2)
-
-            # just do a simple one finger drag
-        if len(self._touches) == self.translation_touches:
-            # _last_touch_pos has last pos in correct parent space,
-            # just like incoming touch
-            dx = (touch.x - self._last_touch_pos[touch][0]) \
-                    * self.do_translation_x
-            dy = (touch.y - self._last_touch_pos[touch][1]) \
-                    * self.do_translation_y
-            dx = dx / self.translation_touches
-            dy = dy / self.translation_touches
-            dx = dx
-            dy = dy
-            if (touch.x > left and touch.x < right and touch.y < top and touch.y > bottom or self.move_lock) and not self.scale_lock_left and not self.scale_lock_right and not self.scale_lock_top and not self.scale_lock_bottom:
-                self.move_lock = True
-                self.apply_transform(Matrix().translate(dx, dy, 0))
-                changed = True
-
-        change_x = touch.x - self.prev_x
-        change_y = touch.y - self.prev_y
-        anchor_sign = 1
-        sign = 1
-        if abs(change_x) >= 9 and not self.move_lock and not self.scale_lock_top and not self.scale_lock_bottom:
-            if change_x < 0:
-                sign = -1
-            if (touch.x < left or self.scale_lock_left) and not self.scale_lock_right:
-                self.scale_lock_left = True
-                self.pos = (self.pos[0] + (sign * 10), self.pos[1])
-                anchor_sign = -1
-            elif (touch.x > right or self.scale_lock_right) and not self.scale_lock_left:
-                self.scale_lock_right = True
-            self.size[0] = self.size[0] + (sign * anchor_sign * 10)
-            self.prev_x = touch.x
-            changed = True
-        if abs(change_y) >= 9 and not self.move_lock and not self.scale_lock_left and not self.scale_lock_right:
-            if change_y < 0:
-                sign = -1
-            if (touch.y > top or self.scale_lock_top) and not self.scale_lock_bottom:
-                self.scale_lock_top = True
-            elif (touch.y < bottom or self.scale_lock_bottom) and not self.scale_lock_top:
-                self.scale_lock_bottom = True
-                self.pos = (self.pos[0], self.pos[1] + (sign * 10))
-                anchor_sign = -1
-            self.size[1] = self.size[1] + (sign * anchor_sign * 10)
-            self.prev_y = touch.y
-            changed = True
-            return changed
-
-    def on_touch_down(self, touch):
-        self.size_hint = None,None
-        x, y = touch.x, touch.y
-        self.prev_x = touch.x
-        self.prev_y = touch.y
-        # if the touch isnt on the widget we do nothing
-        if not self.do_collide_after_children:
-            if not self.collide_point(x, y):
-                return False
-
-        # let the child widgets handle the event if they want
-        touch.push()
-        touch.apply_transform_2d(self.to_local)
-        if super(Scatter, self).on_touch_down(touch):
-            # ensure children don't have to do it themselves
-            if 'multitouch_sim' in touch.profile:
-                touch.multitouch_sim = True
-            touch.pop()
-            self._bring_to_front(touch)
-            return True
-        touch.pop()
 
 
-    def hide_widget(wid, dohide=True):
+
+class RightPane(FloatLayout):
+
+    def hide_pane(wid, dohide=True):
         if hasattr(wid, 'saved_attrs'):
             if not dohide:
                 wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
                 del wid.saved_attrs
+                return 1 #return values indicate size the header should be in th kv file, which runs this and sets header's size_hint to this value
+        #capture sizing information, opacity, disabled status, and set to 0's/None/True to hide the pane
+        elif dohide:
+            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+            return .66 #return values indicate size the header should be in th kv file, which runs this and sets header's size_hint to this value
+
+
+#this might need to live somewhere else
+
+class OppButton(Button):
+
+    def hide_opp(wid, dohide=True):
+        if hasattr(wid, 'saved_attrs'):
+            if not dohide:
+                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+                del wid.saved_attrs
+        #capture sizing information, opacity, disabled status, and set to 0's/None/True to hide the pane
         elif dohide:
             wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
             wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
 
-#TODO: hiding does not work
-    # def hide_buttons(self):
-    #     #look up right pane
-    #     if self.hiding_buttons:
-    #         #set right pane contents' sizes to 0, and header bar to fit only on left pane
-    #         self.ids.header.size_hint_x = self.ids.left_pane.size_hint_x
-    #         self.ids.right_pane.size_hint_y = 0
-    #         for kids in self.ids.right_pane.children:
-    #             self.ids.right_pane.size_hint_y = 0
-    #         self.hiding_buttons = True
-    #         pass
-    #     else:
-    #         #set size_hint to original value
-    #         self.ids.header.size_hint_x = 1
-    #         self.ids.right_pane.size_hint_y = .31
-    #         for kids in self.ids.right_pane.children:
-    #             self.ids.right_pane.size_hint_y = .31
-    #         self.hiding_buttons = False
-    #         pass
-    #     pass
+    def __init__(self, **kwargs):
+        super(OppButton, self).__init__(**kwargs)
+        self.hide_opp() #start hidden, use when we have add functionality working
 
 
-    def check_boundaries(self, x,y):
-        ## TODO: given x and y, are we within the interactive_space
-        pass
 
+class MakeFigureButton(Button):
+    def hide_make(wid, dohide=True):
+        if hasattr(wid, 'saved_attrs'):
+            if not dohide:
+                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+                del wid.saved_attrs
+        #capture sizing information, opacity, disabled status, and set to 0's/None/True to hide the pane
+        elif dohide:
+            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+
+    def __init__(self, **kwargs):
+        super(MakeFigureButton, self).__init__(**kwargs)
+        # self.hide_make() #start hidden, use when we have add functionality working
 
 
 
@@ -276,6 +224,7 @@ class Figure(Widget):
 
     # TODO: add content
     def __init__(self, points):
+        super(Figure, self).__init__(**kwargs)
         for p in points:
             self.add_point(p[0],p[1])
         self.draw_fig()
@@ -291,7 +240,7 @@ class PointButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
         super(PointButton, self).__init__(**kwargs)
 
-        self.source = 'visual_assets/fig_point.png'
+        self.source = img_source
         self.size = Image(source=self.source).texture.size
         self.selected = False
 
@@ -300,10 +249,10 @@ class PointButton(ButtonBehavior, Image):
     '''
     def select(self):
         if(self.selected == False):
-            self.source = 'visual_assets/fig_point_selected.png'
+            self.source = img_source_selected
             self.selected = True
         else:
-            self.source = 'visual_assets/fig_point.png'
+            self.source = img_source
             self.selected = False
 
     '''
@@ -323,7 +272,7 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
     def __init__(self, **kwargs):
         super(PointLayout, self).__init__(**kwargs)
         self.add_widget(PointButton())
-        self.source = 'visual_assets/fig_point.png'
+        self.source = img_source
         self.size = Image(source=self.source).texture.size
         self.radius = (Image(source=self.source).texture.size[0])/2 #radius of point, based off size of image (image is assumed to be a square canvas with a circle of diameter equal to image width and height)
         self.size_hint_x = None
@@ -371,3 +320,123 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
                 self.point_y = self.pos[1] + self.radius
                 self.last_touch = touch.pos # Update the last position of the mouse
         return super(PointLayout, self).on_touch_move(touch)
+
+
+
+
+
+
+
+
+######## The below code was in the Geometry class for scatter layout movements. Because the class should not move within current design intentions, this has been commented out.
+######## I've moved the code here in case we end up needing it
+
+    # move_lock = False
+    # scale_lock_left = False
+    # scale_lock_right = False
+    # scale_lock_top = False
+    # scale_lock_bottom = False
+
+    # def on_touch_up(self, touch):
+    #     self.size_hint = None, None
+    #     self.move_lock = False
+    #     self.scale_lock_left = False
+    #     self.scale_lock_right = False
+    #     self.scale_lock_top = False
+    #     self.scale_lock_bottom = False
+    #     self.size_hint = None,None
+    #     if touch.grab_current is self:
+    #         touch.ungrab(self)
+    #         x = self.pos[0] / 10
+    #         x = round(x, 0)
+    #         x = x * 10
+    #         y = self.pos[1] / 10
+    #         y = round(y, 0)
+    #         y = y * 10
+    #         self.pos = x, y
+    #         return super(Geometry, self).on_touch_up(touch)
+    #
+    # def transform_with_touch(self, touch):
+    #     self.size_hint = None,None
+    #     changed = False
+    #     x = self.bbox[0][0]
+    #     y = self.bbox[0][1]
+    #     width = self.bbox[1][0]
+    #     height = self.bbox[1][1]
+    #     mid_x = x + width / 2
+    #     mid_y = y + height / 2
+    #     inner_width = width * 0.5
+    #     inner_height = height * 0.5
+    #     left = mid_x - (inner_width / 2)
+    #     right = mid_x + (inner_width / 2)
+    #     top = mid_y + (inner_height / 2)
+    #     bottom = mid_y - (inner_height / 2)
+    #
+    #         # just do a simple one finger drag
+    #     if len(self._touches) == self.translation_touches:
+    #         # _last_touch_pos has last pos in correct parent space,
+    #         # just like incoming touch
+    #         dx = (touch.x - self._last_touch_pos[touch][0]) \
+    #                 * self.do_translation_x
+    #         dy = (touch.y - self._last_touch_pos[touch][1]) \
+    #                 * self.do_translation_y
+    #         dx = dx / self.translation_touches
+    #         dy = dy / self.translation_touches
+    #         dx = dx
+    #         dy = dy
+    #         if (touch.x > left and touch.x < right and touch.y < top and touch.y > bottom or self.move_lock) and not self.scale_lock_left and not self.scale_lock_right and not self.scale_lock_top and not self.scale_lock_bottom:
+    #             self.move_lock = True
+    #             self.apply_transform(Matrix().translate(dx, dy, 0))
+    #             changed = True
+    #
+    #     change_x = touch.x - self.prev_x
+    #     change_y = touch.y - self.prev_y
+    #     anchor_sign = 1
+    #     sign = 1
+    #     if abs(change_x) >= 9 and not self.move_lock and not self.scale_lock_top and not self.scale_lock_bottom:
+    #         if change_x < 0:
+    #             sign = -1
+    #         if (touch.x < left or self.scale_lock_left) and not self.scale_lock_right:
+    #             self.scale_lock_left = True
+    #             self.pos = (self.pos[0] + (sign * 10), self.pos[1])
+    #             anchor_sign = -1
+    #         elif (touch.x > right or self.scale_lock_right) and not self.scale_lock_left:
+    #             self.scale_lock_right = True
+    #         self.size[0] = self.size[0] + (sign * anchor_sign * 10)
+    #         self.prev_x = touch.x
+    #         changed = True
+    #     if abs(change_y) >= 9 and not self.move_lock and not self.scale_lock_left and not self.scale_lock_right:
+    #         if change_y < 0:
+    #             sign = -1
+    #         if (touch.y > top or self.scale_lock_top) and not self.scale_lock_bottom:
+    #             self.scale_lock_top = True
+    #         elif (touch.y < bottom or self.scale_lock_bottom) and not self.scale_lock_top:
+    #             self.scale_lock_bottom = True
+    #             self.pos = (self.pos[0], self.pos[1] + (sign * 10))
+    #             anchor_sign = -1
+    #         self.size[1] = self.size[1] + (sign * anchor_sign * 10)
+    #         self.prev_y = touch.y
+    #         changed = True
+    #         return changed
+    #
+    # def on_touch_down(self, touch):
+    #     self.size_hint = None,None
+    #     x, y = touch.x, touch.y
+    #     self.prev_x = touch.x
+    #     self.prev_y = touch.y
+    #     # if the touch isnt on the widget we do nothing
+    #     if not self.do_collide_after_children:
+    #         if not self.collide_point(x, y):
+    #             return False
+    #
+    #     # let the child widgets handle the event if they want
+    #     touch.push()
+    #     touch.apply_transform_2d(self.to_local)
+    #     if super(Scatter, self).on_touch_down(touch):
+    #         # ensure children don't have to do it themselves
+    #         if 'multitouch_sim' in touch.profile:
+    #             touch.multitouch_sim = True
+    #         touch.pop()
+    #         self._bring_to_front(touch)
+    #         return True
+    #     touch.pop()

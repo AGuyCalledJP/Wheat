@@ -246,7 +246,7 @@ class InterpreterWrapper(EventDispatcher):
 
     def restart_halted_interpreter(self):
         print('interpreter is halted')
-        self.dispatch('on_user_message', 
+        self.dispatch('on_user_message',
             ('The interpreter is not responding, it may have been killed by the OS '
              'while paused. Restarting.'))
         self.restart()

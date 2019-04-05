@@ -1,5 +1,6 @@
 <Geometry>:
     id: geometry
+    geom: geometry
     FloatLayout:
         id: header
         padding: 5
@@ -21,21 +22,29 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        Button:
+        ToggleButton:
+            state: "normal"
             id: hide_right_button
             pos_hint: {'x': .46, 'y': 0}
             size_hint: .2, 1
             text: "Hide Buttons"
             background_color: geometry.button_bg_color
             color: geometry.white
-            # on_release: geometry.hide_buttons()
-            on_release: geometry.hide_widget() #FIXME: hides everything :\
+            on_press:
+                header.size_hint_x = right_pane.hide_pane()
+                # hide_right_button.text = "Unhide"
+                hide_right_button.size_hint_x = .303
+                hide_right_button.pos_hint_x = .697 #FIXME: I'm not sure if this line actually does anything
+            on_release:
+                header.size_hint_x = right_pane.hide_pane(dohide=False)
+                # hide_right_button.text ="Hide Buttons"
+                hide_right_button.pos_hint_x = .46
+                hide_right_button.size_hint_x = .2
 
     FloatLayout:
         id: body
         pos_hint: {'x' : 0, 'y' : 0}
         size_hint: 1, 0.9
-        # PointLayout:
         BoxLayout:
             id: left_pane
             pos_hint: {'x' : 0 ,'y' : 0}
@@ -47,7 +56,7 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-            FloatLayout:
+            Interactive_Space:
                 id: interactive_space
                 canvas.before:
                     Color:
@@ -55,9 +64,15 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                PointLayout:
+                on_touch_down:
+                    geometry.connect_interactive_space(interactive_space)
+                    geometry.touch_interactive_space(*args)
 
-        FloatLayout:
+
+                # PointLayout:
+
+
+        RightPane:
             id: right_pane
             padding: 5
             pos_hint: {'x' : .66 ,'y' : 0}
@@ -76,28 +91,64 @@
                 size_hint: 1, .33
                 canvas.before:
                     Color:
-                        rgba: geometry.black
+                        rgba: geometry.white
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                Button:
+                #TODO: figure out how to alter togglebuttons so they can't all be deselected.
+                #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
+                ToggleButton:
                     id: add_mode_button
+                    state: 'down'
+                    group: "modes"
                     text: "Add Mode"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
-                Button:
-                    id: select_mode_button
+                    on_press:
+                        geometry.change_mode('adding')
+                        distance_button.hide_opp() ## NOTE: for some reason trying to consolidate these hide opps into hides on the layouts breaks everything
+                        angle_button.hide_opp()
+                        area_button.hide_opp()
+                        perimeter_button.hide_opp()
+                        center_button.hide_opp()
+                        make_figure_button.hide_make(False)
+                        cancel_figure_button.hide_make(False)
+                #TODO: figure out how to alter togglebuttons so they can't all be deselected.
+                #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
+                ToggleButton:
+                    id: move_mode_button
+                    group: "modes"
                     text: "Move Mode"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
-                Button:
+                    on_press:
+                        geometry.change_mode('moving')
+                        distance_button.hide_opp()
+                        angle_button.hide_opp()
+                        area_button.hide_opp()
+                        perimeter_button.hide_opp()
+                        center_button.hide_opp()
+                        make_figure_button.hide_make()
+                        cancel_figure_button.hide_make()
+                #TODO: figure out how to alter togglebuttons so they can't all be deselected.
+                #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
+                ToggleButton:
                     id: select_mode_button
+                    group: "modes"
                     text: "Select Mode"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
+                    on_press:
+                        geometry.change_mode('selecting')
+                        distance_button.hide_opp(False)
+                        angle_button.hide_opp(False)
+                        area_button.hide_opp(False)
+                        perimeter_button.hide_opp(False)
+                        center_button.hide_opp(False)
+                        make_figure_button.hide_make()
+                        cancel_figure_button.hide_make()
+
+
             Label:
                 id: separating_line
                 pos_hint: {'x' : 0, 'y' : .66}
@@ -108,6 +159,7 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
+
             GridLayout:
                 padding: 5
                 cols: 1
@@ -116,40 +168,53 @@
                 size_hint: 1, .66
                 canvas.before:
                     Color:
-                        rgba: geometry.black
+                        rgba: geometry.white
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                Button:
+                MakeFigureButton:
+                    id: make_figure_button
+                    text: "Make Figure"
+                    color: geometry.white
+                    background_color: geometry.button_bg_color
+                MakeFigureButton:
+                    id: cancel_figure_button
+                    text: "Cancel Figure Creation"
+                    color: geometry.white
+                    background_color: geometry.button_bg_color
+
+                OppButton:
                     id: distance_button
                     text: "Find Distance"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
-                Button:
+
+                OppButton:
                     id: angle_button
                     text: "Find Angle"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
-                Button:
+
+                OppButton:
                     id: area_button
                     text: "Find Area"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
 
-                Button:
+                OppButton:
                     id: perimeter_button
                     text: "Find Perimeter"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
-                Button:
+
+                OppButton:
                     id: center_button
                     text: "Find Center"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
 <PointLayout>:
-    id: point
+    # id: point
+
+<PointButton>:
+    on_press:
+        # .check_boundaries(touch.x, touch.y) FIXME where do i need to put this function to detect touch on point and look at dimensions of interactive_space
