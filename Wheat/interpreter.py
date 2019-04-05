@@ -71,10 +71,6 @@ class InitiallyFullGridLayout(GridLayout):
     def on_parent(self, instance, value):
         self.parent.bind(height=self.calculate_filling_widget_height)
 
-    # def on_height(self, instance, value):
-    #     if self.filling_widget_height > 1.5:
-    #         self.calculate_filling_widget_height()
-
     def on_minimum_height(self, instance, value):
         self.calculate_filling_widget_height()
 

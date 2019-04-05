@@ -5,6 +5,9 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color
 from kivy.graphics import Rectangle
 from kivy.graphics import Ellipse
+from kivy.properties import (ObjectProperty, NumericProperty,
+                             OptionProperty, BooleanProperty,
+                             StringProperty, ListProperty)
 
 from kivy.uix.scatter import Scatter
 from kivy.uix.button import Button
@@ -20,6 +23,8 @@ POINT_SIZE = .01
 Builder.load_file('Geometry.kv')
 
 class Geometry(ScatterLayout):
+
+    interaction_space = ObjectProperty()
     move_lock = False
     scale_lock_left = False
     scale_lock_right = False

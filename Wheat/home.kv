@@ -2,6 +2,7 @@
     name: 'Wheat1'
     id: Wheat
     draw: pad
+    widg: widget_list
     canvas.before:
         Rectangle:
             pos: self.pos
@@ -15,10 +16,20 @@
         spacing: 20
         size_hint: 1, .1
         pos_hint: {'x': 0, 'y': .9}
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1.
+                #rgba: 0.3, 0.3, 0.3, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
         Button:
             root: Wheat
             text: 'Prev page'
+            color: 1, .3, .4 , .85
+            background_color: 1,1,1,1
+            background_normal: ''
             on_release:
                 root.manager.transition.direction = 'right'
                 root.manager.current = "Wheat1"
@@ -27,8 +38,9 @@
             text: 'E'
             id: widget_menu
             root: Wheat
-            background_normal: 0.3, 0.3, 0.3, 1
-            background_down: 0.1, 0.1, 0.1, 1
+            color: 1, .3, .4 , .85
+            background_normal: 1, .3, .4 , .85
+            background_down: 0.3, 0.3, 0.3, 1
             font_name: 'assets/fontello.ttf'
             font_size: sp(34)
             color: 1, 1, 1, 1
@@ -36,11 +48,17 @@
         Button:
             root: Wheat
             text: 'Draw'
+            color: 1,1,1,1.
+            background_color: 1, .3, .4 , .85
+            background_normal: ''
             on_release: root.drawToggle()
 
         Button:
             root: Wheat
             text: 'Next page'
+            color: 1, .3, .4 , .85
+            background_color: 1,1,1,1
+            background_normal: ''
 
             on_release:
                 root.manager.transition.direction = 'left'
@@ -54,6 +72,20 @@
 
     FloatLayout:
         id: widget_list
+    # ScrollView:
+    #     size_hint: 1, .9
+    #     pos_hint: {'x': 0, 'y': 0}
+    #     FloatLayout:
+    #         size_hint: 1,1
+    #         pos_hint: {'x': 0, 'y': 0}
+    #         FloatLayout:
+    #             id: widget_list  
+    #             size_hint: 1,1
+    #             pos_hint: {'x': 0, 'y': 0}
+    #         Draw:
+    #             id: pad 
+    #             size_hint: 1,1
+    #             pos_hint: {'x': 0, 'y': 0}
 #-------------------------------- Identical Copy of Above---------------
 <WheatScreen2>:
     name: 'Wheat2'
@@ -174,3 +206,8 @@
     Widget:
         size_hint_y: None
         height: dp(2)
+
+<DrawLayout>:
+    size_hint: 1, 1
+    pos_hint: {'x': 0, 'y': 0}
+

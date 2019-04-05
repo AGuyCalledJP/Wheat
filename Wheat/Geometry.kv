@@ -1,5 +1,6 @@
 <Geometry>:
     id: geometry
+    interaction_space: body
     canvas.before:
         Color:
             rgba: 1,1,1,1.
@@ -17,12 +18,6 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
-        # Button:
-        #     id: move
-        #     pos_hint: {'x': .7,'y': 0}
-        #     size_hint: .3,1
-        #     text: 'Move'
-        #     on_press: functionplotter.flip()
         CheckBox:
             id: check
             pos_hint: {'x': 0,'y': 0}
@@ -33,12 +28,20 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-
     FloatLayout:
         id: body
         pos_hint: {'x' : 0, 'y' : 0}
         size_hint: 1, 0.9
-        PointLayout:
+        FloatLayout:
+            id: left
+            pos_hint: {'x' : 0, 'y' : 0}
+            size_hint: .5, 1
+            PointLayout:
+        FloatLayout:
+            id: right
+            pos_hint: {'x' : .5, 'y' : 0}
+            size_hint: .5, 1
+
 
 <PointLayout>:
     id: point

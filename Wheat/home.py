@@ -42,31 +42,24 @@ from Wheat.Geometry import Geometry
 #Load kv file
 Builder.load_file('home.kv')
 
+class DrawLayout(FloatLayout):
+    def __init__(self, **kwargs):
+        super(DrawLayout, self).__init__(**kwargs)
+
 class WheatScreen(Screen):
 
     count = 1
     layouts = []
     d = 1
     draw = ObjectProperty()
+    widg = ObjectProperty()
 
     def remove(self):
-        # if self.count > 1:
-        #     self.count -= 1
         for i in self.layouts:
             main = i
             contained = i.children[0].ids.check
             if contained.active:
                 self.ids.widget_list.remove_widget(main)
-            # for i in contained:
-            #     print(i)
-            #     if i.id == "header":
-            #         print("we close")
-            #     if i.id == "check":
-            #         if i.active:
-            #             self.ids.widget_list.remove_widget(main)
-
-        if self.layouts!=[]:
-            print("nothing here")
 
     def add(self):
         if self.layouts==[]:
@@ -116,9 +109,11 @@ class WheatScreen(Screen):
     def drawToggle(self):
         if self.d == 1:
             self.draw.disabled = True
+            # self.widg.disabled = False
             self.d = 0
         else:
             self.draw.disabled = False
+            # self.widg.disabled = True
             self.d = 1
 
 #-------------------------------- Identical Copy of Above---------------
