@@ -7,6 +7,12 @@
             pos: self.pos
             size: self.size
             source: "blank-notebook-paper-template.jpg"
+    FloatLayout:
+        Clear:
+            text: 'Clear writing'
+            pos_hint: {'x':0, 'y': 0}
+            size_hint: (None, None)
+            on_release: root.clear_canvas()
 #Old stuff ................................
     BoxLayout:
 
@@ -26,8 +32,6 @@
                     root.manager.current = 'paint screen'
             Button:
                 text: 'Clear page'
-                on_release:
-                    root.clear_canvas()
 
             Button:
                 text: 'Eraser'
@@ -38,7 +42,9 @@
                 on_release:
                     root.manager.transition.direction = 'left'
                     root.manager.current = 'paint screen'
-        PaintWidget:
-            name: 'paint me'
-<PaintWidget>:
-    background_color: 0, 0, 0, 0
+        FloatLayout:
+            size_hint: 1, .9
+            PaintWidget:
+                id: painter
+                name: 'paint me'
+                size_hint: 1, 1

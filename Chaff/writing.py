@@ -33,7 +33,7 @@ Builder.load_file('writing.kv')
 
 class PaintWidget(Widget):
     def on_touch_down(self, touch):
-        with self.canvas:
+        with self.canvas.before:
             Color(0,0,0)
             lineWidth = 2.5;
             Ellipse(pos=(touch.x - lineWidth, touch.y - lineWidth), size=(2* lineWidth,2 * lineWidth))
@@ -43,6 +43,12 @@ class PaintWidget(Widget):
         touch.ud['line'].points += [touch.x,touch.y]
 
 class PaintScreen(Screen):
+    def __init__(self,**kwargs):
+        super(PaintScreen,self).__init__(**kwargs)
+#        self.PaintWidget = self.ids.painter
+
+    def clear_canvas(self):
+        self.PaintWidget.canvas.clear()
 
 # Old Stuff ..............................
     count = 1
@@ -101,13 +107,17 @@ class PaintScreen(Screen):
 class Manager(ScreenManager):
     pass
 
+class Clear(Button):
+    pass
+
 class PaintApp(App):
     def build(self):
         self.sm = Manager()
+        self.sm.PaintScreen = PaintScreen()
+#        self.sm.PaintScreen.PaintWidget = PaintWidget()
+#        self.painter = self.sm.PaintScreen.PaintWidget;
+#        self.sm.PaintScreen.add_widget(Clear())
         return self.sm
-
-    def clear_canvas(self):
-        self.sm.PaintScreen.PaintWidget.canvas.clear();
 
 if __name__ == '__main__':
     PaintApp().run()

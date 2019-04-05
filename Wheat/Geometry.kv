@@ -1,5 +1,6 @@
 <Geometry>:
     id: geometry
+<<<<<<< HEAD
     interaction_space: body
     canvas.before:
         Color:
@@ -8,30 +9,56 @@
             pos: self.pos
             size: self.size
 
+=======
+>>>>>>> f098cf60a4e7d41cab2d15f05883df7e8f04ea80
     FloatLayout:
         id: header
+        padding: 5
         pos_hint: {'x' : 0, 'y' : .9}
         size_hint: 1, 0.1
         canvas.before:
             Color:
-                rgba: 1, 1, 1, 1.
+                rgba: geometry.left_pane_bg_color
             Rectangle:
                 pos: self.pos
                 size: self.size
         CheckBox:
             id: check
             pos_hint: {'x': 0,'y': 0}
-            size_hint: .3,1
+            size_hint: .1,1
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 1.
+                    rgba: geometry.button_bg_color
                 Rectangle:
                     pos: self.pos
                     size: self.size
+<<<<<<< HEAD
+=======
+        ToggleButton:
+            state: "normal"
+            id: hide_right_button
+            pos_hint: {'x': .46, 'y': 0}
+            size_hint: .2, 1
+            text: "Hide Buttons"
+            background_color: geometry.button_bg_color
+            color: geometry.white
+            on_press:
+                header.size_hint_x = right_pane.hide_pane()
+                # hide_right_button.text = "Unhide"
+                hide_right_button.size_hint_x = .303
+                hide_right_button.pos_hint_x = .697 #FIXME: I'm not sure if this line actually does anything
+            on_release:
+                header.size_hint_x = right_pane.hide_pane(dohide=False)
+                # hide_right_button.text ="Hide Buttons"
+                hide_right_button.pos_hint_x = .46
+                hide_right_button.size_hint_x = .2
+
+>>>>>>> f098cf60a4e7d41cab2d15f05883df7e8f04ea80
     FloatLayout:
         id: body
         pos_hint: {'x' : 0, 'y' : 0}
         size_hint: 1, 0.9
+<<<<<<< HEAD
         FloatLayout:
             id: left
             pos_hint: {'x' : 0, 'y' : 0}
@@ -42,6 +69,139 @@
             pos_hint: {'x' : .5, 'y' : 0}
             size_hint: .5, 1
 
+=======
+        # PointLayout:
+        BoxLayout:
+            id: left_pane
+            pos_hint: {'x' : 0 ,'y' : 0}
+            size_hint: .66,1
+            padding: 30
+            canvas.before:
+                Color:
+                    rgba: geometry.left_pane_bg_color
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            FloatLayout:
+                id: interactive_space
+                canvas.before:
+                    Color:
+                        rgba: geometry.white
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                PointLayout:
+>>>>>>> f098cf60a4e7d41cab2d15f05883df7e8f04ea80
 
+        RightPane
+            id: right_pane
+            padding: 5
+            pos_hint: {'x' : .66 ,'y' : 0}
+            size_hint: .34,1
+            canvas.before:
+                Color:
+                    rgba: geometry.white
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            GridLayout:
+                padding: 5
+                cols: 1
+                id: mode_buttons
+                pos_hint: {'x' : 0, 'y' : .67}
+                size_hint: 1, .33
+                canvas.before:
+                    Color:
+                        rgba: geometry.black
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                ToggleButton:
+                    id: add_mode_button
+                    group: "modes"
+                    text: "Add Mode"
+                    color: geometry.white
+                    on_press:
+                        geometry.mode_state = "adding"
+                        print(geometry.mode_state)
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                ToggleButton:
+                    id: select_mode_button
+                    group: "modes"
+                    text: "Move Mode"
+                    color: geometry.white
+                    on_press:
+                        geometry.mode_state = "moving"
+                        print(geometry.mode_state)
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                ToggleButton:
+                    id: select_mode_button
+                    group: "modes"
+                    text: "Select Mode"
+                    color: geometry.white
+                    on_press:
+                        geometry.mode_state = "selecting"
+                        print(geometry.mode_state)
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+            Label:
+                id: separating_line
+                pos_hint: {'x' : 0, 'y' : .66}
+                size_hint: 1, .01
+                canvas.before:
+                    Color:
+                        rgba: geometry.separator_color
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            GridLayout:
+                padding: 5
+                cols: 1
+                id: operation_buttons
+                pos_hint: {'x' : 0, 'y' : 0}
+                size_hint: 1, .66
+                canvas.before:
+                    Color:
+                        rgba: geometry.black
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Button:
+                    id: distance_button
+                    text: "Find Distance"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                Button:
+                    id: angle_button
+                    text: "Find Angle"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                Button:
+                    id: area_button
+                    text: "Find Area"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+
+                Button:
+                    id: perimeter_button
+                    text: "Find Perimeter"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
+                Button:
+                    id: center_button
+                    text: "Find Center"
+                    color: geometry.white
+                    # padding: 5
+                    background_color: geometry.button_bg_color
 <PointLayout>:
-    id: point
+    # id: point
+
+<PointButton>:
+    on_press:
+        # .check_boundaries(touch.x, touch.y) FIXME where do i need to put this function to detect touch on point and look at dimensions of interactive_space
