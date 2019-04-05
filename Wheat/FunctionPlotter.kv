@@ -10,7 +10,7 @@
         size_hint: 1, 0.1
         canvas.before:
             Color:
-                rgba: 1, 1, 1, 1.
+                rgba: 0,0,0, 1.
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -26,7 +26,7 @@
             size_hint: .3,1
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 1.
+                    rgba: 0,0,0, 1.
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -116,7 +116,7 @@
                     background_normal: ''
                     background_color: root.c1, root.c2, root.c3, root.c4 -0.05
                     font_size: root.fontSizer
-                    text: 'x^-1'
+                    text: '1/x'
                     on_press: functionplotter.ClickedInv()
                 Button:
                     background_normal: ''
@@ -134,14 +134,14 @@
                     background_normal: ''
                     background_color: root.c1, root.c2, root.c3, root.c4
                     font_size: root.fontSizer
-                    text: '/'
+                    text: u'\u00f7'
                     on_press: functionplotter.ClickedDiv()
 
                 Button:
                     background_normal: ''
                     background_color: root.c1, root.c2, root.c3, root.c4 -0.05
                     font_size: root.fontSizer
-                    text: '^2'
+                    text: 'x' + u'\u00b2'
                     on_press: functionplotter.ClickedSquared()
                 Button:
                     background_normal: ''
@@ -165,14 +165,14 @@
                     background_normal: ''
                     background_color: root.c1, root.c2, root.c3, root.c4 - 0.05
                     font_size: root.fontSizer
-                    text: '*'
+                    text: u'\u2022'
                     on_press: functionplotter.ClickedTimes()
 
                 Button:
                     background_normal: ''
                     background_color: root.c1, root.c2, root.c3, root.c4
                     font_size: root.fontSizer
-                    text: u'\u1d49'
+                    text: 'x'
                     on_press: functionplotter.Clickedx()
                 Button:
                     background_normal: ''
@@ -196,7 +196,7 @@
                     background_normal: ''
                     background_color: root.c1, root.c2, root.c3, root.c4
                     font_size: root.fontSizer
-                    text: '-'
+                    text: u'\u2212'
                     on_press: functionplotter.ClickedMinus()
 
                 Button:
@@ -227,7 +227,7 @@
                     background_normal: ''
                     background_color: root.c1, root.c2, root.c3, root.c4 -0.05
                     font_size: root.fontSizer
-                    text: '+'
+                    text: u'\u002b'
                     on_press: functionplotter.ClickedPlus()
 
                 Button:
@@ -258,5 +258,5 @@
                     background_normal: ''
                     background_color: root.c1, root.c2, root.c3, root.c4
                     font_size: root.fontSizer
-                    text: 'Enter'
+                    text: '='
                     on_press: functionplotter.ClickedEnter()
