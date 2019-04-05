@@ -6,44 +6,59 @@
     #OutputWindow
     FloatLayout:
         id: top_box
-        FloatLayout:
-            id: out
-            pos_hint: {'x': 0,'y': .55}
-            size_hint: 1,.45
-            InitiallyFullGridLayout: #output window
-                cols: 1
-                id: output_window
-                pos_hint: {'x': 0,'y': 0}
-                size_hint: 1,1
-                filling_widget_minimum_height: 100
-        
+        canvas.before:
+            Color:
+                rgba: 1,1,1,1.
+            Rectangle:
+                pos: self.pos
+                size: self.size
         #Header
         FloatLayout: 
             id: header
-            pos_hint: {'x': 0,'y': .45}
+            pos_hint: {'x': 0,'y': .9}
             size_hint: 1,.1
+            canvas.before:
+                Color:
+                    rgba: 1,1,1,1.
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             Button:
                 id: move
                 pos_hint: {'x': .7,'y': 0}
                 size_hint: .3,1
                 text: 'Move'
                 on_press: interpreter_gui.flip()
+                background_normal: ''
+                background_color: 1, .3, .4 , .85
+                color: 1,1,1,1
             CheckBox:
                 id: check
                 pos_hint: {'x': 0,'y': 0}
-                size_hint: .3,1
+                size_hint: .2,1
                 canvas.before:
                     Color:
-                        rgba: 1, 1, 1, 1.
+                        rgba: 1, .3, .4 , .85
                     Rectangle:
                         pos: self.pos
                         size: self.size
+
+        FloatLayout:
+            id: out
+            pos_hint: {'x': 0,'y': .5}
+            size_hint: 1,.5
+            InitiallyFullGridLayout: #output window
+                cols: 1
+                id: output_window
+                pos_hint: {'x': 0,'y': 0}
+                size_hint: 1,1
+                filling_widget_minimum_height: 100
 
         #Left Bar
         FloatLayout:
             id: left
             pos_hint: {'x':0, 'y':0}
-            size_hint: .1,.45
+            size_hint: .1,.5
             canvas.before:
                 Rectangle:
                     pos: self.pos
@@ -55,8 +70,9 @@
                 id: settings
                 pos_hint: {'x':0, 'y':0}
                 size_hint: 1,.5
-                background_normal: 0.3, 0.3, 0.3, 1
-                background_down: 0.1, 0.1, 0.1, 1
+                background_normal: 1, .3, .4 , .85
+                background_down: 0.3, 0.3, 0.3, 1
+                color: 244, 293, 239, .9
                 font_name: 'assets/fontello.ttf'
                 font_size: sp(34)
                 color: 1, 1, 1, 1
@@ -111,8 +127,9 @@
                     font_name: 'assets/fontello.ttf'
                     font_size: sp(20)
                     on_release: interpreter_gui.interpret_line_from_code_input()
-                    background_normal: 0.3, 0.3, 0.3, 1
+                    background_normal: 1, .3, .4 , .85
                     background_down: 0.1, 0.1, 0.1, 1
+                    color: 1,1,1,1
                     radius: 0
                     padding: 0
 

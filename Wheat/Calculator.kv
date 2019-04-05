@@ -20,6 +20,16 @@
             font_size: root.fontSizer
             text: 'Move'
             on_press: calculator.flip()
+        CheckBox:
+            id: check
+            pos_hint: {'x': 0,'y': 0}
+            size_hint: .2,1
+            canvas.before:
+                Color:
+                    rgba: 1, .3, .4 , .85
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
 
         FloatLayout:
             pos_hint: {'x' : 0.0, 'y' : 0.0}
