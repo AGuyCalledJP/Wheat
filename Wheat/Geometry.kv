@@ -1,5 +1,6 @@
 <Geometry>:
     id: geometry
+    geom: geometry
     FloatLayout:
         id: header
         padding: 5
@@ -56,7 +57,7 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-            FloatLayout:
+            Interactive_Space:
                 id: interactive_space
                 canvas.before:
                     Color:
@@ -64,7 +65,9 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                PointLayout:
+                on_touch_down:
+                    geometry.touch_interactive_space(*args)
+
 
         RightPane:
             id: right_pane
@@ -85,40 +88,58 @@
                 size_hint: 1, .33
                 canvas.before:
                     Color:
-                        rgba: geometry.black
+                        rgba: geometry.white
                     Rectangle:
                         pos: self.pos
                         size: self.size
+
                 ToggleButton:
                     id: add_mode_button
+                    state: 'down'
                     group: "modes"
                     text: "Add Mode"
                     color: geometry.white
-                    on_press:
-                        geometry.mode_state = "adding"
-                        print(geometry.mode_state)
-                    # padding: 5
                     background_color: geometry.button_bg_color
+                    on_press:
+                        geometry.change_mode('adding')
+                        distance_button.hide_opp()
+                        angle_button.hide_opp()
+                        area_button.hide_opp()
+                        perimeter_button.hide_opp()
+                        center_button.hide_opp()
+                        print(geometry.mode_state)
+
                 ToggleButton:
-                    id: select_mode_button
+                    id: move_mode_button
                     group: "modes"
                     text: "Move Mode"
                     color: geometry.white
-                    on_press:
-                        geometry.mode_state = "moving"
-                        print(geometry.mode_state)
-                    # padding: 5
                     background_color: geometry.button_bg_color
+                    on_press:
+                        geometry.change_mode('moving')
+                        distance_button.hide_opp()
+                        angle_button.hide_opp()
+                        area_button.hide_opp()
+                        perimeter_button.hide_opp()
+                        center_button.hide_opp()
+                        print(geometry.mode_state)
+
                 ToggleButton:
                     id: select_mode_button
                     group: "modes"
                     text: "Select Mode"
                     color: geometry.white
-                    on_press:
-                        geometry.mode_state = "selecting"
-                        print(geometry.mode_state)
-                    # padding: 5
                     background_color: geometry.button_bg_color
+                    on_press:
+                        geometry.change_mode('selecting')
+                        distance_button.hide_opp(False)
+                        angle_button.hide_opp(False)
+                        area_button.hide_opp(False)
+                        perimeter_button.hide_opp(False)
+                        center_button.hide_opp(False)
+                        print(geometry.mode_state)
+
+
             Label:
                 id: separating_line
                 pos_hint: {'x' : 0, 'y' : .66}
@@ -129,6 +150,7 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
+
             GridLayout:
                 padding: 5
                 cols: 1
@@ -137,40 +159,39 @@
                 size_hint: 1, .66
                 canvas.before:
                     Color:
-                        rgba: geometry.black
+                        rgba: geometry.white
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                Button:
+
+                OppButton:
                     id: distance_button
                     text: "Find Distance"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
-                Button:
+
+                OppButton:
                     id: angle_button
                     text: "Find Angle"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
-                Button:
+
+                OppButton:
                     id: area_button
                     text: "Find Area"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
 
-                Button:
+                OppButton:
                     id: perimeter_button
                     text: "Find Perimeter"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
-                Button:
+
+                OppButton:
                     id: center_button
                     text: "Find Center"
                     color: geometry.white
-                    # padding: 5
                     background_color: geometry.button_bg_color
 <PointLayout>:
     # id: point
