@@ -7,7 +7,7 @@
         size_hint: 1, 1
         canvas.before:
             Color:
-                rgba: 0,0,0,1
+                rgba:0,0,0,1
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -15,6 +15,9 @@
             id: move
             pos_hint: {'x': 0.8, 'y': 0.9}
             size_hint: 0.2,0.1
+            background_normal: ''
+            background_color: root.c1, root.c2, root.c3, root.c4
+            font_size: root.fontSizer
             text: 'Move'
             on_press: calculator.flip()
 
@@ -45,7 +48,7 @@
                 Keyboard:
                     canvas.before:
                         Color:
-                            rgba: 0,0,0,1
+                            rgba: 1,1,1,1
                         Rectangle:
                             pos: self.pos
                             size: self.size
