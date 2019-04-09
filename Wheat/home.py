@@ -38,6 +38,9 @@ from Wheat.FunctionPlotter import FunctionPlotter
 from Wheat.draw import Draw
 from Wheat.Calculator import Calculator
 from Wheat.Geometry import Geometry
+from kivy.storage.jsonstore import JsonStore
+
+store = JsonStore('children.json')
 
 #Load kv file
 Builder.load_file('home.kv')
@@ -50,22 +53,36 @@ class WheatScreen(Screen):
 
     count = 1
     layouts = []
+    currentKeys = []
     d = 1
     draw = ObjectProperty()
     widg = ObjectProperty()
+    sStr = 'child'
 
     def remove(self):
+        rem = 0
+        getLost = []
+        it = 0
         for i in self.layouts:
             main = i
             contained = i.children[0].ids.check
             if contained.active:
+                rem = rem + 1
                 self.ids.widget_list.remove_widget(main)
+                getLost.append(it)
+            it = it + 1
+        self.count = self.count - rem
+        print(len(self.layouts))
+        print(len(getLost))
+        for i in getLost:
+            del self.layouts[i]
 
     def add(self):
         if self.layouts==[]:
             self.ids.widget_list.clear_widgets()
 
-        if len(self.ids.widget_list.children)<4:
+        if len(self.ids.widget_list.children)<10:
+            self.count = self.count + 1
             layout = FloatLayout(size_hint=(None,None), size = self.size)
             print(layout.size)
             layout.add_widget(InterpreterGui())
@@ -115,6 +132,97 @@ class WheatScreen(Screen):
             self.draw.disabled = False
             # self.widg.disabled = True
             self.d = 1
+
+    def Save(self):
+        self.currentKeys = []
+        if len(self.layouts) > 0:
+            it = 0
+            for i in self.layouts:
+                saveMe = str(self.sStr) + str(it)
+                local = i.children[0].pos
+                widgType = ''
+                a = i.children[0].ids
+                if 'calc' in a:
+                    widgType = 'calc'
+                elif 'func' in a:
+                    widgType = 'func'
+                elif 'geo' in a:
+                    widgType = 'geo'
+                elif 'interp' in a:
+                    widgType = 'interp'
+                it = it + 1
+                self.currentKeys.append(saveMe)
+                store.put(saveMe, location=local, wType = widgType)
+                print(store.exists(saveMe))
+
+    def Load(self):
+        print("hello there")
+        print(len(self.currentKeys))
+        if len(self.currentKeys) > 0:
+            for curr in self.currentKeys:
+                elem = store.get(curr)
+                print(elem)
+                print(type(elem))
+                loc = elem['location']
+                wt = elem['wType']
+                if 'calc' in wt:
+                    self.addCalcAux(loc)
+                elif 'func' in wt:
+                    self.addFuncAux(loc)
+                elif 'geo' in wt:
+                    self.addGeoAux(loc)
+                elif 'interp' in wt:
+                    self.addAux(loc)
+
+    def addAux(self, pos):
+        if self.layouts==[]:
+            self.ids.widget_list.clear_widgets()
+
+        if len(self.ids.widget_list.children)<10:
+            self.count = self.count + 1
+            layout = FloatLayout(size_hint=(None,None), size = self.size)
+            print(layout.size)
+            layout.add_widget(InterpreterGui(pos=pos))
+            self.count += 1
+            self.ids.widget_list.add_widget(layout)
+            self.layouts.append(layout)
+
+    def addFuncAux(self,pos):
+        if self.layouts==[]:
+            self.ids.widget_list.clear_widgets()
+
+        if len(self.ids.widget_list.children)<4:
+            layout = FloatLayout(size_hint=(None,None), size = self.size)
+            layout.add_widget(FunctionPlotter(pos=pos));
+            self.count += 1
+            self.ids.widget_list.add_widget(layout)
+            self.layouts.append(layout)
+
+    def addCalcAux(self,pos):
+        if self.layouts==[]:
+            self.ids.widget_list.clear_widgets()
+
+        if len(self.ids.widget_list.children)<4:
+            layout = FloatLayout(size_hint=(None,None), size = self.size)
+            layout.add_widget(Calculator(pos=pos));
+            self.count += 1
+            self.ids.widget_list.add_widget(layout)
+            self.layouts.append(layout)
+    
+    def addGeoAux(self,pos):
+        if self.layouts==[]:
+            self.ids.widget_list.clear_widgets()
+
+        if len(self.ids.widget_list.children)<4:
+            layout = FloatLayout(size_hint=(None,None), size = self.size)
+            layout.add_widget(Geometry(pos=pos));
+            self.count += 1
+            self.ids.widget_list.add_widget(layout)
+            self.layouts.append(layout)
+
+
+
+
 
 #-------------------------------- Identical Copy of Above---------------
 
@@ -177,3 +285,10 @@ class WheatBlocksDropDownMenu(menu.MenuDropDown):
 
 class WheatBlocksDropDownMenuButton(menu.MenuButton):
     dropdown_cls = ObjectProperty(WheatBlocksDropDownMenu)
+
+class DrawDropDownMenu(menu.MenuDropDown):
+    pass
+
+class DrawDropDownMenuButton(menu.MenuButton):
+    dropdown_cls = ObjectProperty(DrawDropDownMenu)
+
