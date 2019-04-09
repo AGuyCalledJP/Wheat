@@ -285,3 +285,10 @@ class WheatBlocksDropDownMenu(menu.MenuDropDown):
 
 class WheatBlocksDropDownMenuButton(menu.MenuButton):
     dropdown_cls = ObjectProperty(WheatBlocksDropDownMenu)
+
+class DrawDropDownMenu(menu.MenuDropDown):
+    pass
+
+class DrawDropDownMenuButton(menu.MenuButton):
+    dropdown_cls = ObjectProperty(DrawDropDownMenu)
+
