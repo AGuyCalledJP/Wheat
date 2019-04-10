@@ -111,7 +111,7 @@ class WheatScreen(Screen):
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
-    
+
     def addGeo(self):
         if self.layouts==[]:
             self.ids.widget_list.clear_widgets()
@@ -208,7 +208,7 @@ class WheatScreen(Screen):
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
-    
+
     def addGeoAux(self,pos):
         if self.layouts==[]:
             self.ids.widget_list.clear_widgets()
@@ -219,6 +219,15 @@ class WheatScreen(Screen):
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
+
+    #Incorporationg writing functionality
+    def clear(self):
+        self.ids.pad.ids.paintWid.clear_canvas()
+
+    def undo(self):
+        self.ids.pad.ids.paintWid.undo()
+    def redo(self):
+        self.ids.pad.ids.paintWid.redo()
 
 
 
@@ -291,4 +300,3 @@ class DrawDropDownMenu(menu.MenuDropDown):
 
 class DrawDropDownMenuButton(menu.MenuButton):
     dropdown_cls = ObjectProperty(DrawDropDownMenu)
-

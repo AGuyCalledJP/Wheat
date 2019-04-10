@@ -60,7 +60,7 @@
             background_color: 1, .3, .4 , .85
             background_normal: ''
             on_release: root.Save()
-        
+
         Button:
             root: Wheat
             text: 'Load'
@@ -95,11 +95,11 @@
     #         size_hint: 1,1
     #         pos_hint: {'x': 0, 'y': 0}
     #         FloatLayout:
-    #             id: widget_list  
+    #             id: widget_list
     #             size_hint: 1,1
     #             pos_hint: {'x': 0, 'y': 0}
     #         Draw:
-    #             id: pad 
+    #             id: pad
     #             size_hint: 1,1
     #             pos_hint: {'x': 0, 'y': 0}
 #-------------------------------- Identical Copy of Above---------------
@@ -243,7 +243,7 @@
         text_size: self.size
         padding_x: dp(10)
         valign: 'middle'
-        #on_release: Fill these out
+        on_release: root.parent_obj.root.clear()
     Widget:
         size_hint_y: None
         height: dp(2)
@@ -254,7 +254,7 @@
         text_size: self.size
         padding_x: dp(10)
         valign: 'middle'
-        #on_release: Fill these out
+        on_release: root.parent_obj.root.undo()
     Widget:
         size_hint_y: None
         height: dp(2)
@@ -265,7 +265,7 @@
         text_size: self.size
         padding_x: dp(10)
         valign: 'middle'
-        #on_release: Fill these out
+        on_release: root.parent_obj.root.redo()
     Widget:
         size_hint_y: None
         height: dp(2)
