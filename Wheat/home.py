@@ -128,6 +128,17 @@ class WheatScreen(Screen):
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
 
+    def addTex(self):
+        if self.layouts==[]:
+            self.ids.widget_list.clear_widgets()
+
+        if len(self.ids.widget_list.children)<4:
+            layout =  FloatLayout(size_hint=(None,None), size = self.size)
+            layout.add_widget(Tex());
+            self.count += 1
+            self.ids.widget_list.add_widget(layout)
+            self.layouts.append(layout)
+
     def drawToggle(self):
         if self.d == 1:
             self.draw.disabled = True

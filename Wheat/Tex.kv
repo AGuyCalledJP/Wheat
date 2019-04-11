@@ -1,0 +1,12 @@
+<Tex>:
+    id: tex
+
+    FloatLayout:
+        pos_hint: {'x' : 0.0, 'y' : 0.0}
+        size_hint: 1, 1
+        canvas.before:
+            Color:
+                rgba:0,0,0,1
+            Rectangle:
+                pos: self.pos
+                size: self.size
