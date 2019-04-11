@@ -41,6 +41,7 @@ from Wheat.Geometry import Geometry
 from kivy.storage.jsonstore import JsonStore
 
 store = JsonStore('children.json')
+stuff = JsonStore('childInfo.json')
 
 #Load kv file
 Builder.load_file('home.kv')
@@ -68,6 +69,8 @@ class WheatScreen(Screen):
             contained = i.children[0].ids.check
             if contained.active:
                 rem = rem + 1
+                if 'interp' in i.children[0].ids:
+                    i.children[0].restart_interpreter()
                 self.ids.widget_list.remove_widget(main)
                 getLost.append(it)
             it = it + 1
@@ -85,7 +88,9 @@ class WheatScreen(Screen):
             self.count = self.count + 1
             layout = FloatLayout(size_hint=(None,None), size = self.size)
             print(layout.size)
-            layout.add_widget(InterpreterGui())
+            w = InterpreterGui()
+            w.restart_interpreter()
+            layout.add_widget(w)
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
@@ -138,6 +143,7 @@ class WheatScreen(Screen):
         if len(self.layouts) > 0:
             it = 0
             for i in self.layouts:
+                #Save the widget itself
                 saveMe = str(self.sStr) + str(it)
                 local = i.children[0].pos
                 widgType = ''
@@ -154,13 +160,20 @@ class WheatScreen(Screen):
                 self.currentKeys.append(saveMe)
                 store.put(saveMe, location=local, wType = widgType)
                 print(store.exists(saveMe))
+                #Save the information associated with said widget
+                bundle = []
+                if widgType is 'interp':
+                    bundle = i.children[0].Save()
+                    print(bundle)
+                    stuff.put(saveMe, prior = bundle[0], curr = bundle[1])
+
 
     def Load(self):
-        print("hello there")
         print(len(self.currentKeys))
         if len(self.currentKeys) > 0:
             for curr in self.currentKeys:
                 elem = store.get(curr)
+                discharged = stuff.get(curr)
                 print(elem)
                 print(type(elem))
                 loc = elem['location']
@@ -172,7 +185,12 @@ class WheatScreen(Screen):
                 elif 'geo' in wt:
                     self.addGeoAux(loc)
                 elif 'interp' in wt:
-                    self.addAux(loc)
+                    res = self.addAux(loc)
+                    interp = self.layouts[res-1].children[0]
+                    prior = discharged['prior']
+                    curr = discharged['curr']
+                    interp.Load(prior, curr)
+
 
     def addAux(self, pos):
         if self.layouts==[]:
@@ -186,6 +204,7 @@ class WheatScreen(Screen):
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
+            return len(self.layouts)
 
     def addFuncAux(self,pos):
         if self.layouts==[]:

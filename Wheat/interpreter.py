@@ -22,6 +22,7 @@ from kivy.app import App
 from kivy import platform
 from kivy.lang import Builder
 from functools import partial
+import time as t
 
 from kivy.clock import Clock
 
@@ -823,6 +824,23 @@ class InterpreterGui(ScatterLayout):
         self._touches.append(touch)
         self._last_touch_pos[touch] = touch.pos
         return True
+
+    def Save(self):
+        lifeRaft = []
+        lifeRaft.append(self.interpreted_lines)
+        lifeRaft.append(self.code_input.text)
+        return lifeRaft
+
+    def Load(self, prior, curr):
+        # self.restart_interpreter()
+        self.clear_output()
+        t.sleep(1)
+        for i in prior:
+            self.interpret_line(i)
+        self.code_input.text = curr
+        self.clear_output()
+            
+
 
 class RestartPopup(ModalView):
     interpreter_gui = ObjectProperty()
