@@ -35,7 +35,7 @@ class Tex(ScatterLayout):
     disp = 1
 
     def __init__(self, **kwargs):
-        super(Calculator, self).__init__(**kwargs)
+        super(Tex, self).__init__(**kwargs)
         self.size_hint = 0.5,0.5
 
 
@@ -55,7 +55,7 @@ class Tex(ScatterLayout):
             y = round(y, 0)
             y = y * 10
             self.pos = x, y
-            return super(Calculator, self).on_touch_up(touch)
+            return super(Tex, self).on_touch_up(touch)
 
     def transform_with_touch(self, touch):
         self.size_hint = None,None

@@ -38,6 +38,7 @@ from Wheat.FunctionPlotter import FunctionPlotter
 from Wheat.draw import Draw
 from Wheat.Calculator import Calculator
 from Wheat.Geometry import Geometry
+from Wheat.Tex import Tex
 from kivy.storage.jsonstore import JsonStore
 
 store = JsonStore('children.json')
