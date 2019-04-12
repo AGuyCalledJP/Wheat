@@ -6,7 +6,11 @@
         size_hint: 1, 1
         canvas.before:
             Color:
-                rgba:0,0,0,1
+                rgba: 1,1,1,1
             Rectangle:
                 pos: self.pos
                 size: self.size
+
+        TextInput:
+            pos_hint: {'x' : 0.1, 'y' : 0.05}
+            size_hint: 0.8,0.2

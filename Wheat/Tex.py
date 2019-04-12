@@ -36,7 +36,7 @@ class Tex(ScatterLayout):
 
     def __init__(self, **kwargs):
         super(Tex, self).__init__(**kwargs)
-        self.size_hint = 0.5,0.5
+        self.size_hint = 0.5,0.25
 
 
     def on_touch_up(self, touch):
