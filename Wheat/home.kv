@@ -3,11 +3,11 @@
     id: Wheat
     draw: pad
     widg: widget_list
-    canvas.before:
-        Rectangle:
-            pos: self.pos
-            size: self.size
-            source: "visual_assets/wheat_bg_1_college.png"
+    # canvas.before:
+    #     Rectangle:
+    #         pos: self.pos
+    #         size: self.size
+    #         source: "visual_assets/wheat_bg_1_college.png"
 
     GridLayout:
 
@@ -29,9 +29,11 @@
             color: 1, .3, .4 , .85
             background_color: 1,1,1,1
             background_normal: ''
-            on_release:
-                root.manager.transition.direction = 'right'
-                root.manager.current = "Wheat1"
+            on_release: pad.pageBack()
+
+            # on_release:
+            #     root.manager.transition.direction = 'right'
+            #     root.manager.current = "Wheat1"
 
         #Widget Menu
         WheatBlocksDropDownMenuButton:
@@ -75,10 +77,11 @@
             color: 1, .3, .4 , .85
             background_color: 1,1,1,1
             background_normal: ''
+            on_release: pad.pageForward()
 
-            on_release:
-                root.manager.transition.direction = 'left'
-                root.manager.current = "Wheat2"
+            # on_release:
+            #     root.manager.transition.direction = 'left'
+            #     root.manager.current = "Wheat2"
 
     Draw:
         id: pad
@@ -105,7 +108,7 @@
 <WheatScreen2>:
     name: 'Wheat2'
     id: Wheat
-    draw: pad
+    # draw: pad
     canvas.before:
         Rectangle:
             pos: self.pos
@@ -154,15 +157,15 @@
             text: 'Draw'
             on_release: root.drawToggle()
 
-    Draw:
-        id: pad
-        size_hint: 1, .9
-        pos_hint: {'x': 0, 'y': 0}
-        orientation: 'vertical'
+    # Draw:
+    #     id: pad
+    #     size_hint: 1, .9
+    #     pos_hint: {'x': 0, 'y': 0}
+    #     orientation: 'vertical'
 
-    FloatLayout:
+    # FloatLayout:
 
-        id: widget_list
+    #     id: widget_list
 
 <WheatBlocksDropDownMenu>:
     id: widg_drop

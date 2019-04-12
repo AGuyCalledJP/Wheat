@@ -151,6 +151,7 @@ class WheatScreen(Screen):
             self.d = 1
 
     def Save(self):
+        self.ids.pad.Save()
         self.currentKeys = []
         if len(self.layouts) > 0:
             it = 0
@@ -181,6 +182,7 @@ class WheatScreen(Screen):
 
 
     def Load(self):
+        self.ids.pad.Load()
         print(len(self.currentKeys))
         if len(self.currentKeys) > 0:
             for curr in self.currentKeys:
@@ -253,15 +255,15 @@ class WheatScreen(Screen):
 
     #Incorporationg writing functionality
     def clear(self):
-        self.ids.pad.ids.paintWid.clear_canvas()
+        self.ids.pad.clear_canvas()
 
     def undo(self):
-        self.ids.pad.ids.paintWid.undo()
+        self.ids.pad.undo()
     def redo(self):
-        self.ids.pad.ids.paintWid.redo()
+        self.ids.pad.redo()
 
     def chColor(self):
-        self.ids.pad.ids.paintWid.chColor()
+        self.ids.pad.chColor()
 
 
 
