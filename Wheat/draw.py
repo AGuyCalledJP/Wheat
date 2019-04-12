@@ -13,6 +13,7 @@ class Paint(Widget):
     undolist = []
     objects = []
     drawing = False
+    color = 'black'
 
     def on_touch_up(self, touch):
         self.drawing = False
@@ -26,7 +27,10 @@ class Paint(Widget):
                 self.drawing = True
                 self.points = [touch.pos]
                 self.obj = InstructionGroup()
-                self.obj.add(Color(0,0,0))
+                if self.color == 'black':
+                    self.obj.add(Color(0,0,0))
+                else:
+                    self.obj.add(Color(1,.4,.4))
                 self.obj.add(Line(width = 2.5))
                 self.objects.append(self.obj)
                 self.canvas.add(self.obj)
@@ -48,7 +52,11 @@ class Paint(Widget):
         if len(self.objects) > 0:
             print(len(self.objects))
             for i in range(len(self.objects)):
-                print('help!')
                 self.undo()
 #        self.objects = []
 #        self.canvas.clear()
+    def chColor(self):
+        if self.color == 'black':
+            self.color = 'red'
+        else:
+            self.color = 'black'

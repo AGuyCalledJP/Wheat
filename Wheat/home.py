@@ -260,6 +260,9 @@ class WheatScreen(Screen):
     def redo(self):
         self.ids.pad.ids.paintWid.redo()
 
+    def chColor(self):
+        self.ids.pad.ids.paintWid.chColor()
+
 
 
 
