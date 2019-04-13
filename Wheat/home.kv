@@ -2,12 +2,10 @@
     name: 'Wheat1'
     id: Wheat
     draw: pad
-    widg: widget_list
-    # canvas.before:
-    #     Rectangle:
-    #         pos: self.pos
-    #         size: self.size
-    #         source: "visual_assets/wheat_bg_1_college.png"
+    manager: space_manager
+    space1: one
+    space2: two
+    space3: three
 
     GridLayout:
 
@@ -29,11 +27,11 @@
             color: 1, .3, .4 , .85
             background_color: 1,1,1,1
             background_normal: ''
-            on_release: pad.pageBack()
-
-            # on_release:
-            #     root.manager.transition.direction = 'right'
-            #     root.manager.current = "Wheat1"
+            on_release: 
+                pad.pageBack()
+                root.pageBack()
+                space_manager.transition.direction = 'right'
+                space_manager.current = 'o'
 
         #Widget Menu
         WheatBlocksDropDownMenuButton:
@@ -77,11 +75,11 @@
             color: 1, .3, .4 , .85
             background_color: 1,1,1,1
             background_normal: ''
-            on_release: pad.pageForward()
-
-            # on_release:
-            #     root.manager.transition.direction = 'left'
-            #     root.manager.current = "Wheat2"
+            on_release:
+                pad.pageForward()
+                root.pageForward()
+                space_manager.transition.direction = 'left'
+                # space_manager.current = 't'
 
     Draw:
         id: pad
@@ -89,83 +87,32 @@
         pos_hint: {'x': 0, 'y': 0}
         orientation: 'vertical'
 
+    LiveManager:
+        id: space_manager
+        WorkSpace1:
+            id: one
+            name: 'o'
+        WorkSpace2:
+            id: two
+            name: 't'
+        WorkSpace3:
+            id: three
+            name: "tr"
+
+<WorkSpace1>:
+    id: widgSpaceOne
     FloatLayout:
-        id: widget_list
+        id: flone
 
-    #     pos_hint: {'x': 0, 'y': 0}
-    #     FloatLayout:
-    #         size_hint: 1,1
-    #         pos_hint: {'x': 0, 'y': 0}
-    #         FloatLayout:
-    #             id: widget_list
-    #             size_hint: 1,1
-    #             pos_hint: {'x': 0, 'y': 0}
-    #         Draw:
-    #             id: pad
-    #             size_hint: 1,1
-    #             pos_hint: {'x': 0, 'y': 0}
-#-------------------------------- Identical Copy of Above---------------
-<WheatScreen2>:
-    name: 'Wheat2'
-    id: Wheat
-    # draw: pad
-    canvas.before:
-        Rectangle:
-            pos: self.pos
-            size: self.size
-            source: "visual_assets/wheat_bg_1_college.png"
+<WorkSpace2>:
+    id: widgSpaceTwo
+    FloatLayout:
+        id: fltwo
 
-    GridLayout:
-
-        cols: 5
-        padding: 20
-        spacing: 20
-        size_hint: 1, .1
-        pos_hint: {'x': 0, 'y': .9}
-
-        Button:
-            root: Wheat
-            text: 'Prev page'
-            on_release:
-                root.manager.transition.direction = 'right'
-                root.manager.current = "Wheat1"
-        # Button:
-        #     root: Wheat
-        #     text: 'Python'
-        #     on_release: root.add()
-
-        # Button:
-        #     root: Wheat
-        #     text: 'Function'
-        #     on_release: root.addFunc()
-
-        # # Button:
-        # #     root: Wheat
-        # #     text: 'Remove Widget'
-        # #     on_release: root.remove()
-
-        Button:
-            root: Wheat
-            text: 'Next page'
-
-            on_release:
-                root.manager.transition.direction = 'left'
-                root.manager.current = "Wheat2"
-
-        Button:
-            root: Wheat
-            text: 'Draw'
-            on_release: root.drawToggle()
-
-    # Draw:
-    #     id: pad
-    #     size_hint: 1, .9
-    #     pos_hint: {'x': 0, 'y': 0}
-    #     orientation: 'vertical'
-
-    # FloatLayout:
-
-    #     id: widget_list
+<WorkSpace3>:
+    id: widgSpaceThree
+    FloatLayout:
+        id: flthree
 
 <WheatBlocksDropDownMenu>:
     id: widg_drop

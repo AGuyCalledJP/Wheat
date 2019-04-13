@@ -41,8 +41,8 @@ from Wheat.Geometry import Geometry
 from Wheat.Tex import Tex
 from kivy.storage.jsonstore import JsonStore
 
-store = JsonStore('children.json')
-stuff = JsonStore('childInfo.json')
+store = JsonStore('Wheat/Notebook/PageState/children.json')
+stuff = JsonStore('Wheat/Notebook/PageState/childInfo.json')
 
 #Load kv file
 Builder.load_file('home.kv')
@@ -53,101 +53,330 @@ class DrawLayout(FloatLayout):
 
 class WheatScreen(Screen):
 
-    count = 1
     layouts = []
-    currentKeys = []
+    count = 1
+    layouts2 = []
+    count2 = 1
+    layouts3 = []
+    count3 = 1
+    #currentKeys = []
+    universalConstant = 3
+    interp = 0
+    interpLoc = []
+    calc = 0
+    calcLoc = []
+    geo = 0
+    geoLoc = []
+    func = 0
+    funcLoc = []
+    tex = 0
+    texLoc = []
     d = 1
     draw = ObjectProperty()
-    widg = ObjectProperty()
+    manager = ObjectProperty()
+    space1 = ObjectProperty()
+    space2 = ObjectProperty()
+    space3 = ObjectProperty()
+    currSpace = 0
+    numSpace = 3
     sStr = 'child'
+    curr = 0
 
     def remove(self):
-        rem = 0
-        getLost = []
-        it = 0
-        for i in self.layouts:
-            main = i
-            contained = i.children[0].ids.check
-            if contained.active:
-                rem = rem + 1
-                if 'interp' in i.children[0].ids:
-                    i.children[0].restart_interpreter()
-                self.ids.widget_list.remove_widget(main)
-                getLost.append(it)
-            it = it + 1
-        self.count = self.count - rem
-        print(len(self.layouts))
-        print(len(getLost))
-        for i in getLost:
-            del self.layouts[i]
+        if self.currSpace is 0:
+            rem = 0
+            getLost = []
+            it = 0
+            for i in self.layouts:
+                main = i
+                contained = i.children[0].ids.check
+                if contained.active:
+                    rem = rem + 1
+                    if 'interp' in i.children[0].ids:
+                        i.children[0].restart_interpreter()
+                    self.space1.ids.flone.remove_widget(main)
+                    getLost.append(it)
+                it = it + 1
+            self.count = self.count - rem
+            print(len(self.layouts))
+            print(len(getLost))
+            for i in getLost:
+                del self.layouts[i]
+        elif self.currSpace is 1:
+            rem = 0
+            getLost = []
+            it = 0
+            for i in self.layouts2:
+                main = i
+                contained = i.children[0].ids.check
+                if contained.active:
+                    rem = rem + 1
+                    if 'interp' in i.children[0].ids:
+                        i.children[0].restart_interpreter()
+                    self.space2.ids.fltwo.remove_widget(main)
+                    getLost.append(it)
+                it = it + 1
+            self.count2 = self.count2 - rem
+            print(len(self.layouts2))
+            print(len(getLost))
+            for i in getLost:
+                del self.layouts2[i]
+        else:
+            rem = 0
+            getLost = []
+            it = 0
+            for i in self.layouts3:
+                main = i
+                contained = i.children[0].ids.check
+                if contained.active:
+                    rem = rem + 1
+                    if 'interp' in i.children[0].ids:
+                        i.children[0].restart_interpreter()
+                    self.space3.ids.flthree.remove_widget(main)
+                    getLost.append(it)
+                it = it + 1
+            self.count3 = self.count3 - rem
+            print(len(self.layouts3))
+            print(len(getLost))
+            for i in getLost:
+                del self.layouts3[i]
+
+
+    def pageForward(self):
+        print(self.curr)
+        print("AY")
+        self.curr = self.curr + 1
+        print(self.curr)
+        self.currSpace = (self.currSpace + 1) % self.numSpace
+        if self.currSpace is 0 and self.curr is not 0:  
+            for i in self.layouts:
+                print(i)
+                self.space1.ids.flone.remove_widget(i)
+            self.layouts = []
+        elif self.currSpace is 1 and self.curr is not 1:
+            for i in self.layouts2:
+                print(i)
+                self.space2.ids.fltwo.remove_widget(i)
+            self.layouts2 = []
+        elif self.currSpace is 2 and self.curr is not 2:
+            for i in self.layouts3:
+                print(i)
+                self.space3.ids.flthree.remove_widget(i)
+            self.layouts3 = []
+        if self.currSpace is 0:
+            self.manager.current = 'o'
+        elif self.currSpace is 1:
+            self.manager.current = 't'
+        else:
+            self.manager.current = 'tr'
+
+    def pageBack(self):
+        print("Yo")
+        if self.curr > 0:
+            self.curr = self.curr - 1
+            self.currSpace = (self.currSpace + 2) % self.numSpace
+            if self.currSpace is 0:
+                self.manager.current = 'o'
+            elif self.currSpace is 1:
+                self.manager.current = 't'
+            else:
+                self.manager.current = 'tr'  
 
     def add(self):
-        if self.layouts==[]:
-            self.ids.widget_list.clear_widgets()
+        if self.currSpace is 0:
+            if self.layouts==[]:
+                self.space1.ids.flone.clear_widgets()
 
-        if len(self.ids.widget_list.children)<10:
-            self.count = self.count + 1
-            layout = FloatLayout(size_hint=(None,None), size = self.size)
-            print(layout.size)
-            w = InterpreterGui()
-            w.restart_interpreter()
-            layout.add_widget(w)
-            self.count += 1
-            self.ids.widget_list.add_widget(layout)
-            self.layouts.append(layout)
+            if self.interp < self.universalConstant:
+                self.interp = self.interp + 1
+                self.interpLoc.append(self.count)
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                w = InterpreterGui()
+                w.restart_interpreter()
+                layout.add_widget(w)
+                self.count += 1
+                self.space1.ids.flone.add_widget(layout)
+                self.layouts.append(layout)
+            else:
+                rem = self.interpLoc[0]
+                #probably need to add another matrix to track which layout each is in
+                self.interpLoc = self.interpLoc[1:-1]
+                self.interpLoc.append(self.count)
+                print(self.interpLoc)
+                self.space1.ids.flone.remove_widget(self.layouts[rem])
+                del self.layouts[rem]
+        elif self.currSpace is 1:
+            if self.layouts2==[]:
+                self.space2.ids.fltwo.clear_widgets()
+
+            if self.interp < self.universalConstant:
+                self.interp = self.interp + 1
+                self.interpLoc.append(self.count)
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                w = InterpreterGui()
+                w.restart_interpreter()
+                layout.add_widget(w)
+                self.count2 += 1
+                self.space2.ids.fltwo.add_widget(layout)
+                self.layouts2.append(layout)
+            else:
+                rem = self.interpLoc[0]
+                self.interpLoc = self.interpLoc[1:-1]
+                self.interpLoc.append(self.count)
+                print(self.interpLoc)
+                self.space2.ids.fltwo.remove_widget(self.layouts2[rem])
+                del self.layouts2[rem]
+        elif self.currSpace is 2:
+            if self.layouts3==[]:
+                self.space3.ids.flthree.clear_widgets()
+
+            if self.interp < self.universalConstant:
+                self.interp = self.interp + 1
+                self.interpLoc.append(self.count)
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                w = InterpreterGui()
+                w.restart_interpreter()
+                layout.add_widget(w)
+                self.count3 += 1
+                self.space3.ids.flthree.add_widget(layout)
+                self.layouts3.append(layout)
+            else:
+                rem = self.interpLoc[0]
+                self.interpLoc = self.interpLoc[1:-1]
+                self.interpLoc.append(self.count)
+                print(self.interpLoc)
+                self.space3.ids.flthree.remove_widget(self.layouts3[rem])
+                del self.layouts3[rem]
 
     def addFunc(self):
-        if self.layouts==[]:
-            self.ids.widget_list.clear_widgets()
-
-        if len(self.ids.widget_list.children)<4:
-            layout =  FloatLayout(size_hint=(None,None), size = self.size)
-            layout.add_widget(FunctionPlotter());
-            self.count += 1
-            self.ids.widget_list.add_widget(layout)
-            self.layouts.append(layout)
+        if self.currSpace is 0:
+            if self.layouts==[]:
+                self.space1.ids.flone.clear_widgets()
+            if self.func < self.universalConstant:
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(FunctionPlotter());
+                self.count += 1
+                self.space1.ids.flone.add_widget(layout)
+                self.layouts.append(layout)
+        elif self.currSpace is 1:
+            if self.layouts2==[]:
+                self.space2.ids.fltwo.clear_widgets()
+            if self.func < self.universalConstant:
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(FunctionPlotter());
+                self.count2 += 1
+                self.space2.ids.fltwo.add_widget(layout)
+                self.layouts2.append(layout)
+        else:
+            if self.layouts3==[]:
+                self.space1.ids.flone.clear_widgets()
+            if self.func < self.universalConstant:
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(FunctionPlotter());
+                self.count += 1
+                self.space3.ids.flthree.add_widget(layout)
+                self.layouts3.append(layout)
 
     def addCalc(self):
-        if self.layouts==[]:
-            self.ids.widget_list.clear_widgets()
+        if self.currSpace is 0:
+            if self.layouts==[]:
+                self.space1.ids.flone.clear_widgets()
 
-        if len(self.ids.widget_list.children)<4:
-            layout =  FloatLayout(size_hint=(None,None), size = self.size)
-            layout.add_widget(Calculator());
-            self.count += 1
-            self.ids.widget_list.add_widget(layout)
-            self.layouts.append(layout)
+            if self.calc < self.universalConstant:
+                layout =  FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(Calculator());
+                self.count += 1
+                self.space1.ids.flone.add_widget(layout)
+                self.layouts.append(layout)
+        elif self.currSpace is 1:
+            if self.layouts2==[]:
+                self.space2.ids.fltwo.clear_widgets()
+
+            if self.calc < self.universalConstant:
+                layout =  FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(Calculator());
+                self.count2 += 1
+                self.space2.ids.fltwo.add_widget(layout)
+                self.layouts2.append(layout)
+        else:
+            if self.layouts3==[]:
+                self.space3.ids.flthree.clear_widgets()
+            if self.func < self.universalConstant:
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(FunctionPlotter());
+                self.count3 += 1
+                self.space3.ids.flthree.add_widget(layout)
+                self.layouts3.append(layout)
 
     def addGeo(self):
-        if self.layouts==[]:
-            self.ids.widget_list.clear_widgets()
+        if self.currSpace is 0:
+            if self.layouts==[]:
+                self.space1.ids.flone.clear_widgets()
 
-        if len(self.ids.widget_list.children)<4:
-            layout =  FloatLayout(size_hint=(None,None), size = self.size)
-            layout.add_widget(Geometry());
-            self.count += 1
-            self.ids.widget_list.add_widget(layout)
-            self.layouts.append(layout)
+            if self.geo < self.universalConstant:
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(Geometry());
+                self.count += 1
+                self.space1.ids.flone.add_widget(layout)
+                self.layouts.append(layout)
+        elif self.currSpace is 1:
+            if self.layouts2==[]:
+                self.space2.ids.fltwo.clear_widgets()
+
+            if self.geo < self.universalConstant:
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(Geometry());
+                self.count2 += 1
+                self.space2.ids.fltow.add_widget(layout)
+                self.layouts2.append(layout)
+        else:
+            if self.layouts3==[]:
+                self.space3.ids.flthree.clear_widgets()
+            if self.geo < self.universalConstant:
+                layout = FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(Geometry());
+                self.count3 += 1
+                self.space3.ids.flthree.add_widget(layout)
+                self.layouts3.append(layout)
+
 
     def addTex(self):
-        if self.layouts==[]:
-            self.ids.widget_list.clear_widgets()
+        if self.currSpace is 0:
+            if self.layouts==[]:
+                self.space1.ids.flone.clear_widgets()
 
-        if len(self.ids.widget_list.children)<4:
-            layout =  FloatLayout(size_hint=(None,None), size = self.size)
-            layout.add_widget(Tex());
-            self.count += 1
-            self.ids.widget_list.add_widget(layout)
-            self.layouts.append(layout)
+            if self.tex < self.universalConstant:
+                layout =  FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(Tex());
+                self.count += 1
+                self.space1.ids.flone.add_widget(layout)
+                self.layouts.append(layout)
+        elif self.currSpace is 1:
+            if self.layouts2==[]:
+                self.space2.ids.fltwo.clear_widgets()
+
+            if self.tex < self.universalConstant:
+                layout =  FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(Tex());
+                self.count2 += 1
+                self.space2.ids.fltow.add_widget(layout)
+                self.layouts2.append(layout)
+        else:
+            if self.layouts3==[]:
+                self.space3.ids.flthree.clear_widgets()
+            if self.tex < self.universalConstant:
+                layout =  FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(Tex());
+                self.count3 += 1
+                self.space3.ids.flthree.add_widget(layout)
+                self.layouts3.append(layout)
 
     def drawToggle(self):
         if self.d == 1:
             self.draw.disabled = True
-            # self.widg.disabled = False
             self.d = 0
         else:
             self.draw.disabled = False
-            # self.widg.disabled = True
             self.d = 1
 
     def Save(self):
@@ -157,7 +386,7 @@ class WheatScreen(Screen):
             it = 0
             for i in self.layouts:
                 #Save the widget itself
-                saveMe = str(self.sStr) + str(it)
+                saveMe = "P" + str(self.curr) + str(self.sStr) + str(it)
                 local = i.children[0].pos
                 widgType = ''
                 a = i.children[0].ids
@@ -177,15 +406,22 @@ class WheatScreen(Screen):
                 bundle = []
                 if widgType is 'interp':
                     bundle = i.children[0].Save()
-                    print(bundle)
                     stuff.put(saveMe, prior = bundle[0], curr = bundle[1])
+                elif widgType is 'calc':
+                    bundle = i.children[0].Save()
+                    stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+                elif widgType is 'func':
+                    bundle = i.children[0].Save()
+                    stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
 
 
     def Load(self):
-        self.ids.pad.Load()
-        print(len(self.currentKeys))
-        if len(self.currentKeys) > 0:
-            for curr in self.currentKeys:
+        # self.ids.pad.Load()
+        print(store.keys())
+        for curr in store.keys():
+            print(curr)
+            pageStr = "P" + str(self.curr)
+            if pageStr in curr:
                 elem = store.get(curr)
                 discharged = stuff.get(curr)
                 print(elem)
@@ -193,9 +429,17 @@ class WheatScreen(Screen):
                 loc = elem['location']
                 wt = elem['wType']
                 if 'calc' in wt:
-                    self.addCalcAux(loc)
+                    res = self.addCalcAux(loc)
+                    calc = self.layouts[res-1].children[0]
+                    eq_text = discharged['eq_text']
+                    comp_text = discharged['comp_text']
+                    calc.Load(eq_text,comp_text)
                 elif 'func' in wt:
-                    self.addFuncAux(loc)
+                    res = self.addFuncAux(loc)
+                    func = self.layouts[res-1].children[0]
+                    eq_text = discharged['eq_text']
+                    comp_text = discharged['comp_text']
+                    func.Load(eq_text,comp_text)
                 elif 'geo' in wt:
                     self.addGeoAux(loc)
                 elif 'interp' in wt:
@@ -204,7 +448,6 @@ class WheatScreen(Screen):
                     prior = discharged['prior']
                     curr = discharged['curr']
                     interp.Load(prior, curr)
-
 
     def addAux(self, pos):
         if self.layouts==[]:
@@ -230,6 +473,7 @@ class WheatScreen(Screen):
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
+            return len(self.layouts)
 
     def addCalcAux(self,pos):
         if self.layouts==[]:
@@ -241,6 +485,7 @@ class WheatScreen(Screen):
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
+            return len(self.layouts)
 
     def addGeoAux(self,pos):
         if self.layouts==[]:
@@ -252,6 +497,7 @@ class WheatScreen(Screen):
             self.count += 1
             self.ids.widget_list.add_widget(layout)
             self.layouts.append(layout)
+            return len(self.layouts)
 
     #Incorporationg writing functionality
     def clear(self):
@@ -265,65 +511,17 @@ class WheatScreen(Screen):
     def chColor(self):
         self.ids.pad.chColor()
 
+class LiveManager(ScreenManager):
+    pass
 
+class WorkSpace1(Screen):
+    pass
 
+class WorkSpace2(Screen):
+    pass
 
-
-#-------------------------------- Identical Copy of Above---------------
-
-class WheatScreen2(Screen):
-
-    count = 1
-    layouts = []
-    d = 1
-    draw = ObjectProperty()
-
-    def remove(self):
-        if self.count > 1:
-            self.count -= 1
-        for i in self.layouts:
-            main = i
-            contained = i.children[0].children[0].children
-            for i in contained:
-                if i.id == "check":
-                    if i.active:
-                        self.ids.widget_list.remove_widget(main)
-
-        if self.layouts!=[]:
-            print("nothing here")
-
-    def add(self):
-        print(self.size)
-        if self.layouts==[]:
-            self.ids.widget_list.clear_widgets()
-
-        if len(self.ids.widget_list.children)<4:
-            layout = FloatLayout(size_hint=(None,None), size = self.size)
-            print(layout.size)
-            layout.add_widget(InterpreterGui())
-            self.count += 1
-            self.ids.widget_list.add_widget(layout)
-            self.layouts.append(layout)
-
-    def addFunc(self):
-
-        if self.layouts==[]:
-            self.ids.widget_list.clear_widgets()
-
-        if len(self.ids.widget_list.children)<4:
-            layout = FloatLayout(size_hint=(None,None))
-            layout.add_widget(FunctionPlotter());
-            self.count += 1
-            self.ids.widget_list.add_widget(layout)
-            self.layouts.append(layout)
-
-    def drawToggle(self):
-        if self.d == 1:
-            self.draw.disabled = True
-            self.d = 0
-        else:
-            self.draw.disabled = False
-            self.d = 1
+class WorkSpace3(Screen):
+    pass
 
 class WheatBlocksDropDownMenu(menu.MenuDropDown):
     pass

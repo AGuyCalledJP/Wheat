@@ -1,1 +1,0 @@
-{"child0": {"prior": ["def func(c):\n    return c * c", "x = 10", "square(x)", "square(x)", "func(x)"], "curr": ""}}

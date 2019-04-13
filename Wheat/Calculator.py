@@ -319,4 +319,15 @@ class Calculator(ScatterLayout):
         self.equation_text += u'\u03c0'
         self.compute_text += "math.pi"
 
+    def Save(self):
+        letsGo = []
+        letsGo.append(self.equation_text)
+        letsGo.append(self.compute_text)
+        print(letsGo)
+        return letsGo
+
+    def Load(self, equation_text, compute_text):
+        self.equation_text = equation_text
+        self.compute_text = compute_text
+
 # Notable Issues: Square root with math constants/functions, backspace wont work with those either
