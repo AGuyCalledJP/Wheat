@@ -82,6 +82,9 @@ class WheatScreen(Screen):
     sStr = 'child'
     curr = 0
 
+    def __init__(self, *args, **kwargs):
+        super(WheatScreen, self).__init__(*args, **kwargs)
+
     def remove(self):
         if self.currSpace is 0:
             rem = 0
@@ -199,14 +202,6 @@ class WheatScreen(Screen):
                 self.count += 1
                 self.space1.ids.flone.add_widget(layout)
                 self.layouts.append(layout)
-            else:
-                rem = self.interpLoc[0]
-                #probably need to add another matrix to track which layout each is in
-                self.interpLoc = self.interpLoc[1:-1]
-                self.interpLoc.append(self.count)
-                print(self.interpLoc)
-                self.space1.ids.flone.remove_widget(self.layouts[rem])
-                del self.layouts[rem]
         elif self.currSpace is 1:
             if self.layouts2==[]:
                 self.space2.ids.fltwo.clear_widgets()
@@ -221,13 +216,6 @@ class WheatScreen(Screen):
                 self.count2 += 1
                 self.space2.ids.fltwo.add_widget(layout)
                 self.layouts2.append(layout)
-            else:
-                rem = self.interpLoc[0]
-                self.interpLoc = self.interpLoc[1:-1]
-                self.interpLoc.append(self.count)
-                print(self.interpLoc)
-                self.space2.ids.fltwo.remove_widget(self.layouts2[rem])
-                del self.layouts2[rem]
         elif self.currSpace is 2:
             if self.layouts3==[]:
                 self.space3.ids.flthree.clear_widgets()
@@ -242,13 +230,6 @@ class WheatScreen(Screen):
                 self.count3 += 1
                 self.space3.ids.flthree.add_widget(layout)
                 self.layouts3.append(layout)
-            else:
-                rem = self.interpLoc[0]
-                self.interpLoc = self.interpLoc[1:-1]
-                self.interpLoc.append(self.count)
-                print(self.interpLoc)
-                self.space3.ids.flthree.remove_widget(self.layouts3[rem])
-                del self.layouts3[rem]
 
     def addFunc(self):
         if self.currSpace is 0:
@@ -304,8 +285,8 @@ class WheatScreen(Screen):
             if self.layouts3==[]:
                 self.space3.ids.flthree.clear_widgets()
             if self.func < self.universalConstant:
-                layout = FloatLayout(size_hint=(None,None), size = self.size)
-                layout.add_widget(FunctionPlotter());
+                layout =  FloatLayout(size_hint=(None,None), size = self.size)
+                layout.add_widget(Calculator());
                 self.count3 += 1
                 self.space3.ids.flthree.add_widget(layout)
                 self.layouts3.append(layout)
@@ -383,8 +364,7 @@ class WheatScreen(Screen):
 
     def Save(self):
         self.ids.pad.Save()
-        self.currentKeys = []
-        if self.curr >= 0:
+        if self.curr >= 0: 
             for i in self.layouts:
                 it = 0
                 #Save the widget itself
@@ -401,7 +381,6 @@ class WheatScreen(Screen):
                 elif 'interp' in a:
                     widgType = 'interp'
                 it = it + 1
-                self.currentKeys.append(saveMe)
                 store.put(saveMe, location=local, wType = widgType)
                 print(store.exists(saveMe))
                 #Save the information associated with said widget
@@ -431,7 +410,6 @@ class WheatScreen(Screen):
                 elif 'interp' in a:
                     widgType = 'interp'
                 it = it + 1
-                self.currentKeys.append(saveMe)
                 store.put(saveMe, location=local, wType = widgType)
                 print(store.exists(saveMe))
                 #Save the information associated with said widget
@@ -445,7 +423,7 @@ class WheatScreen(Screen):
                 elif widgType is 'func':
                     bundle = i.children[0].Save()
                     stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
-            for i in self.layouts:
+            for i in self.layouts3:
                 it = 0
                 #Save the widget itself
                 saveMe = "P" + str(self.curr + 2) + str(self.sStr) + str(it)
@@ -461,7 +439,6 @@ class WheatScreen(Screen):
                 elif 'interp' in a:
                     widgType = 'interp'
                 it = it + 1
-                self.currentKeys.append(saveMe)
                 store.put(saveMe, location=local, wType = widgType)
                 print(store.exists(saveMe))
                 #Save the information associated with said widget
