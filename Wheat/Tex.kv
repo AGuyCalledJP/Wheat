@@ -6,6 +6,7 @@
         size_hint: 1, 1
 
         Bar:
+            id: header
             pos_hint: {'x' : 0.0, 'y' : 0.85}
             size_hint: 1, 0.15
             canvas.before:
@@ -15,7 +16,21 @@
                     pos: self.pos
                     size: self.size
 
+            ToggleButton:
+                state: "normal"
+                id: hide_bot_button
+                pos_hint: {'x': .05, 'y': 0.05}
+                size_hint: .25, .9
+                text: "Hide Input"
+                on_press:
+                    input.hide_input()
+                    hide_bot_button.text = "Unhide"
+                on_release:
+                    input.hide_input(dohide=False)
+                    hide_bot_button.text = "Hide Input"
+
         Display:
+            id: display
             pos_hint: {'x' : 0.0, 'y' : 0.2}
             size_hint: 1, 0.65
             canvas.before:
@@ -26,6 +41,7 @@
                     size: self.size
 
         Input:
+            id: input
             pos_hint: {'x' : 0.0, 'y' : 0.0}
             size_hint: 1, 0.2
             canvas.before:
