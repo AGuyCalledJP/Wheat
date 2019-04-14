@@ -364,185 +364,178 @@ class WheatScreen(Screen):
 
     def Save(self):
         self.ids.pad.Save()
-        if self.curr >= 0: 
-            for i in self.layouts:
-                it = 0
-                #Save the widget itself
-                saveMe = "P" + str(self.curr) + str(self.sStr) + str(it)
-                local = i.children[0].pos
-                widgType = ''
-                a = i.children[0].ids
-                if 'calc' in a:
-                    widgType = 'calc'
-                elif 'func' in a:
-                    widgType = 'func'
-                elif 'geo' in a:
-                    widgType = 'geo'
-                elif 'interp' in a:
-                    widgType = 'interp'
-                it = it + 1
-                store.put(saveMe, location=local, wType = widgType)
-                print(store.exists(saveMe))
-                #Save the information associated with said widget
-                bundle = []
-                if widgType is 'interp':
-                    bundle = i.children[0].Save()
-                    stuff.put(saveMe, prior = bundle[0], curr = bundle[1])
-                elif widgType is 'calc':
-                    bundle = i.children[0].Save()
-                    stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
-                elif widgType is 'func':
-                    bundle = i.children[0].Save()
-                    stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
-            for i in self.layouts2:
-                it = 0
-                #Save the widget itself
-                saveMe = "P" + str(self.curr + 1) + str(self.sStr) + str(it)
-                local = i.children[0].pos
-                widgType = ''
-                a = i.children[0].ids
-                if 'calc' in a:
-                    widgType = 'calc'
-                elif 'func' in a:
-                    widgType = 'func'
-                elif 'geo' in a:
-                    widgType = 'geo'
-                elif 'interp' in a:
-                    widgType = 'interp'
-                it = it + 1
-                store.put(saveMe, location=local, wType = widgType)
-                print(store.exists(saveMe))
-                #Save the information associated with said widget
-                bundle = []
-                if widgType is 'interp':
-                    bundle = i.children[0].Save()
-                    stuff.put(saveMe, prior = bundle[0], curr = bundle[1])
-                elif widgType is 'calc':
-                    bundle = i.children[0].Save()
-                    stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
-                elif widgType is 'func':
-                    bundle = i.children[0].Save()
-                    stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
-            for i in self.layouts3:
-                it = 0
-                #Save the widget itself
-                saveMe = "P" + str(self.curr + 2) + str(self.sStr) + str(it)
-                local = i.children[0].pos
-                widgType = ''
-                a = i.children[0].ids
-                if 'calc' in a:
-                    widgType = 'calc'
-                elif 'func' in a:
-                    widgType = 'func'
-                elif 'geo' in a:
-                    widgType = 'geo'
-                elif 'interp' in a:
-                    widgType = 'interp'
-                it = it + 1
-                store.put(saveMe, location=local, wType = widgType)
-                print(store.exists(saveMe))
-                #Save the information associated with said widget
-                bundle = []
-                if widgType is 'interp':
-                    bundle = i.children[0].Save()
-                    stuff.put(saveMe, prior = bundle[0], curr = bundle[1])
-                elif widgType is 'calc':
-                    bundle = i.children[0].Save()
-                    stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
-                elif widgType is 'func':
-                    bundle = i.children[0].Save()
-                    stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+        if self.curr >= 0:
+            writeTo = self.currSpace % self.numSpace
+            if writeTo is 0:
+                for i in self.layouts:
+                    it = 0
+                    #Save the widget itself
+                    saveMe = "P" + str(self.curr) + str(self.sStr) + str(it)
+                    local = i.children[0].pos
+                    widgType = ''
+                    a = i.children[0].ids
+                    if 'calc' in a:
+                        widgType = 'calc'
+                    elif 'func' in a:
+                        widgType = 'func'
+                    elif 'geo' in a:
+                        widgType = 'geo'
+                    elif 'interp' in a:
+                        widgType = 'interp'
+                    it = it + 1
+                    store.put(saveMe, location=local, wType = widgType)
+                    #Save the information associated with said widget
+                    bundle = []
+                    if widgType is 'interp':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, prior = bundle[0], curr = bundle[1])
+                    elif widgType is 'calc':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+                    elif widgType is 'func':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+            elif writeTo is 1:
+                for i in self.layouts2:
+                    it = 0
+                    #Save the widget itself
+                    saveMe = "P" + str(self.curr) + str(self.sStr) + str(it)
+                    local = i.children[0].pos
+                    widgType = ''
+                    a = i.children[0].ids
+                    if 'calc' in a:
+                        widgType = 'calc'
+                    elif 'func' in a:
+                        widgType = 'func'
+                    elif 'geo' in a:
+                        widgType = 'geo'
+                    elif 'interp' in a:
+                        widgType = 'interp'
+                    it = it + 1
+                    store.put(saveMe, location=local, wType = widgType)
+                    #Save the information associated with said widget
+                    bundle = []
+                    if widgType is 'interp':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, prior = bundle[0], curr = bundle[1])
+                    elif widgType is 'calc':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+                    elif widgType is 'func':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+            else:
+                for i in self.layouts3:
+                    it = 0
+                    #Save the widget itself
+                    saveMe = "P" + str(self.curr) + str(self.sStr) + str(it)
+                    local = i.children[0].pos
+                    widgType = ''
+                    a = i.children[0].ids
+                    if 'calc' in a:
+                        widgType = 'calc'
+                    elif 'func' in a:
+                        widgType = 'func'
+                    elif 'geo' in a:
+                        widgType = 'geo'
+                    elif 'interp' in a:
+                        widgType = 'interp'
+                    it = it + 1
+                    store.put(saveMe, location=local, wType = widgType)
+                    print(store.exists(saveMe))
+                    #Save the information associated with said widget
+                    bundle = []
+                    if widgType is 'interp':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, prior = bundle[0], curr = bundle[1])
+                    elif widgType is 'calc':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+                    elif widgType is 'func':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
 
     def Load(self):
-        print(store.keys())
         for curr in store.keys():
-            print(curr)
             pageStr = "P" + str(self.curr)
+            writeTo = self.curr % self.numSpace
             if pageStr in curr:
-                elem = store.get(curr)
-                discharged = stuff.get(curr)
-                print(elem)
-                print(type(elem))
-                loc = elem['location']
-                wt = elem['wType']
-                if 'calc' in wt:
-                    res = self.addCalcAux(loc,0)
-                    calc = self.layouts[res-1].children[0]
-                    eq_text = discharged['eq_text']
-                    comp_text = discharged['comp_text']
-                    calc.Load(eq_text,comp_text)
-                elif 'func' in wt:
-                    res = self.addFuncAux(loc,0)
-                    func = self.layouts[res-1].children[0]
-                    eq_text = discharged['eq_text']
-                    comp_text = discharged['comp_text']
-                    func.Load(eq_text,comp_text)
-                elif 'geo' in wt:
-                    self.addGeoAux(loc,0)
-                elif 'interp' in wt:
-                    res = self.addAux(loc,0)
-                    interp = self.layouts[res-1].children[0]
-                    prior = discharged['prior']
-                    curr = discharged['curr']
-                    interp.Load(prior, curr)
-            pageStr2 = "P" + str(self.curr + 1)
-            if pageStr2 in curr:
-                elem = store.get(curr)
-                discharged = stuff.get(curr)
-                print(elem)
-                print(type(elem))
-                loc = elem['location']
-                wt = elem['wType']
-                if 'calc' in wt:
-                    res = self.addCalcAux(loc,1)
-                    calc = self.layouts2[res-1].children[0]
-                    eq_text = discharged['eq_text']
-                    comp_text = discharged['comp_text']
-                    calc.Load(eq_text,comp_text)
-                elif 'func' in wt:
-                    res = self.addFuncAux(loc,1)
-                    func = self.layouts2[res-1].children[0]
-                    eq_text = discharged['eq_text']
-                    comp_text = discharged['comp_text']
-                    func.Load(eq_text,comp_text)
-                elif 'geo' in wt:
-                    self.addGeoAux(loc,1)
-                elif 'interp' in wt:
-                    res = self.addAux(loc,1)
-                    interp = self.layouts2[res-1].children[0]
-                    prior = discharged['prior']
-                    curr = discharged['curr']
-                    interp.Load(prior, curr)
-            pageStr3 = "P" + str(self.curr + 2)
-            if pageStr3 in curr:
-                elem = store.get(curr)
-                discharged = stuff.get(curr)
-                print(elem)
-                print(type(elem))
-                loc = elem['location']
-                wt = elem['wType']
-                if 'calc' in wt:
-                    res = self.addCalcAux(loc,2)
-                    calc = self.layouts3[res-1].children[0]
-                    eq_text = discharged['eq_text']
-                    comp_text = discharged['comp_text']
-                    calc.Load(eq_text,comp_text)
-                elif 'func' in wt:
-                    res = self.addFuncAux(loc,2)
-                    func = self.layouts3[res-1].children[0]
-                    eq_text = discharged['eq_text']
-                    comp_text = discharged['comp_text']
-                    func.Load(eq_text,comp_text)
-                elif 'geo' in wt:
-                    self.addGeoAux(loc,2)
-                elif 'interp' in wt:
-                    res = self.addAux(loc,2)
-                    interp = self.layouts3[res-1].children[0]
-                    prior = discharged['prior']
-                    curr = discharged['curr']
-                    interp.Load(prior, curr)
+                if writeTo is 0:
+                    elem = store.get(curr)
+                    discharged = stuff.get(curr)
+                    loc = elem['location']
+                    wt = elem['wType']
+                    if 'calc' in wt:
+                        res = self.addCalcAux(loc,0)
+                        calc = self.layouts[res-1].children[0]
+                        eq_text = discharged['eq_text']
+                        comp_text = discharged['comp_text']
+                        calc.Load(eq_text,comp_text)
+                    elif 'func' in wt:
+                        res = self.addFuncAux(loc,0)
+                        func = self.layouts[res-1].children[0]
+                        eq_text = discharged['eq_text']
+                        comp_text = discharged['comp_text']
+                        func.Load(eq_text,comp_text)
+                    elif 'geo' in wt:
+                        self.addGeoAux(loc,0)
+                    elif 'interp' in wt:
+                        res = self.addAux(loc,0)
+                        interp = self.layouts[res-1].children[0]
+                        prior = discharged['prior']
+                        curr = discharged['curr']
+                        interp.Load(prior, curr)
+                elif writeTo is 1:
+                    elem = store.get(curr)
+                    discharged = stuff.get(curr)
+                    loc = elem['location']
+                    wt = elem['wType']
+                    if 'calc' in wt:
+                        res = self.addCalcAux(loc,1)
+                        calc = self.layouts2[res-1].children[0]
+                        eq_text = discharged['eq_text']
+                        comp_text = discharged['comp_text']
+                        calc.Load(eq_text,comp_text)
+                    elif 'func' in wt:
+                        res = self.addFuncAux(loc,1)
+                        func = self.layouts2[res-1].children[0]
+                        eq_text = discharged['eq_text']
+                        comp_text = discharged['comp_text']
+                        func.Load(eq_text,comp_text)
+                    elif 'geo' in wt:
+                        self.addGeoAux(loc,1)
+                    elif 'interp' in wt:
+                        res = self.addAux(loc,1)
+                        interp = self.layouts2[res-1].children[0]
+                        prior = discharged['prior']
+                        curr = discharged['curr']
+                        interp.Load(prior, curr)
+                else:
+                    elem = store.get(curr)
+                    discharged = stuff.get(curr)
+                    loc = elem['location']
+                    wt = elem['wType']
+                    if 'calc' in wt:
+                        res = self.addCalcAux(loc,2)
+                        calc = self.layouts3[res-1].children[0]
+                        eq_text = discharged['eq_text']
+                        comp_text = discharged['comp_text']
+                        calc.Load(eq_text,comp_text)
+                    elif 'func' in wt:
+                        res = self.addFuncAux(loc,2)
+                        func = self.layouts3[res-1].children[0]
+                        eq_text = discharged['eq_text']
+                        comp_text = discharged['comp_text']
+                        func.Load(eq_text,comp_text)
+                    elif 'geo' in wt:
+                        self.addGeoAux(loc,2)
+                    elif 'interp' in wt:
+                        res = self.addAux(loc,2)
+                        interp = self.layouts3[res-1].children[0]
+                        prior = discharged['prior']
+                        curr = discharged['curr']
+                        interp.Load(prior, curr)
             
-
     def addAux(self, pos, dest):
         if dest is 0:
             if self.layouts==[]:

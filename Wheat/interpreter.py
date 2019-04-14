@@ -832,11 +832,13 @@ class InterpreterGui(ScatterLayout):
         return lifeRaft
 
     def Load(self, prior, curr):
-        # self.restart_interpreter()
-        self.clear_output()
+        self.restart_interpreter()
         t.sleep(1)
+        self.clear_output()
+        t.sleep(10/1000)
         for i in prior:
             self.interpret_line(i)
+            t.sleep(10/1000)
         self.code_input.text = curr
         self.clear_output()
             

@@ -156,7 +156,7 @@ class InterpreterWrapper(EventDispatcher):
         osc.readQueue(self.oscid)
 
     def receive_osc_message(self, message, *args):
-        print('received message', message, args)
+        #print('received message', message, args)
         address = message[0]
         body = [s.decode('utf-8') for s in message[2:]]
 
@@ -209,7 +209,7 @@ class InterpreterWrapper(EventDispatcher):
     def send_osc_message(self, message, address=b'/interpret'):
         osc.sendMsg(address, [message], port=self.interpreter_port,
                     typehint='b')
-        print('sent', message)
+        # print('sent', message)
 
     def command_not_received(self, *args):
         print('command not received? something is wrong!?')
@@ -261,7 +261,7 @@ class InterpreterWrapper(EventDispatcher):
             self.interpreter_state = 'not_responding'
 
     def pong(self):
-        print('Received pong')
+        #print('Received pong')
         Clock.unschedule(self.ping_failed)
         if self.interpreter_state == 'restarting':
             self.finish_restart()
