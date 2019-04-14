@@ -25,7 +25,30 @@ from kivy.properties import (ObjectProperty, NumericProperty,
 
 Builder.load_file('Tex.kv')
 
+class Bar(FloatLayout):
+    pass
+
+class Display(FloatLayout):
+    pass
+
+class Input(FloatLayout):
+    pass
+
+
 class Tex(ScatterLayout):
+
+    c1 = NumericProperty()
+    c2 = NumericProperty()
+    c3 = NumericProperty()
+    c4 = NumericProperty()
+    fontSizer = NumericProperty()
+
+    c1 = 1
+    c2 = .3
+    c3 = .4
+    c4 = .85
+    fontSizer = 24
+
     move_lock = False
     scale_lock_left = False
     scale_lock_right = False

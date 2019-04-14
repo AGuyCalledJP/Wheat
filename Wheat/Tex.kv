@@ -4,13 +4,37 @@
     FloatLayout:
         pos_hint: {'x' : 0.0, 'y' : 0.0}
         size_hint: 1, 1
-        canvas.before:
-            Color:
-                rgba: 1,1,1,1
-            Rectangle:
-                pos: self.pos
-                size: self.size
 
-        TextInput:
-            pos_hint: {'x' : 0.1, 'y' : 0.05}
-            size_hint: 0.8,0.2
+        Bar:
+            pos_hint: {'x' : 0.0, 'y' : 0.85}
+            size_hint: 1, 0.15
+            canvas.before:
+                Color:
+                    rgba: root.c1,root.c2,root.c3,root.c4
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        Display:
+            pos_hint: {'x' : 0.0, 'y' : 0.2}
+            size_hint: 1, 0.65
+            canvas.before:
+                Color:
+                    rgba: 0,0,0,1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        Input:
+            pos_hint: {'x' : 0.0, 'y' : 0.0}
+            size_hint: 1, 0.2
+            canvas.before:
+                Color:
+                    rgba: 1,1,1,1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            TextInput:
+                pos_hint: {'x' : 0.1, 'y' : 0.05}
+                size_hint: 0.8,0.9
+                multiline: False
