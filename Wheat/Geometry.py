@@ -69,16 +69,25 @@ class Geometry(FloatLayout):
     def touch_interactive_space(self, *args):
         #retrieve touch event
         contact_point = args[1].pos
-        #check if x and y in bounds of interactive_space (possibly unnecessary)
         print(self.interactive_space)
 
         #check mode
         if self.mode_state == 'adding':
             #try adding point at touchpoint
+            ## TODO: if the point we'd add is too close to the edge of interactive space, move it inwards more
+
                 #are we in the middle of making a figure?
-                    #if so, points get added to figure
-                #otherwise, create a new figure, add point to it
-            pass
+                if self.in_prog_figure is not None:
+                    ## TODO: if so, points get added to figure
+                    pass
+                else:
+                    #otherwise, create a new figure,
+                    f = Figure()
+                    self.in_prog_figure = f
+                    self.interactive_space.add_widget(f)
+                    #add point to it
+                    f.add_point(contact_point[0], contact_point[1])
+                    ## TODO: maybe put a label on it? either here or somewhere in the point itself
         else:
             #check if contact at point, if so continue
             if True:
@@ -93,8 +102,6 @@ class Geometry(FloatLayout):
             #otherwise, do nothing
 
 
-
-
     def __init__(self, *args, **kwargs):
         super(Geometry, self).__init__(*args, **kwargs)
         self.size_hint = .7,.7
@@ -105,6 +112,8 @@ class Geometry(FloatLayout):
         self.mode_state = OptionProperty('adding', options=('moving','selecting','adding'))
         self.mode_state = 'adding' ## NOTE: this shouldn't need to be here because the type literally HAS A DEFAULT FIELD but it won't work without it
         self.interactive_space = None
+        self.in_prog_figure = None #If we're in the middle of making a figure, this points to that in some way
+
 
     class Interactive_Space(FloatLayout):
         pass
@@ -187,10 +196,10 @@ class Figure(Widget):
         return
 
     def draw_fig(self):
-        if(self.canvas):
-            self.canvas.clear() #remove all previous points and lines on this figure (this hopefully only effects one figure?)
-        self.draw_line()
-        # self.draw_points()
+        # if(self.canvas):
+        #     self.canvas.clear() #remove all previous points and lines on this figure (this hopefully only effects one figure?)
+        # self.draw_line()
+        # # self.draw_points()
         return
 
 
@@ -218,12 +227,13 @@ class Figure(Widget):
 
 
     def add_point(self, new_x, new_y):
-        p = PointLayout(pos=[new_x-(img_size/2), new_y-(img_size/2)])
+        p = PointLayout(pos=[new_x-(img_size[0]/2), new_y-(img_size[0]/2)])
         self.add_widget(p)
+        print("point added at " + str(new_x) + ", " + str(new_y))
 
 
     # TODO: add content
-    def __init__(self, points):
+    def __init__(self, points = [], **kwargs):
         super(Figure, self).__init__(**kwargs)
         for p in points:
             self.add_point(p[0],p[1])
@@ -260,7 +270,8 @@ class PointButton(ButtonBehavior, Image):
     '''
     def on_press(self):
         #TODO: case checking what mode we're in before "selecting" point
-        self.select()
+        if(self.parent.parent.parent.parent.parent.parent.parent.parent.mode_state == "selecting"): #TODO: please god make this prettier
+            self.select()
 
 
 
@@ -294,31 +305,35 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
 
 
     def on_touch_down(self, touch):
-        #include check for select mode? TODO
-        if self.collide_point(*touch.pos):
-            if touch.button == 'left':
+        #include check for move mode
+        if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
+            if self.collide_point(*touch.pos):
+                if touch.button == 'left':
 
-                # Hold value of touch downed pos
-                self.last_touch = touch.pos # Need this line
+                    # Hold value of touch downed pos
+                    self.last_touch = touch.pos # Need this line
         return super(PointLayout, self).on_touch_down(touch)
 
 
     def on_touch_up(self, touch):
-        if self.collide_point(*touch.pos):
-            if touch.button == 'left':
-                # move complete TODO: find some way to have figure update for this
-                pass
+        if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
+            if self.collide_point(*touch.pos):
+                if touch.button == 'left':
+                    # move complete TODO: find some way to have figure update for this
+                    #self.parent.draw_fig()
+                    pass
         return super(PointLayout, self).on_touch_up(touch)
 
 
     def on_touch_move(self, touch):
-        if self.collide_point(*touch.pos):
-            if touch.button == 'left':
-                self.x = self.x + touch.pos[0] - self.last_touch[0] # Add the x distance between this mouse event and the last
-                self.y = self.y + touch.pos[1] - self.last_touch[1] # Add the y distance between this mouse event and the last
-                self.point_x = self.pos[0] + self.radius
-                self.point_y = self.pos[1] + self.radius
-                self.last_touch = touch.pos # Update the last position of the mouse
+        if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
+            if self.collide_point(*touch.pos):
+                if touch.button == 'left':
+                    self.x = self.x + touch.pos[0] - self.last_touch[0] # Add the x distance between this mouse event and the last
+                    self.y = self.y + touch.pos[1] - self.last_touch[1] # Add the y distance between this mouse event and the last
+                    self.point_x = self.pos[0] + self.radius
+                    self.point_y = self.pos[1] + self.radius
+                    self.last_touch = touch.pos # Update the last position of the mouse
         return super(PointLayout, self).on_touch_move(touch)
 
 
