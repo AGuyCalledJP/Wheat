@@ -6,6 +6,7 @@ from kivy.graphics import Color
 from kivy.graphics import Rectangle
 from kivy.graphics import Ellipse
 from kivy.graphics import Line
+from kivy.graphics import InstructionGroup
 from kivy.properties import (ObjectProperty, NumericProperty,
                              OptionProperty, BooleanProperty,
                              StringProperty, ListProperty)
@@ -68,7 +69,6 @@ class Geometry(FloatLayout):
     def make_figure(self):
         if self.in_prog_figure is None:
             return False
-        #have the figure draw itself # TODO:
         self.in_prog_figure.draw_fig()
         #set the in progress figure pointer back to None
         self.in_prog_figure = None
@@ -81,10 +81,10 @@ class Geometry(FloatLayout):
         #retrieve touch event
         contact_point = args[1].pos
 
+        #are we in contact with the interactive space of the geometry widget?
         if self.interactive_space.collide_point(contact_point[0], contact_point[1]):
             #check mode
             if self.mode_state == 'adding':
-                #try adding point at touchpoint
                 ## TODO: if the point we'd add is too close to the edge of interactive space, move it inwards more
 
                     #are we in the middle of making a figure?
@@ -195,28 +195,26 @@ class Figure(Widget):
     def draw_points(self):
         pass
 
-    def draw_line(self):
+    # def draw_line(self):
+    def draw_fig(self):
         #traverse points to draw line of figure
         coords = []
 
         for p in self.children:
             coords.append(p.point_x)
             coords.append(p.point_y)
-        print(self.children)
-        # coords.append(self.children[0]) #tack on the first point again to close the figure
 
-
-        with self.canvas:
-            Color(1,0,0)
-            Line(points=coords)
+        self.canvas.remove(self.line_draw)
+        self.line_draw.add(Color(1,0,0))
+        self.line_draw.add(Line(points=coords, close=True, width=1.5))
+        self.canvas.add(self.line_draw)
         return
 
-    def draw_fig(self):
-        # if(self.canvas):
-        #     self.canvas.clear() #remove all previous points and lines on this figure (this hopefully only effects one figure?)
-        self.draw_line()
-        # self.draw_points()
-        return
+    # def draw_fig(self):
+    #     self.canvas.remove_group()
+    #     self.draw_line()
+    #     # self.draw_points()
+    #     return
 
 
     def calculateArea(self):
@@ -251,9 +249,10 @@ class Figure(Widget):
     # TODO: add content
     def __init__(self, points = [], **kwargs):
         super(Figure, self).__init__(**kwargs)
-        for p in points:
-            self.add_point(p[0],p[1])
-        self.draw_fig()
+        self.line_draw = InstructionGroup()
+        # for p in points:
+        #     self.add_point(p[0],p[1])
+        # self.draw_fig()
 
 
 
@@ -286,8 +285,6 @@ class PointButton(ButtonBehavior, Image):
                 geom.num_selected-=1
                 self.selected = False
                 geom.selected_points.remove(self.parent) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
-
-        print(geom.selected_points)
 
     '''
         If contact is made with the button, selects it. Possibly to be removed and have contact handled above it.
@@ -344,7 +341,7 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
             if self.collide_point(*touch.pos):
                 if touch.button == 'left':
                     # move complete TODO: find some way to have figure update for this
-                    #self.parent.draw_fig()
+                    self.parent.draw_fig()
                     pass
         return super(PointLayout, self).on_touch_up(touch)
 
