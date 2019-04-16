@@ -5,6 +5,7 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color
 from kivy.graphics import Rectangle
 from kivy.graphics import Ellipse
+from kivy.graphics import Line
 from kivy.properties import (ObjectProperty, NumericProperty,
                              OptionProperty, BooleanProperty,
                              StringProperty, ListProperty)
@@ -47,21 +48,31 @@ class Geometry(FloatLayout):
     ########################################
 
 
-    ########################################
-    ####       FIGURE PROPERTIES        ####
-
-    num_selected = NumericProperty() #number of points selected within select mode
-
-    ########################################
-    ########################################
-
     def change_mode(self, mode):
         if (mode != 'adding') and (mode != 'selecting') and (mode != 'moving'):
             print("ERROR: Invalid move change attempted, this should never happen.")
             return False
-        else:
+        elif self.mode_state != mode: #don't change mode if the new mode is the same as the current mode (prevents accidental resets)
+
+            #todo: if the mode state changes from adding and there are points added from a figure, issue a make figure call
+
             self.mode_state = mode
+            #resetting these just in case
+            self.num_selected = 0
+            self.in_prog_figure = None
+            self.selected_points = []
             return True
+        else:
+            return False
+
+    def make_figure(self):
+        if self.in_prog_figure is None:
+            return False
+        #have the figure draw itself # TODO:
+        self.in_prog_figure.draw_fig()
+        #set the in progress figure pointer back to None
+        self.in_prog_figure = None
+        return True
 
     def connect_interactive_space(self, interactive_space):
         self.interactive_space = interactive_space
@@ -69,37 +80,37 @@ class Geometry(FloatLayout):
     def touch_interactive_space(self, *args):
         #retrieve touch event
         contact_point = args[1].pos
-        print(self.interactive_space)
 
-        #check mode
-        if self.mode_state == 'adding':
-            #try adding point at touchpoint
-            ## TODO: if the point we'd add is too close to the edge of interactive space, move it inwards more
+        if self.interactive_space.collide_point(contact_point[0], contact_point[1]):
+            #check mode
+            if self.mode_state == 'adding':
+                #try adding point at touchpoint
+                ## TODO: if the point we'd add is too close to the edge of interactive space, move it inwards more
 
-                #are we in the middle of making a figure?
-                if self.in_prog_figure is not None:
-                    ## TODO: if so, points get added to figure
-                    pass
-                else:
-                    #otherwise, create a new figure,
-                    f = Figure()
-                    self.in_prog_figure = f
-                    self.interactive_space.add_widget(f)
+                    #are we in the middle of making a figure?
+                    if self.in_prog_figure is None:
+                        #if not, create new figure
+                        f = Figure()
+                        self.in_prog_figure = f
+                        self.interactive_space.add_widget(self.in_prog_figure)
+
                     #add point to it
-                    f.add_point(contact_point[0], contact_point[1])
+                    self.in_prog_figure.add_point(contact_point[0], contact_point[1])
                     ## TODO: maybe put a label on it? either here or somewhere in the point itself
-        else:
-            #check if contact at point, if so continue
-            if True:
-                if self.mode_state == 'selecting':
-                     #if so select and add to some structure
-                    pass
-                elif self.mode_state == 'moving':
-                    #move point position, redraw figure
-                    pass
-                else:
-                    print("ERROR: Invalid mode_state interaction") #FIXME: remove if it turns out this never happens (it shouldn't)
-            #otherwise, do nothing
+            else:
+                #check if contact at point, if so continue
+                if True:
+                    if self.mode_state == 'selecting':
+                         #if so select and add to some structure
+                         #REMOVE: handled within pointbutton
+                        pass
+                    elif self.mode_state == 'moving':
+                        #move point position, redraw figure
+                        #REMOVE: handled within pointlayout
+                        pass
+                    else:
+                        print("ERROR: Invalid mode_state interaction") #FIXME: remove if it turns out this never happens (it shouldn't)
+                #otherwise, do nothing
 
 
     def __init__(self, *args, **kwargs):
@@ -109,8 +120,10 @@ class Geometry(FloatLayout):
         # self.add_widget(internals)
 
         #the different modes the user can be in within the geometry app, defaults to adding
-        self.mode_state = OptionProperty('adding', options=('moving','selecting','adding'))
-        self.mode_state = 'adding' ## NOTE: this shouldn't need to be here because the type literally HAS A DEFAULT FIELD but it won't work without it
+        self.mode_state = 'adding' #for some reason i can't get OptionProperty to behave correctly here, despite this being exactly the kind of situation you use it in.
+        self.num_selected = 0 #number of points selected within select mode, not using NumericProperty for similar reasons as above
+        self.selected_points = []
+
         self.interactive_space = None
         self.in_prog_figure = None #If we're in the middle of making a figure, this points to that in some way
 
@@ -189,17 +202,20 @@ class Figure(Widget):
         for p in self.children:
             coords.append(p.point_x)
             coords.append(p.point_y)
+        print(self.children)
+        # coords.append(self.children[0]) #tack on the first point again to close the figure
+
 
         with self.canvas:
-            Color(1,0,0) #WHITE
-            Line(coords)
+            Color(1,0,0)
+            Line(points=coords)
         return
 
     def draw_fig(self):
         # if(self.canvas):
         #     self.canvas.clear() #remove all previous points and lines on this figure (this hopefully only effects one figure?)
-        # self.draw_line()
-        # # self.draw_points()
+        self.draw_line()
+        # self.draw_points()
         return
 
 
@@ -229,7 +245,7 @@ class Figure(Widget):
     def add_point(self, new_x, new_y):
         p = PointLayout(pos=[new_x-(img_size[0]/2), new_y-(img_size[0]/2)])
         self.add_widget(p)
-        print("point added at " + str(new_x) + ", " + str(new_y))
+        # print("point added at " + str(new_x) + ", " + str(new_y))
 
 
     # TODO: add content
@@ -258,20 +274,27 @@ class PointButton(ButtonBehavior, Image):
         Checks if the button is selected or not, and flips to the other state, while updating the image to reflect whether the point is selected
     '''
     def select(self):
-        if(self.selected == False):
-            self.source = img_source_selected
-            self.selected = True
-        else:
-            self.source = img_source
-            self.selected = False
+        geom = self.parent.parent.parent.parent.parent.parent.parent.parent
+        if(geom.mode_state == "selecting"): #TODO: please god make this prettier
+            if(self.selected == False):
+                self.source = img_source_selected
+                geom.num_selected+=1
+                self.selected = True
+                geom.selected_points.append(self.parent) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
+            else:
+                self.source = img_source
+                geom.num_selected-=1
+                self.selected = False
+                geom.selected_points.remove(self.parent) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
+
+        print(geom.selected_points)
 
     '''
         If contact is made with the button, selects it. Possibly to be removed and have contact handled above it.
     '''
     def on_press(self):
         #TODO: case checking what mode we're in before "selecting" point
-        if(self.parent.parent.parent.parent.parent.parent.parent.parent.mode_state == "selecting"): #TODO: please god make this prettier
-            self.select()
+        self.select()
 
 
 
@@ -290,6 +313,7 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
         self.size_hint_y = None
         self.point_x = self.pos[0] + self.radius # visual center of point (center of the image)
         self.point_y = self.pos[1] + self.radius # visual center of point (center of the image)
+        self.last_touch = [0,0]
 
     '''
         Selects all (ideally, the singular) children of this layout container.
