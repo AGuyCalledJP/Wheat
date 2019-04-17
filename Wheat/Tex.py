@@ -23,7 +23,9 @@ from kivy.properties import (ObjectProperty, NumericProperty,
                              OptionProperty, BooleanProperty,
                              StringProperty, ListProperty)
 
+from pdf2image import convert_from_path
 from pylatex import Document, Section, Subsection, Command, Math, Alignat
+from PIL import Image
 import os
 import sys
 
@@ -33,7 +35,21 @@ class Bar(FloatLayout):
     pass
 
 class Display(FloatLayout):
-    pass
+    def __init__(self, **kwargs):
+        super(Display, self).__init__(**kwargs)
+        with self.canvas:
+            self.bg = Rectangle(source='Wheat/visual_assets/error-image.png', pos=self.pos, size=self.size)
+
+        self.bind(pos=self.update_bg)
+        self.bind(size=self.update_bg)
+
+    def update(self):
+        with self.canvas:
+            self.canvas.ask_update()
+
+    def update_bg(self, *args):
+        self.bg.pos = self.pos
+        self.bg.size = self.size
 
 class Input(FloatLayout):
     def hide_input(wid, dohide=True):
@@ -216,4 +232,22 @@ class Tex(ScatterLayout):
         self.convert_image()
 
     def convert_image(self):
-        print("hi")
+
+        pages = convert_from_path('Wheat/visual_assets/latex.pdf', 500)
+        for page in pages:
+            page.save('Wheat/visual_assets/output.png', 'PNG')
+
+        self.crop()
+
+    def crop(self):
+        """
+        @param image_path: The path to the image to edit
+        @param coords: A tuple of x/y coordinates (x1, y1, x2, y2)
+        @param saved_location: Path to save the cropped image
+        """
+
+        image_obj = Image.open('Wheat/visual_assets/output.png')
+        width, height = image_obj.size
+        coords = (0.2*width, 0.1*height, 0.8*width, 0.25*height)
+        cropped_image = image_obj.crop(coords)
+        cropped_image.save('Wheat/visual_assets/cropped.png')
