@@ -122,7 +122,7 @@ def stop_thread(thread):
 ##########################################
 
 def receive_message(message, *args):
-    real_stdout.write('- subprocess received' + str(message) + '\n')
+    #real_stdout.write('- subprocess received' + str(message) + '\n')
     real_stdout.flush()
     address = message[0]
 

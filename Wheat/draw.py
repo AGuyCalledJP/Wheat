@@ -9,9 +9,10 @@ from kivy.properties import (ObjectProperty, NumericProperty,
 
 Builder.load_file('draw.kv')
 
-f = "paint"
+f = "page"
 suffix = ".png"
-newP = "visual_assets/wheat_bg_1_college.png"
+newPage = "visual_assets/wheat_bg_1_college.png"
+folder = '/Wheat/NoteBook/Pages/'
 
 class Draw(BoxLayout):
 
@@ -21,17 +22,28 @@ class Draw(BoxLayout):
 
     def __init__(self, *args, **kwargs):
         super(Draw, self).__init__(*args, **kwargs)
-        p = Paint(2)
-        self.pages.append(p)
-        self.add_widget(p)
-        print(self.pages)
+        cd = os.getcwd()
+        pages = os.listdir(cd + folder)
+        pages.sort()
+        if len(pages) > 0:
+            for page in pages:
+                print(page)
+                p = Paint(cd + folder + page)
+                self.pages.append(p)
+                print(self.pages)
+                self.count = self.count + 1
+            self.add_widget(self.pages[0])
+        else:
+            p = Paint(newPage)
+            self.pages.append(p)
+            self.add_widget(p)
+            print(self.pages)
 
     def Save(self):
         print("hello there")
         files = []
         cd = os.getcwd()
         print(cd)
-        folder = '/Wheat/NoteBook/'
         for i in range(0,len(self.pages)):
             files.append(self.pages[i].Save(i))
         for f in files:
@@ -55,13 +67,13 @@ class Draw(BoxLayout):
 
     
     def pageForward(self):
-        if self.curr == self.count:
+        if self.curr == self.count - 1:
             print(self.curr)
             oldP = self.pages[self.curr]
             print(oldP)
             oldP.rem()
             self.remove_widget(oldP)
-            newP = Paint(1)
+            newP = Paint(newPage)
             self.pages.append(newP)
             print(self.pages)
             self.add_widget(newP)
@@ -101,16 +113,10 @@ class Paint(Widget):
     drawing = False
     color = 'black'
 
-    def __init__(self, imDifferent, *args, **kwargs):
+    def __init__(self, where, *args, **kwargs):
         super(Paint, self).__init__(*args, **kwargs)
         with self.canvas:
-            if imDifferent is 0:
-                #GOING FORWARD OR BACKWARDS AN ALREADY EXISTING PAGE
-                pass
-            elif imDifferent is 1:
-                self.bg = Rectangle(source="visual_assets/wheat_bg_1_college.png", pos=self.pos, size=self.size)
-            else:
-                self.bg = Rectangle(source=str(f + suffix), pos=self.pos, size=self.size)
+                self.bg = Rectangle(source=where, pos=self.pos, size=self.size)
 
         self.bind(pos=self.update_bg)
         self.bind(size=self.update_bg)
