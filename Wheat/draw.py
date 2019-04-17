@@ -12,7 +12,7 @@ Builder.load_file('draw.kv')
 f = "page"
 suffix = ".png"
 newPage = "visual_assets/wheat_bg_1_college.png"
-folder = '/Wheat/NoteBook/Pages/'
+folder = '/Wheat/Notebook/Pages/'
 
 class Draw(BoxLayout):
 
@@ -52,7 +52,7 @@ class Draw(BoxLayout):
             shutil.move(f, str(cd + folder))
     def Load(self):
         pass
-        
+
 
     def pageBack(self):
         if self.curr > 0:
@@ -65,7 +65,7 @@ class Draw(BoxLayout):
             oldP.update()
             newP.update()
 
-    
+
     def pageForward(self):
         if self.curr == self.count - 1:
             print(self.curr)
@@ -107,11 +107,18 @@ class Draw(BoxLayout):
     def clear_canvas(self):
         self.pages[self.curr].clear_canvas()
 
+    def increaseSize(self):
+        self.pages[self.curr].increaseSize()
+
+    def decreaseSize(self):
+        self.pages[self.curr].decreaseSize()
+
 class Paint(Widget):
     undolist = []
     objects = []
     drawing = False
     color = 'black'
+    SZ = 2.5
 
     def __init__(self, where, *args, **kwargs):
         super(Paint, self).__init__(*args, **kwargs)
@@ -148,7 +155,7 @@ class Paint(Widget):
                     self.obj.add(Color(0,0,0))
                 else:
                     self.obj.add(Color(1,.4,.4))
-                self.obj.add(Line(width = 2.5))
+                self.obj.add(Line(width = self.SZ))
                 self.objects.append(self.obj)
                 self.canvas.add(self.obj)
 
@@ -170,8 +177,6 @@ class Paint(Widget):
             print(len(self.objects))
             for i in range(len(self.objects)):
                 self.undo()
-#        self.objects = []
-#        self.canvas.clear()
 
     def chColor(self):
         if self.color == 'black':
@@ -179,7 +184,13 @@ class Paint(Widget):
         else:
             self.color = 'black'
 
+    def increaseSize(self):
+        self.SZ = self.SZ + .25
+
+    def decreaseSize(self):
+        if self.SZ > .1:
+            self.SZ = self.SZ - .25
+
     def Save(self, who):
-        print("hello there")
         self.export_to_png(str(f + str(who) + suffix))
         return str(f + str(who) + suffix)
