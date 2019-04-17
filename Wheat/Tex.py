@@ -23,24 +23,46 @@ from kivy.properties import (ObjectProperty, NumericProperty,
                              OptionProperty, BooleanProperty,
                              StringProperty, ListProperty)
 
+from pdf2image import convert_from_path
+from pylatex import Document, Section, Subsection, Command, Math, Alignat
+from PIL import Image
+import os
+import sys
+
 Builder.load_file('Tex.kv')
 
 class Bar(FloatLayout):
     pass
 
 class Display(FloatLayout):
-    pass
+    def __init__(self, **kwargs):
+        super(Display, self).__init__(**kwargs)
+        with self.canvas:
+            self.bg = Rectangle(source='Wheat/visual_assets/error-image.png', pos=self.pos, size=self.size)
+
+        self.bind(pos=self.update_bg)
+        self.bind(size=self.update_bg)
+
+    def update(self):
+        with self.canvas:
+            self.canvas.ask_update()
+
+    def update_bg(self, *args):
+        self.bg.pos = self.pos
+        self.bg.size = self.size
 
 class Input(FloatLayout):
     def hide_input(wid, dohide=True):
         if hasattr(wid, 'saved_attrs'):
             if not dohide:
-                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+                wid.height, wid.size_hint_x, wid.opacity, wid.disabled = wid.saved_attrs
                 del wid.saved_attrs
+                return .15
 
         elif dohide:
-            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
-            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+            wid.saved_attrs = wid.height, wid.size_hint_x, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_x, wid.opacity, wid.disabled = 0, None, 0, True
+            return .2
 
 
 class Tex(ScatterLayout):
@@ -56,6 +78,8 @@ class Tex(ScatterLayout):
     c3 = .4
     c4 = .85
     fontSizer = 24
+
+    code = StringProperty()
 
     move_lock = False
     scale_lock_left = False
@@ -191,3 +215,39 @@ class Tex(ScatterLayout):
         self._touches.append(touch)
         self._last_touch_pos[touch] = touch.pos
         return True
+
+
+    def fill_document(self,doc,code):
+        with doc.create(Alignat(numbering=False, escape=False)) as agn:
+                agn.append(code)
+
+
+    def write(self):
+        self.code = self.ids.equation.text
+        doc = Document('latex')
+        self.fill_document(doc,self.code)
+
+        doc.generate_pdf(filepath='Wheat/visual_assets/', clean_tex=False, compiler='pdflatex')
+
+        self.convert_image()
+
+    def convert_image(self):
+
+        pages = convert_from_path('Wheat/visual_assets/latex.pdf', 500)
+        for page in pages:
+            page.save('Wheat/visual_assets/output.png', 'PNG')
+
+        self.crop()
+
+    def crop(self):
+        """
+        @param image_path: The path to the image to edit
+        @param coords: A tuple of x/y coordinates (x1, y1, x2, y2)
+        @param saved_location: Path to save the cropped image
+        """
+
+        image_obj = Image.open('Wheat/visual_assets/output.png')
+        width, height = image_obj.size
+        coords = (0.2*width, 0.1*height, 0.8*width, 0.25*height)
+        cropped_image = image_obj.crop(coords)
+        cropped_image.save('Wheat/visual_assets/cropped.png')
