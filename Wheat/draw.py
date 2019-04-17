@@ -12,7 +12,7 @@ Builder.load_file('draw.kv')
 f = "page"
 suffix = ".png"
 newPage = "visual_assets/wheat_bg_1_college.png"
-folder = '/Wheat/NoteBook/Pages/'
+folder = '/Wheat/Notebook/Pages/'
 
 class Draw(BoxLayout):
 
