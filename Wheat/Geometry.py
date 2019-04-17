@@ -205,8 +205,10 @@ class Figure(Widget):
             coords.append(p.point_y)
 
         self.canvas.remove(self.line_draw)
-        self.line_draw.add(Color(1,0,0))
-        self.line_draw.add(Line(points=coords, close=True, width=1.5))
+        new_line = InstructionGroup()
+        new_line.add(Color(1,0,0))
+        new_line.add(Line(points=coords, close=True, width=1.5))
+        self.line_draw = new_line
         self.canvas.add(self.line_draw)
         return
 
