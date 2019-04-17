@@ -23,6 +23,10 @@ from kivy.properties import (ObjectProperty, NumericProperty,
                              OptionProperty, BooleanProperty,
                              StringProperty, ListProperty)
 
+from pylatex import Document, Section, Subsection, Command, Math, Alignat
+import os
+import sys
+
 Builder.load_file('Tex.kv')
 
 class Bar(FloatLayout):
@@ -58,6 +62,8 @@ class Tex(ScatterLayout):
     c3 = .4
     c4 = .85
     fontSizer = 24
+
+    code = StringProperty()
 
     move_lock = False
     scale_lock_left = False
@@ -195,5 +201,19 @@ class Tex(ScatterLayout):
         return True
 
 
-    def write():
-        print('haha')
+    def fill_document(self,doc,code):
+        with doc.create(Alignat(numbering=False, escape=False)) as agn:
+                agn.append(code)
+
+
+    def write(self):
+        self.code = self.ids.equation.text
+        doc = Document('latex')
+        self.fill_document(doc,self.code)
+
+        doc.generate_pdf(filepath='Wheat/visual_assets/', clean_tex=False, compiler='pdflatex')
+
+        self.convert_image()
+
+    def convert_image(self):
+        print("hi")

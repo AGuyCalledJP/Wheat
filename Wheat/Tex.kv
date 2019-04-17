@@ -34,9 +34,8 @@
             pos_hint: {'x' : 0.0, 'y' : 0.2}
             size_hint: 1, 0.65
             canvas.before:
-                Color:
-                    rgba: 0,0,0,1
                 Rectangle:
+                    source: 'visual_assets/error-image.png'
                     pos: self.pos
                     size: self.size
 
@@ -51,7 +50,13 @@
                     pos: self.pos
                     size: self.size
             TextInput:
-                pos_hint: {'x' : 0.1, 'y' : 0.05}
-                size_hint: 0.8,0.9
+                id: equation
+                pos_hint: {'x' : 0.05, 'y' : 0.05}
+                size_hint: 0.7,0.9
                 multiline: False
-                on_enter: root.write
+
+            Button:
+                pos_hint: {'x' : 0.8, 'y' : 0.05}
+                size_hint: 0.15,0.9
+                text: "Run"
+                on_press: root.write()
