@@ -151,7 +151,7 @@ class WheatScreen(Screen):
         print(self.currSpace)
         self.currSpace = (self.currSpace + 1) % self.numSpace
         print(self.currSpace)
-        if self.currSpace is 0 and self.curr is not 0:  
+        if self.currSpace is 0 and self.curr is not 0:
             for i in self.layouts:
                 print(i)
                 self.space1.ids.flone.remove_widget(i)
@@ -185,7 +185,7 @@ class WheatScreen(Screen):
             elif self.currSpace is 1:
                 self.manager.current = 't'
             else:
-                self.manager.current = 'tr'  
+                self.manager.current = 'tr'
 
     def add(self):
         if self.currSpace is 0:
@@ -535,7 +535,7 @@ class WheatScreen(Screen):
                         prior = discharged['prior']
                         curr = discharged['curr']
                         interp.Load(prior, curr)
-            
+
     def addAux(self, pos, dest):
         if dest is 0:
             if self.layouts==[]:
@@ -746,6 +746,12 @@ class WheatScreen(Screen):
 
     def chColor(self):
         self.ids.pad.chColor()
+
+    def sizeUp(self):
+        self.ids.pad.increaseSize()
+
+    def sizeDown(self):
+        self.ids.pad.decreaseSize()
 
 class LiveManager(ScreenManager):
     pass
