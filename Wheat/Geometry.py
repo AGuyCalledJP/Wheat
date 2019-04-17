@@ -18,15 +18,28 @@ from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
 from kivy.lang import Builder
-from kivy.properties import (ObjectProperty, NumericProperty,
-                             OptionProperty, BooleanProperty,
-                             StringProperty, ListProperty)
+
+from Point import *
+from GeomMenuing import *
+
+
+#big todos:
+# maybe make point moving not try to detect collision during movement, just check that we're grabbed?
+    #fix redraw bug, but this^ should do that
+# make operators do things
+# points should be labeled both with an identifier and coords
+# possibly allow adding points by numeric input?
+#switching off of add mode during figure creation, or canceling creation, should remove all points from the in_prog figure
+
+#selecting points should be added to some structure
+#switching off of select mode should de-select all points
+#selecting a selected point should remove it from the selection structure
+
+#removing points from figure?
+#clearing all figures?
 
 
 
-img_source_selected = 'visual_assets/fig_point_selected.png'
-img_source = 'visual_assets/fig_point.png'
-img_size = Image(source=img_source).texture.size
 
 
 
@@ -54,8 +67,15 @@ class Geometry(FloatLayout):
             print("ERROR: Invalid move change attempted, this should never happen.")
             return False
         elif self.mode_state != mode: #don't change mode if the new mode is the same as the current mode (prevents accidental resets)
+            if self.mode_state == "adding":
+                #if we switch off of adding and there's a figure in process, we need to address it
+                # self.cancel_figure()
+                self.make_figure()
 
-            #todo: if the mode state changes from adding and there are points added from a figure, issue a make figure call
+            if self.mode_state == "selecting":
+                #if we switch off of selecting, deselect everything:
+                for selected in self.selected_points:
+                    selected.select()
 
             self.mode_state = mode
             #resetting these just in case
@@ -71,6 +91,14 @@ class Geometry(FloatLayout):
             return False
         self.in_prog_figure.draw_fig()
         #set the in progress figure pointer back to None
+        self.in_prog_figure = None
+        return True
+
+    def cancel_figure(self):
+        #don't try to cancel a figure creation with no actual points
+        if self.in_prog_figure is None:
+            return False
+        self.in_prog_figure.clear_widgets()
         self.in_prog_figure = None
         return True
 
@@ -116,8 +144,6 @@ class Geometry(FloatLayout):
     def __init__(self, *args, **kwargs):
         super(Geometry, self).__init__(*args, **kwargs)
         self.size_hint = .7,.7
-        # internals = PointLayout()
-        # self.add_widget(internals)
 
         #the different modes the user can be in within the geometry app, defaults to adding
         self.mode_state = 'adding' #for some reason i can't get OptionProperty to behave correctly here, despite this being exactly the kind of situation you use it in.
@@ -128,62 +154,17 @@ class Geometry(FloatLayout):
         self.in_prog_figure = None #If we're in the middle of making a figure, this points to that in some way
 
 
-    class Interactive_Space(FloatLayout):
+    class Interactive_Space(FloatLayout): #class used to describe space containing points
         pass
 
 
 
 
 
-class RightPane(FloatLayout):
-
-    def hide_pane(wid, dohide=True):
-        if hasattr(wid, 'saved_attrs'):
-            if not dohide:
-                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
-                del wid.saved_attrs
-                return 1 #return values indicate size the header should be in th kv file, which runs this and sets header's size_hint to this value
-        #capture sizing information, opacity, disabled status, and set to 0's/None/True to hide the pane
-        elif dohide:
-            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
-            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
-            return .66 #return values indicate size the header should be in th kv file, which runs this and sets header's size_hint to this value
-
-
-#this might need to live somewhere else
-
-class OppButton(Button):
-
-    def hide_opp(wid, dohide=True):
-        if hasattr(wid, 'saved_attrs'):
-            if not dohide:
-                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
-                del wid.saved_attrs
-        #capture sizing information, opacity, disabled status, and set to 0's/None/True to hide the pane
-        elif dohide:
-            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
-            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
-
-    def __init__(self, **kwargs):
-        super(OppButton, self).__init__(**kwargs)
-        self.hide_opp() #start hidden, use when we have add functionality working
 
 
 
-class MakeFigureButton(Button):
-    def hide_make(wid, dohide=True):
-        if hasattr(wid, 'saved_attrs'):
-            if not dohide:
-                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
-                del wid.saved_attrs
-        #capture sizing information, opacity, disabled status, and set to 0's/None/True to hide the pane
-        elif dohide:
-            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
-            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
 
-    def __init__(self, **kwargs):
-        super(MakeFigureButton, self).__init__(**kwargs)
-        # self.hide_make() #start hidden, use when we have add functionality working
 
 
 
@@ -207,17 +188,10 @@ class Figure(Widget):
         self.canvas.remove(self.line_draw)
         new_line = InstructionGroup()
         new_line.add(Color(1,0,0))
-        new_line.add(Line(points=coords, close=True, width=1.5))
+        new_line.add(Line(points=coords, close=True, width=1.1))
         self.line_draw = new_line
         self.canvas.add(self.line_draw)
         return
-
-    # def draw_fig(self):
-    #     self.canvas.remove_group()
-    #     self.draw_line()
-    #     # self.draw_points()
-    #     return
-
 
     def calculateArea(self):
 
@@ -245,16 +219,12 @@ class Figure(Widget):
     def add_point(self, new_x, new_y):
         p = PointLayout(pos=[new_x-(img_size[0]/2), new_y-(img_size[0]/2)])
         self.add_widget(p)
-        # print("point added at " + str(new_x) + ", " + str(new_y))
 
 
     # TODO: add content
     def __init__(self, points = [], **kwargs):
         super(Figure, self).__init__(**kwargs)
         self.line_draw = InstructionGroup()
-        # for p in points:
-        #     self.add_point(p[0],p[1])
-        # self.draw_fig()
 
 
 
@@ -263,101 +233,7 @@ class Figure(Widget):
 
 
 
-class PointButton(ButtonBehavior, Image):
-    def __init__(self, **kwargs):
-        super(PointButton, self).__init__(**kwargs)
 
-        self.source = img_source
-        self.size = Image(source=self.source).texture.size
-        self.selected = False
-
-    '''
-        Checks if the button is selected or not, and flips to the other state, while updating the image to reflect whether the point is selected
-    '''
-    def select(self):
-        geom = self.parent.parent.parent.parent.parent.parent.parent.parent
-        if(geom.mode_state == "selecting"): #TODO: please god make this prettier
-            if(self.selected == False):
-                self.source = img_source_selected
-                geom.num_selected+=1
-                self.selected = True
-                geom.selected_points.append(self.parent) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
-            else:
-                self.source = img_source
-                geom.num_selected-=1
-                self.selected = False
-                geom.selected_points.remove(self.parent) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
-
-    '''
-        If contact is made with the button, selects it. Possibly to be removed and have contact handled above it.
-    '''
-    def on_press(self):
-        #TODO: case checking what mode we're in before "selecting" point
-        self.select()
-
-
-
-class PointLayout(ScatterLayout): #container for individual point, controls movement
-    do_scale = False
-    do_rotation = False
-    do_translation = False
-
-    def __init__(self, **kwargs):
-        super(PointLayout, self).__init__(**kwargs)
-        self.add_widget(PointButton())
-        self.source = img_source
-        self.size = Image(source=self.source).texture.size
-        self.radius = (Image(source=self.source).texture.size[0])/2 #radius of point, based off size of image (image is assumed to be a square canvas with a circle of diameter equal to image width and height)
-        self.size_hint_x = None
-        self.size_hint_y = None
-        self.point_x = self.pos[0] + self.radius # visual center of point (center of the image)
-        self.point_y = self.pos[1] + self.radius # visual center of point (center of the image)
-        self.last_touch = [0,0]
-
-    '''
-        Selects all (ideally, the singular) children of this layout container.
-    '''
-    def select_children(self):
-        for child in self.content.children: #NOTE: Because this was originally a ScatterLayout, we need to use content.children instead of children
-            child.select()
-
-    def collide_point(self, x, y): #Checks for contact within the radius of the point
-        if((x - self.point_x)**2 + (y - self.point_y)**2 < self.radius**2):
-            return True
-        return False
-
-
-    def on_touch_down(self, touch):
-        #include check for move mode
-        if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
-            if self.collide_point(*touch.pos):
-                if touch.button == 'left':
-
-                    # Hold value of touch downed pos
-                    self.last_touch = touch.pos # Need this line
-        return super(PointLayout, self).on_touch_down(touch)
-
-
-    def on_touch_up(self, touch):
-        if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
-            if self.collide_point(*touch.pos):
-                if touch.button == 'left':
-                    # move complete TODO: find some way to have figure update for this
-                    self.parent.draw_fig()
-                    pass
-        return super(PointLayout, self).on_touch_up(touch)
-
-
-    def on_touch_move(self, touch):
-        if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
-            if self.collide_point(*touch.pos):
-                if touch.button == 'left':
-                    self.x = self.x + touch.pos[0] - self.last_touch[0] # Add the x distance between this mouse event and the last
-                    self.y = self.y + touch.pos[1] - self.last_touch[1] # Add the y distance between this mouse event and the last
-                    self.point_x = self.pos[0] + self.radius
-                    self.point_y = self.pos[1] + self.radius
-                    self.last_touch = touch.pos # Update the last position of the mouse
-        return super(PointLayout, self).on_touch_move(touch)
 
 
 
