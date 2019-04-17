@@ -35,12 +35,14 @@ class Input(FloatLayout):
     def hide_input(wid, dohide=True):
         if hasattr(wid, 'saved_attrs'):
             if not dohide:
-                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+                wid.height, wid.size_hint_x, wid.opacity, wid.disabled = wid.saved_attrs
                 del wid.saved_attrs
+                return .15
 
         elif dohide:
-            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
-            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+            wid.saved_attrs = wid.height, wid.size_hint_x, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_x, wid.opacity, wid.disabled = 0, None, 0, True
+            return .2
 
 
 class Tex(ScatterLayout):
@@ -191,3 +193,7 @@ class Tex(ScatterLayout):
         self._touches.append(touch)
         self._last_touch_pos[touch] = touch.pos
         return True
+
+
+    def write():
+        print('haha')
