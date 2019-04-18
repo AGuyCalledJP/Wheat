@@ -74,8 +74,12 @@ class Geometry(FloatLayout):
 
             if self.mode_state == "selecting":
                 #if we switch off of selecting, deselect everything:
+                print("num to des " + str(len(self.selected_points)))
                 for selected in self.selected_points:
-                    selected.select()
+                    selected.set_as_deselected()
+                    print("deselecting")
+                self.num_selected = 0
+                self.selected_points = []
 
             self.mode_state = mode
             #resetting these just in case

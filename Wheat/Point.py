@@ -27,7 +27,6 @@ img_size = Image(source=img_source).texture.size
 class PointButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
         super(PointButton, self).__init__(**kwargs)
-
         self.source = img_source
         self.size = Image(source=self.source).texture.size
         self.selected = False
@@ -37,27 +36,32 @@ class PointButton(ButtonBehavior, Image):
     '''
     def select(self):
         geom = self.parent.parent.parent.parent.parent.parent.parent.parent
-        if(geom.mode_state == "selecting"): #TODO: please god make this prettier
+
+        if(geom.mode_state == "selecting"):
             if(self.selected == False):
                 self.source = img_source_selected
                 geom.num_selected+=1
                 self.selected = True
                 geom.selected_points.append(self) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
-                print("selecting point, points now at " + str(geom.num_selected))
-                print("selpoints length : " + str(len(geom.selected_points)))
             else:
                 self.source = img_source
                 geom.num_selected-=1
                 self.selected = False
                 geom.selected_points.remove(self) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
-                print("deselecting point, points now at " + str(geom.num_selected))
-                print("selpoints length : " + str(len(geom.selected_points)))
+
+    '''
+        Forces a point to be deselected, without altering the selected points or num selected in Geometry.
+        Used to prevent altering the list of selected points while traversing.
+        After use, selected_points and num_selected should be updated within Geometry.
+    '''
+    def set_as_deselected(self):
+        self.source = img_source
+        self.selected = False
 
     '''
         If contact is made with the button, selects it. Possibly to be removed and have contact handled above it.
     '''
     def on_press(self):
-        #TODO: case checking what mode we're in before "selecting" point
         self.select()
 
 
