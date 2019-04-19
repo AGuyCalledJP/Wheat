@@ -38,7 +38,7 @@ class Display(FloatLayout):
     def __init__(self, **kwargs):
         super(Display, self).__init__(**kwargs)
         with self.canvas:
-            self.bg = Rectangle(source='Wheat/visual_assets/error-image.png', pos=self.pos, size=self.size)
+            self.bg = Rectangle(source='Wheat/visual_assets/cropped.png', pos=self.pos, size=self.size)
 
         self.bind(pos=self.update_bg)
         self.bind(size=self.update_bg)
@@ -50,6 +50,9 @@ class Display(FloatLayout):
     def update_bg(self, *args):
         self.bg.pos = self.pos
         self.bg.size = self.size
+
+    def test(self):
+        print('help')
 
 class Input(FloatLayout):
     def hide_input(wid, dohide=True):
@@ -240,14 +243,10 @@ class Tex(ScatterLayout):
         self.crop()
 
     def crop(self):
-        """
-        @param image_path: The path to the image to edit
-        @param coords: A tuple of x/y coordinates (x1, y1, x2, y2)
-        @param saved_location: Path to save the cropped image
-        """
 
         image_obj = Image.open('Wheat/visual_assets/output.png')
         width, height = image_obj.size
-        coords = (0.2*width, 0.1*height, 0.8*width, 0.25*height)
+        coords = (0.44*width, 0.17*height, 0.59*width, 0.21*height)
         cropped_image = image_obj.crop(coords)
         cropped_image.save('Wheat/visual_assets/cropped.png')
+        Display.test(self)
