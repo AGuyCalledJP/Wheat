@@ -31,14 +31,19 @@ import sys
 
 Builder.load_file('Tex.kv')
 
+default = 'Wheat/visual_assets/error-image.png'
+ran = 'Wheat/visual_assets/cropped.png'
+
 class Bar(FloatLayout):
     pass
 
 class Display(FloatLayout):
-    def __init__(self, **kwargs):
+    def __init__(self, where, **kwargs):
         super(Display, self).__init__(**kwargs)
+        self.pos_hint = {'x' : 0.0, 'y' : 0.2}
+        self.size_hint = 1, 0.65
         with self.canvas:
-            self.bg = Rectangle(source='Wheat/visual_assets/cropped.png', pos=self.pos, size=self.size)
+            self.bg = Rectangle(source = where, pos=self.pos, size=self.size)
 
         self.bind(pos=self.update_bg)
         self.bind(size=self.update_bg)
@@ -58,14 +63,14 @@ class Input(FloatLayout):
     def hide_input(wid, dohide=True):
         if hasattr(wid, 'saved_attrs'):
             if not dohide:
-                wid.height, wid.size_hint_x, wid.opacity, wid.disabled = wid.saved_attrs
+                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
                 del wid.saved_attrs
-                return .15
+                return 1
 
         elif dohide:
-            wid.saved_attrs = wid.height, wid.size_hint_x, wid.opacity, wid.disabled
-            wid.height, wid.size_hint_x, wid.opacity, wid.disabled = 0, None, 0, True
-            return .2
+            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+            return .66
 
 
 class Tex(ScatterLayout):
@@ -95,7 +100,8 @@ class Tex(ScatterLayout):
     def __init__(self, **kwargs):
         super(Tex, self).__init__(**kwargs)
         self.size_hint = 0.5,0.25
-
+        d = Display(default)
+        self.add_widget(d)
 
     def on_touch_up(self, touch):
         self.size_hint = None,None
@@ -246,7 +252,13 @@ class Tex(ScatterLayout):
 
         image_obj = Image.open('Wheat/visual_assets/output.png')
         width, height = image_obj.size
-        coords = (0.44*width, 0.17*height, 0.59*width, 0.21*height)
+        coords = (0.4*width, 0.17*height, 0.63*width, 0.21*height)
         cropped_image = image_obj.crop(coords)
         cropped_image.save('Wheat/visual_assets/cropped.png')
-        Display.test(self)
+        self.updateDisp()
+
+    def updateDisp(self):
+        widg = self.children[0]
+        self.remove_widget(widg)
+        d = Display(ran)
+        self.add_widget(d)

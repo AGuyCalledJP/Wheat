@@ -23,16 +23,18 @@
                 size_hint: .2, .9
                 text: "Hide Input"
                 on_press:
-                    header.size_hint_y = input.hide_input()
+                    # header.size_hint_x =
+                    input.hide_input()
                     hide_bot_button.text = "Unhide"
                 on_release:
-                    header.size_hint_y = input.hide_input(dohide=False)
+                    # header.size_hint_x = 
+                    input.hide_input(dohide=False)
                     hide_bot_button.text = "Hide Input"
 
-        Display:
-            id: display
-            pos_hint: {'x' : 0.0, 'y' : 0.2}
-            size_hint: 1, 0.65
+        # Display:
+        #     id: display
+        #     pos_hint: {'x' : 0.0, 'y' : 0.2}
+        #     size_hint: 1, 0.65
 
         Input:
             id: input
