@@ -146,11 +146,8 @@ class WheatScreen(Screen):
 
 
     def pageForward(self):
-        print("AY")
         self.curr = self.curr + 1
-        print(self.currSpace)
         self.currSpace = (self.currSpace + 1) % self.numSpace
-        print(self.currSpace)
         if self.currSpace is 0 and self.curr is not 0:
             for i in self.layouts:
                 print(i)
@@ -174,12 +171,9 @@ class WheatScreen(Screen):
             self.manager.current = 'tr'
 
     def pageBack(self):
-        print("Yo")
         if self.curr > 0:
             self.curr = self.curr - 1
-            print(self.currSpace)
             self.currSpace = (self.currSpace + 2) % self.numSpace
-            print(self.currSpace)
             if self.currSpace is 0:
                 self.manager.current = 'o'
             elif self.currSpace is 1:
@@ -381,6 +375,8 @@ class WheatScreen(Screen):
                         widgType = 'geo'
                     elif 'interp' in a:
                         widgType = 'interp'
+                    elif 'latex' in a:
+                        widgType = 'latex'
                     it = it + 1
                     store.put(saveMe, location=local, wType = widgType)
                     #Save the information associated with said widget
@@ -394,6 +390,9 @@ class WheatScreen(Screen):
                     elif widgType is 'func':
                         bundle = i.children[0].Save()
                         stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+                    elif widgType is 'latex':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, eq_text = bundle)
             elif writeTo is 1:
                 for i in self.layouts2:
                     it = 0
@@ -410,6 +409,8 @@ class WheatScreen(Screen):
                         widgType = 'geo'
                     elif 'interp' in a:
                         widgType = 'interp'
+                    elif 'latex' in a:
+                        widgType = 'latex'
                     it = it + 1
                     store.put(saveMe, location=local, wType = widgType)
                     #Save the information associated with said widget
@@ -423,6 +424,9 @@ class WheatScreen(Screen):
                     elif widgType is 'func':
                         bundle = i.children[0].Save()
                         stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+                    elif widgType is 'latex':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, eq_text = bundle)
             else:
                 for i in self.layouts3:
                     it = 0
@@ -439,6 +443,8 @@ class WheatScreen(Screen):
                         widgType = 'geo'
                     elif 'interp' in a:
                         widgType = 'interp'
+                    elif 'latex' in a:
+                        widgType = 'latex'
                     it = it + 1
                     store.put(saveMe, location=local, wType = widgType)
                     print(store.exists(saveMe))
@@ -453,6 +459,9 @@ class WheatScreen(Screen):
                     elif widgType is 'func':
                         bundle = i.children[0].Save()
                         stuff.put(saveMe, eq_text = bundle[0], comp_text = bundle[1])
+                    elif widgType is 'latex':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, eq_text = bundle)
 
     def Load(self):
         for curr in store.keys():
@@ -484,6 +493,11 @@ class WheatScreen(Screen):
                         prior = discharged['prior']
                         curr = discharged['curr']
                         interp.Load(prior, curr)
+                    elif 'latex' in wt:
+                        res = self.addTexAux(loc,0)
+                        latex = self.layouts[res-1].children[0]
+                        eq_text = discharged['eq_text']
+                        latex.Load(eq_text)                
                 elif writeTo is 1:
                     elem = store.get(curr)
                     discharged = stuff.get(curr)
@@ -509,6 +523,11 @@ class WheatScreen(Screen):
                         prior = discharged['prior']
                         curr = discharged['curr']
                         interp.Load(prior, curr)
+                    elif 'latex' in wt:
+                        res = self.addTexAux(loc,1)
+                        latex = self.layouts[res-1].children[0]
+                        eq_text = discharged['eq_text']
+                        latex.Load(eq_text)
                 else:
                     elem = store.get(curr)
                     discharged = stuff.get(curr)
@@ -534,32 +553,26 @@ class WheatScreen(Screen):
                         prior = discharged['prior']
                         curr = discharged['curr']
                         interp.Load(prior, curr)
+                    elif 'latex' in wt:
+                        res = self.addTexAux(loc,2)
+                        latex = self.layouts[res-1].children[0]
+                        eq_text = discharged['eq_text']
+                        latex.Load(eq_text)
 
     def SaveWriting(self):
         writing = self.draw.Save(self.curr)
         save = "P" + str(self.curr)
-        print("writing")
-        print(writing)
         write.put(save, a = writing)
         written = write.get(save)
-        print(write)
-        print(written)
 
     def LoadWriting(self):
         writing = []
         p = 'P' + str(self.curr)
-        print(write)
         for key in write.keys():
-            print(key)
             if p in key:
                 written = write.get(p)
-                print(written)
                 curr = written['a']
-                print("getting curr back")
-                print(curr)
                 writing = curr
-        print("writing")
-        print(writing)
         self.draw.Load(writing)
 
     def addAux(self, pos, dest):

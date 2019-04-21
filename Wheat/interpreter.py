@@ -288,12 +288,12 @@ class InterpreterInput(InputWidget):
             return super(InterpreterInput, self).insert_text(text + num_spaces * ' ',
                                                              from_undo=from_undo)
 
-    def keyboard_on_key_down(self, window, keycode, text, modifiers):
-        if keycode[1] == 'enter' and 'shift' in modifiers:
-            self.root.interpret_line_from_code_input()
-            return
-        super(InterpreterInput, self).keyboard_on_key_down(
-            window, keycode, text, modifiers)
+    # def keyboard_on_key_down(self, window, keycode, text, modifiers):
+    #     if keycode[1] == 'enter' and 'shift' in modifiers:
+    #         self.root.interpret_line_from_code_input()
+    #         return
+    #     super(InterpreterInput, self).keyboard_on_key_down(
+    #         window, keycode, text, modifiers)
 
 class InterpreterGui(ScatterLayout):
     output_window = ObjectProperty()
@@ -372,19 +372,16 @@ class InterpreterGui(ScatterLayout):
         self.interpreter.bind(on_missing_labels=self.on_missing_labels)
         self.interpreter.bind(on_request_input=self.on_request_input)
         self.size_hint = .5,.5
-        # self.size = 1008, 756.0
 
         Clock.schedule_once(self.post_init_check, 0)
 
     def flip(self):
         if self.disp == 1:
             self.code_input.disabled = True
-            #self.scrollview.disabled = True
             self.output_window.disabled = True
             self.disp = 0
         else:
             self.code_input.disabled = False
-            #self.scrollview.disabled = False
             self.output_window.disabled = False
             self.disp = 1
 

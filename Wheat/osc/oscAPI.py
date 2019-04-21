@@ -217,7 +217,8 @@ class OSCServer(_OSCServer):
 
                 # special handle for EADDRINUSE
                 if error == errno.EADDRINUSE:
-                    Logger.error('OSC: Address %s:%i already in use, retry in 2 second' % (self.ipAddr, self.port))
+                    pass
+                    #Logger.error('OSC: Address %s:%i already in use, retry in 2 second' % (self.ipAddr, self.port))
                 else:
                     self.haveSocket = False
 

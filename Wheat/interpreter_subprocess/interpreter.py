@@ -296,7 +296,7 @@ class OscOut(object):
         return
 
     def send_message(self, message):
-        real_print('message length is', len(message))
+        #real_print('message length is', len(message))
 
         # If the message is very long, manually break into lines
         for sub_string_index in range(0, len(message), 30000):
