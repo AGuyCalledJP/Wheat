@@ -58,6 +58,7 @@ class Geometry(FloatLayout):
     button_bg_color = [.8,.1,.2,1]
     left_pane_bg_color = [.4, 0, 0, 1.]
     separator_color = left_pane_bg_color
+    interactive_space = ObjectProperty()
     ########################################
     ########################################
 
@@ -106,8 +107,8 @@ class Geometry(FloatLayout):
         self.in_prog_figure = None
         return True
 
-    def connect_interactive_space(self, interactive_space):
-        self.interactive_space = interactive_space
+    # def connect_interactive_space(self, interactive_space):
+    #     self.interactive_space = interactive_space
 
     def touch_interactive_space(self, *args):
         #retrieve touch event
@@ -143,6 +144,44 @@ class Geometry(FloatLayout):
                     else:
                         print("ERROR: Invalid mode_state interaction") #FIXME: remove if it turns out this never happens (it shouldn't)
                 #otherwise, do nothing
+    
+    # def draw_fig(self):
+    #     #traverse points to draw line of figure
+    #     coords = []
+
+    #     for p in self.children:
+    #         coords.append(p.point_x)
+    #         coords.append(p.point_y)
+
+    #     self.canvas.remove(self.line_draw)
+    #     new_line = InstructionGroup()
+    #     new_line.add(Color(1,0,0))
+    #     new_line.add(Line(points=coords, close=True, width=1.1))
+    #     line_draw = new_line
+    #     self.canvas.add(line_draw)
+    #     return coords
+
+    def Save(self):
+        figures = []
+        for i in self.interactive_space.children:
+            points = []
+            for j in i.children:
+                points.append(j.pos)
+            figures.append(points)
+        return figures
+
+    def Load(self, bringItBack):
+        print(bringItBack)
+        for i in bringItBack:
+            print(i)
+            f = Figure()
+            self.in_prog_figure = f
+            self.interactive_space.add_widget(self.in_prog_figure)
+            for j in i:
+                self.in_prog_figure.add_point(j[0], j[1])
+            self.make_figure()
+        print(len(self.children))
+
 
 
     def __init__(self, *args, **kwargs):
@@ -154,12 +193,12 @@ class Geometry(FloatLayout):
         self.num_selected = 0 #number of points selected within select mode, not using NumericProperty for similar reasons as above
         self.selected_points = []
 
-        self.interactive_space = None
+        # self.interactive_space = None
         self.in_prog_figure = None #If we're in the middle of making a figure, this points to that in some way
 
 
-    class Interactive_Space(FloatLayout): #class used to describe space containing points
-        pass
+class Interactive_Space(FloatLayout): #class used to describe space containing points
+    pass
 
 
 
@@ -182,6 +221,7 @@ class Figure(Widget):
 
     # def draw_line(self):
     def draw_fig(self):
+        print("im at least kinda trying")
         #traverse points to draw line of figure
         coords = []
 
@@ -195,7 +235,8 @@ class Figure(Widget):
         new_line.add(Line(points=coords, close=True, width=1.1))
         self.line_draw = new_line
         self.canvas.add(self.line_draw)
-        return
+        print(coords)
+        return 
 
     def calculateArea(self):
 
@@ -204,7 +245,7 @@ class Figure(Widget):
         area = 0.0
         for i, p in enumerate(self.children): #for all points, enumerated as indices i
             x_diff = self.children[i+1].point_x - self.children[i].point_x
-            x_diff = self.children[i+1].point_y - self.children[i].point_y
+            y_diff = self.children[i+1].point_y - self.children[i].point_y
             area += self.children[i].point_x * y_diff - self.children[i].point_y * x_diff
         return 0.5 * area
 
@@ -215,7 +256,7 @@ class Figure(Widget):
         perimeter = 0.0
         for i, p in enumerate(self.children): #for all points, enumerated as indices i
             x_diff = self.children[i+1].point_x - self.children[i].point_x
-            x_diff = self.children[i+1].point_y - self.children[i].point_y
+            y_diff = self.children[i+1].point_y - self.children[i].point_y
             perimeter += perimeter + (x_diff * x_diff + y_diff * y_diff)**0.5
         return perimeter
 

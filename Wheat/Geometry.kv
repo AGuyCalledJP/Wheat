@@ -1,6 +1,7 @@
 <Geometry>:
     id: geometry
     geom: geometry
+    interactive_space: interactive_space
     FloatLayout:
         id: geo
         FloatLayout:
@@ -67,7 +68,7 @@
                             pos: self.pos
                             size: self.size
                     on_touch_down:
-                        geometry.connect_interactive_space(interactive_space)
+                        # geometry.connect_interactive_space(interactive_space)
                         geometry.touch_interactive_space(*args)
 
 

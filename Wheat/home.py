@@ -393,6 +393,9 @@ class WheatScreen(Screen):
                     elif widgType is 'latex':
                         bundle = i.children[0].Save()
                         stuff.put(saveMe, eq_text = bundle)
+                    elif widgType is 'geo':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, figures = bundle)
             elif writeTo is 1:
                 for i in self.layouts2:
                     it = 0
@@ -411,6 +414,8 @@ class WheatScreen(Screen):
                         widgType = 'interp'
                     elif 'latex' in a:
                         widgType = 'latex'
+                    elif 'latex' in a:
+                        widgType = 'latex'
                     it = it + 1
                     store.put(saveMe, location=local, wType = widgType)
                     #Save the information associated with said widget
@@ -427,6 +432,9 @@ class WheatScreen(Screen):
                     elif widgType is 'latex':
                         bundle = i.children[0].Save()
                         stuff.put(saveMe, eq_text = bundle)
+                    elif widgType is 'geo':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, figures = bundle)
             else:
                 for i in self.layouts3:
                     it = 0
@@ -443,6 +451,8 @@ class WheatScreen(Screen):
                         widgType = 'geo'
                     elif 'interp' in a:
                         widgType = 'interp'
+                    elif 'latex' in a:
+                        widgType = 'latex'
                     elif 'latex' in a:
                         widgType = 'latex'
                     it = it + 1
@@ -462,6 +472,9 @@ class WheatScreen(Screen):
                     elif widgType is 'latex':
                         bundle = i.children[0].Save()
                         stuff.put(saveMe, eq_text = bundle)
+                    elif widgType is 'geo':
+                        bundle = i.children[0].Save()
+                        stuff.put(saveMe, figures = bundle)
 
     def Load(self):
         for curr in store.keys():
@@ -486,7 +499,10 @@ class WheatScreen(Screen):
                         comp_text = discharged['comp_text']
                         func.Load(eq_text,comp_text)
                     elif 'geo' in wt:
-                        self.addGeoAux(loc,0)
+                        res = self.addGeoAux(loc,0)
+                        geo = self.layouts[res-1].children[0]
+                        figures = discharged['figures']
+                        geo.Load(figures)
                     elif 'interp' in wt:
                         res = self.addAux(loc,0)
                         interp = self.layouts[res-1].children[0]
@@ -516,7 +532,10 @@ class WheatScreen(Screen):
                         comp_text = discharged['comp_text']
                         func.Load(eq_text,comp_text)
                     elif 'geo' in wt:
-                        self.addGeoAux(loc,1)
+                        res = self.addGeoAux(loc,1)
+                        geo = self.layouts2[res-1].children[0]
+                        figures = discharged['figures']
+                        geo.Load(figures)
                     elif 'interp' in wt:
                         res = self.addAux(loc,1)
                         interp = self.layouts2[res-1].children[0]
@@ -525,7 +544,7 @@ class WheatScreen(Screen):
                         interp.Load(prior, curr)
                     elif 'latex' in wt:
                         res = self.addTexAux(loc,1)
-                        latex = self.layouts[res-1].children[0]
+                        latex = self.layouts2[res-1].children[0]
                         eq_text = discharged['eq_text']
                         latex.Load(eq_text)
                 else:
@@ -546,7 +565,10 @@ class WheatScreen(Screen):
                         comp_text = discharged['comp_text']
                         func.Load(eq_text,comp_text)
                     elif 'geo' in wt:
-                        self.addGeoAux(loc,2)
+                        res = self.addGeoAux(loc,2)
+                        geo = self.layouts3[res-1].children[0]
+                        figures = discharged['figures']
+                        geo.Load(figures)
                     elif 'interp' in wt:
                         res = self.addAux(loc,2)
                         interp = self.layouts3[res-1].children[0]
@@ -555,7 +577,7 @@ class WheatScreen(Screen):
                         interp.Load(prior, curr)
                     elif 'latex' in wt:
                         res = self.addTexAux(loc,2)
-                        latex = self.layouts[res-1].children[0]
+                        latex = self.layouts3[res-1].children[0]
                         eq_text = discharged['eq_text']
                         latex.Load(eq_text)
 
