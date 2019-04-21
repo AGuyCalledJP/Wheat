@@ -8,35 +8,15 @@
         size_hint: 1, 1
         canvas.before:
             Color:
-                rgba:0,0,0,1
-            Rectangle:
+                rgba: root.c1, root.c2, root.c3, .5
+            RoundedRectangle:
                 pos: self.pos
                 size: self.size
-        FloatLayout:
-            id: header
-            Button:
-                id: move
-                pos_hint: {'x': 0.8, 'y': 0.9}
-                size_hint: 0.2,0.1
-                background_normal: ''
-                background_color: root.c1, root.c2, root.c3, root.c4
-                font_size: root.fontSizer
-                text: 'Move'
-                on_press: calculator.flip()
-            CheckBox:
-                id: check
-                pos_hint: {'x': 0,'y': 0}
-                size_hint: .2,1
-                canvas.before:
-                    Color:
-                        rgba: 1, .3, .4 , .85
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+
 
         FloatLayout:
-            pos_hint: {'x' : 0.0, 'y' : 0.0}
-            size_hint: 1, .9
+            pos_hint: {'x' : 0.025, 'y' : 0.05}
+            size_hint: 0.95, 0.9
             canvas.before:
                 Color:
                     rgba: 1,1,1,1
@@ -59,6 +39,8 @@
                 pos_hint: {'x' : 0, 'y' : 0}
                 size_hint: 1, 0.8
                 Keyboard:
+                    pos_hint: {'x' : 0.01, 'y' : 0.01}
+                    size_hint: 0.98, 0.98
                     canvas.before:
                         Color:
                             rgba: 1,1,1,1
@@ -66,190 +48,340 @@
                             pos: self.pos
                             size: self.size
                     id: key
-                    spacing: 1
+                    spacing: 2
                     cols: 5
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 - 0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: u'\u221a'
                         on_press: calculator.ClickedSqrt()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: 'sin'
                         on_press: calculator.ClickedSin()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: 'cos'
                         on_press: calculator.ClickedCos()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: 'tan'
                         on_press: calculator.ClickedTan()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: u'\u03c0'
                         on_press: calculator.ClickedPi()
 
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '^'
                         on_press: calculator.ClickedExp()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '1/x'
                         on_press: calculator.ClickedInv()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '('
                         on_press: calculator.ClickedLeftP()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: ')'
                         on_press: calculator.ClickedRightP()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: u'\u00f7'
                         on_press: calculator.ClickedDiv()
 
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: 'x' + u'\u00b2'
                         on_press: calculator.ClickedSquared()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '7'
                         on_press: calculator.Clicked7()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '8'
                         on_press: calculator.Clicked8()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '9'
                         on_press: calculator.Clicked9()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 - 0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: u'\u00d7'
                         on_press: calculator.ClickedTimes()
 
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: 'e'
                         on_press: calculator.Clickede()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '4'
                         on_press: calculator.Clicked4()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '5'
                         on_press: calculator.Clicked5()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '6'
                         on_press: calculator.Clicked6()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: u'\u2212'
                         on_press: calculator.ClickedMinus()
 
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '<-'
                         on_press: calculator.ClickedDel()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '1'
                         on_press: calculator.Clicked1()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '2'
                         on_press: calculator.Clicked2()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '3'
                         on_press: calculator.Clicked3()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: u'\u002b'
                         on_press: calculator.ClickedPlus()
 
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: 'Clear'
                         on_press: calculator.ClickedClear()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '0'
                         on_press: calculator.Clicked0()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '.'
                         on_press: calculator.ClickedPoint()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4 -0.05
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4-0.1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '(-)'
                         on_press: calculator.ClickedNeg()
                     Button:
-                        background_normal: ''
-                        background_color: root.c1, root.c2, root.c3, root.c4
+                        background_color: 0,0,0,0
+                        canvas.before:
+                            Color:
+                                rgba: root.c1,root.c2,root.c3,root.c4
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
                         font_size: root.fontSizer
                         text: '='
                         on_press: calculator.ClickedEnter()
