@@ -1,1 +1,1 @@
-{"P0child0": {"prior": ["x = 0", "def func(c):\n    return c * c"], "curr": ""}, "P1child0": {"eq_text": "-0.1455000", "comp_text": "-0.1455000"}, "P2child0": {"eq_text": "5\u2022x + 12", "comp_text": "5*x+12"}}
+{"P0child0": {"eq_text": "2\u2022x + 4", "comp_text": "2*x+4"}, "P1child0": {"eq_text": "25", "comp_text": "25"}}
