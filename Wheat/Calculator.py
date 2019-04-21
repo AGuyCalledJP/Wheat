@@ -3,7 +3,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 
-import math 
+import math
 
 from kivy.uix.button import Button
 from kivy.graphics import Color, Line, Rectangle
@@ -58,7 +58,7 @@ class Calculator(ScatterLayout):
 
     def __init__(self, **kwargs):
         super(Calculator, self).__init__(**kwargs)
-        self.size_hint = 0.5,0.5
+        self.size_hint = 0.4,0.5
 
 
     def on_touch_up(self, touch):
@@ -220,19 +220,23 @@ class Calculator(ScatterLayout):
             else:
                 result += split[x][0] + "**(1/2)" + split[x][1:]
         self.compute_text = result
-        ans = eval(self.compute_text)
-        if(len(str(ans)) >= 10):
-            self.equation_text = str(ans)[0:10]
-            self.compute_text = str(ans)[0:10]
-        else:
-            self.equation_text = str(ans)
-            self.compute_text = str(ans)
+        try:
+            ans = eval(self.compute_text)
+            if(len(str(ans)) >= 10):
+                self.equation_text = str(ans)[0:10]
+                self.compute_text = str(ans)[0:10]
+            else:
+                self.equation_text = str(ans)
+                self.compute_text = str(ans)
+        except SyntaxError:
+            self.equation_text = "SYNTAX Error"
+            self.compute_text = "SYNTAX Error"
 
     # Line 2
     ########
-    def ClickedDel(self):
-        self.equation_text = self.equation_text[:-1]
-        self.compute_text = self.compute_text[:-1]
+    def ClickedLn(self):
+        self.equation_text += "ln("
+        self.compute_text += "math.log("
     def Clicked1(self):
         self.equation_text += "1"
         self.compute_text += "1"
@@ -288,7 +292,7 @@ class Calculator(ScatterLayout):
         self.equation_text += "^"
         self.compute_text += "**"
     def ClickedInv(self):
-        self.equation_text += "**(-1)"
+        self.equation_text += "^(-1)"
         self.compute_text += "**(-1)"
     def ClickedLeftP(self):
         self.equation_text += "("
@@ -307,14 +311,14 @@ class Calculator(ScatterLayout):
         self.equation_text +=  u'\u221a'
         self.compute_text += "**(1/2)"
     def ClickedSin(self):
-        self.equation_text += "sin"
-        self.compute_text += "math.sin"
+        self.equation_text += "sin("
+        self.compute_text += "math.sin("
     def ClickedCos(self):
-        self.equation_text += "cos"
-        self.compute_text += "math.cos"
+        self.equation_text += "cos("
+        self.compute_text += "math.cos("
     def ClickedTan(self):
-        self.equation_text += "tan"
-        self.compute_text += "math.tan"
+        self.equation_text += "tan("
+        self.compute_text += "math.tan("
     def ClickedPi(self):
         self.equation_text += u'\u03c0'
         self.compute_text += "math.pi"

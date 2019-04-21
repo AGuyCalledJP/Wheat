@@ -31,7 +31,7 @@ import sys
 
 Builder.load_file('Tex.kv')
 
-default = 'Wheat/visual_assets/error-image.png'
+default = 'Wheat/widget_visuals/LaTeX_logo.png'
 ran = 'Wheat/Notebook/Tex/cropped'
 end = '.png'
 
@@ -42,8 +42,8 @@ class Display(FloatLayout):
     start = None
     def __init__(self, where, **kwargs):
         super(Display, self).__init__(**kwargs)
-        self.pos_hint = {'x' : 0.0, 'y' : 0.2}
-        self.size_hint = 1, 0.65
+        self.pos_hint = {'x' : 0.05, 'y' : 0.175}
+        self.size_hint = .9, 0.6
         if self.start is None:
             with self.canvas:
                 self.bg = Rectangle(source = where, pos=self.pos, size=self.size)
@@ -72,7 +72,7 @@ class Input(FloatLayout):
         elif dohide:
             wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
             wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
-            return .66
+            return .85
 
 
 class Tex(ScatterLayout):
@@ -103,10 +103,10 @@ class Tex(ScatterLayout):
 
     def __init__(self, **kwargs):
         super(Tex, self).__init__(**kwargs)
-        self.size_hint = 0.5,0.25
+        self.size_hint = 0.5,0.3
         self.disp = Display(default)
         self.add_widget(self.disp)
-    
+
     def update(self):
         with self.canvas:
             self.canvas.ask_update()
@@ -281,4 +281,3 @@ class Tex(ScatterLayout):
     def clean(self):
         rem = ran + str(self.count - 1) + end
         os.remove(rem)
-
