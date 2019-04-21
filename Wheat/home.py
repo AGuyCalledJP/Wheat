@@ -43,6 +43,7 @@ from kivy.storage.jsonstore import JsonStore
 
 store = JsonStore('Wheat/Notebook/PageState/children.json')
 stuff = JsonStore('Wheat/Notebook/PageState/childInfo.json')
+write = JsonStore('Wheat/Notebook/PageState/writing.json')
 
 #Load kv file
 Builder.load_file('home.kv')
@@ -59,7 +60,6 @@ class WheatScreen(Screen):
     count2 = 1
     layouts3 = []
     count3 = 1
-    #currentKeys = []
     universalConstant = 3
     interp = 0
     interpLoc = []
@@ -363,7 +363,6 @@ class WheatScreen(Screen):
             self.d = 1
 
     def Save(self):
-        self.ids.pad.Save()
         if self.curr >= 0:
             writeTo = self.currSpace % self.numSpace
             if writeTo is 0:
@@ -536,6 +535,33 @@ class WheatScreen(Screen):
                         curr = discharged['curr']
                         interp.Load(prior, curr)
 
+    def SaveWriting(self):
+        writing = self.draw.Save(self.curr)
+        save = "P" + str(self.curr)
+        print("writing")
+        print(writing)
+        write.put(save, a = writing)
+        written = write.get(save)
+        print(write)
+        print(written)
+
+    def LoadWriting(self):
+        writing = []
+        p = 'P' + str(self.curr)
+        print(write)
+        for key in write.keys():
+            print(key)
+            if p in key:
+                written = write.get(p)
+                print(written)
+                curr = written['a']
+                print("getting curr back")
+                print(curr)
+                writing = curr
+        print("writing")
+        print(writing)
+        self.draw.Load(writing)
+
     def addAux(self, pos, dest):
         if dest is 0:
             if self.layouts==[]:
@@ -663,7 +689,7 @@ class WheatScreen(Screen):
                 self.space3.ids.flthree.clear_widgets()
             if self.func < self.universalConstant:
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(FunctionPlotter());
+                layout.add_widget(Calculator());
                 self.count3 += 1
                 self.space3.ids.flthree.add_widget(layout)
                 self.layouts3.append(layout)

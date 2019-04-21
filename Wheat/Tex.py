@@ -32,21 +32,23 @@ import sys
 Builder.load_file('Tex.kv')
 
 default = 'Wheat/visual_assets/error-image.png'
-ran = 'Wheat/visual_assets/cropped.png'
+ran = 'Wheat/Notebook/Tex/cropped'
+end = '.png'
 
 class Bar(FloatLayout):
     pass
 
 class Display(FloatLayout):
+    start = None
     def __init__(self, where, **kwargs):
         super(Display, self).__init__(**kwargs)
         self.pos_hint = {'x' : 0.0, 'y' : 0.2}
         self.size_hint = 1, 0.65
-        with self.canvas:
-            self.bg = Rectangle(source = where, pos=self.pos, size=self.size)
-
-        self.bind(pos=self.update_bg)
-        self.bind(size=self.update_bg)
+        if self.start is None:
+            with self.canvas:
+                self.bg = Rectangle(source = where, pos=self.pos, size=self.size)
+            self.bind(pos=self.update_bg)
+            self.bind(size=self.update_bg)
 
     def update(self):
         with self.canvas:
@@ -56,8 +58,8 @@ class Display(FloatLayout):
         self.bg.pos = self.pos
         self.bg.size = self.size
 
-    def test(self):
-        print('help')
+    def bye(self):
+        self.parent.remove_widget(self)
 
 class Input(FloatLayout):
     def hide_input(wid, dohide=True):
@@ -88,6 +90,7 @@ class Tex(ScatterLayout):
     fontSizer = 24
 
     code = StringProperty()
+    disp = ObjectProperty()
 
     move_lock = False
     scale_lock_left = False
@@ -96,12 +99,17 @@ class Tex(ScatterLayout):
     scale_lock_bottom = False
     col = 1,1,1,1
     disp = 1
+    count = 0
 
     def __init__(self, **kwargs):
         super(Tex, self).__init__(**kwargs)
         self.size_hint = 0.5,0.25
-        d = Display(default)
-        self.add_widget(d)
+        self.disp = Display(default)
+        self.add_widget(self.disp)
+    
+    def update(self):
+        with self.canvas:
+            self.canvas.ask_update()
 
     def on_touch_up(self, touch):
         self.size_hint = None,None
@@ -236,29 +244,41 @@ class Tex(ScatterLayout):
         doc = Document('latex')
         self.fill_document(doc,self.code)
 
-        doc.generate_pdf(filepath='Wheat/visual_assets/', clean_tex=False, compiler='pdflatex')
+        doc.generate_pdf(filepath='Wheat/Notebook/Tex/', clean_tex=False, compiler='pdflatex')
 
         self.convert_image()
 
     def convert_image(self):
 
-        pages = convert_from_path('Wheat/visual_assets/latex.pdf', 500)
+        pages = convert_from_path('Wheat/Notebook/Tex/latex.pdf', 500)
         for page in pages:
-            page.save('Wheat/visual_assets/output.png', 'PNG')
+            page.save('Wheat/Notebook/Tex/output.png', 'PNG')
 
         self.crop()
 
     def crop(self):
 
-        image_obj = Image.open('Wheat/visual_assets/output.png')
+        image_obj = Image.open('Wheat/Notebook/Tex/output.png')
         width, height = image_obj.size
         coords = (0.4*width, 0.17*height, 0.63*width, 0.21*height)
         cropped_image = image_obj.crop(coords)
-        cropped_image.save('Wheat/visual_assets/cropped.png')
-        self.updateDisp()
+        dest = ran + str(self.count) + end
+        cropped_image.save(dest)
+        self.count += 1
+        self.updateDisp(dest)
 
-    def updateDisp(self):
-        widg = self.children[0]
-        self.remove_widget(widg)
-        d = Display(ran)
-        self.add_widget(d)
+    def updateDisp(self, dest):
+        self.disp.bye()
+        self.remove_widget(self.disp)
+        self.disp.update()
+        self.disp = Display(dest)
+        self.add_widget(self.disp)
+        self.disp.update()
+        self.update()
+        if self.count > 1:
+            self.clean()
+
+    def clean(self):
+        rem = ran + str(self.count - 1) + end
+        os.remove(rem)
+

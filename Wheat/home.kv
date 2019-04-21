@@ -9,7 +9,7 @@
 
     GridLayout:
 
-        cols: 6
+        cols: 8
         padding: 20
         spacing: 20
         size_hint: 1, .1
@@ -67,6 +67,22 @@
             background_color: 1, .3, .4 , .85
             background_normal: ''
             on_release: root.Load()
+        
+        Button:
+            root: Wheat
+            text: 'Load Writing'
+            color: 1,1,1,1.
+            background_color: 1, .3, .4 , .85
+            background_normal: ''
+            on_release: root.LoadWriting()
+
+        Button:
+            root: Wheat
+            text: 'Save Writing'
+            color: 1,1,1,1.
+            background_color: 1, .3, .4 , .85
+            background_normal: ''
+            on_release: root.SaveWriting()
 
         Button:
             root: Wheat
