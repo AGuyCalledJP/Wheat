@@ -228,7 +228,5 @@ class Paint(Widget):
         self.doneThat = []
         self.points = []
         for i in writing:
-            print("here")
-            print(i)
             self.redrawLine(i)
 
