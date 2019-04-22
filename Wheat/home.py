@@ -27,6 +27,7 @@ from kivy.uix.modalview import ModalView
 from time import time
 import traceback
 import menu
+import copy 
 
 import sys
 import os
@@ -81,6 +82,7 @@ class WheatScreen(Screen):
     numSpace = 3
     sStr = 'child'
     curr = 0
+    tpgs = 0
 
     def __init__(self, *args, **kwargs):
         super(WheatScreen, self).__init__(*args, **kwargs)
@@ -146,7 +148,13 @@ class WheatScreen(Screen):
 
 
     def pageForward(self):
-        self.curr = self.curr + 1
+        if self.curr is self.tpgs:
+            self.curr += 1
+            self.tpgs += 1
+        else:
+            self.Save()
+            self.SaveWriting()
+            self.curr += 1
         self.currSpace = (self.currSpace + 1) % self.numSpace
         if self.currSpace is 0 and self.curr is not 0:
             for i in self.layouts:
@@ -172,6 +180,7 @@ class WheatScreen(Screen):
 
     def pageBack(self):
         if self.curr > 0:
+            self.SaveWriting()
             self.curr = self.curr - 1
             self.currSpace = (self.currSpace + 2) % self.numSpace
             if self.currSpace is 0:
@@ -582,6 +591,7 @@ class WheatScreen(Screen):
                         latex.Load(eq_text)
 
     def SaveWriting(self):
+        print("ACTIVATING")
         writing = self.draw.Save(self.curr)
         currsz = []
         currsz.append(self.draw.size[0])
@@ -593,22 +603,31 @@ class WheatScreen(Screen):
         p = 'P' + str(self.curr)
         curr = None
         scale = None
+        found = False
         for key in write.keys():
             if p in key:
+                found = True
                 written = write.get(p)
-                curr = written['writing']
+                print(written)
+                curr = copy.deepcopy(written['writing'])
                 scale = written['sz']
-        xl = scale[0]
-        xc = self.draw.size[0]
-        yl = scale[1]
-        yc = self.draw.size[1]
-        xfactor = float(xc/xl)
-        yfactor = float(yc/yl)
-        for i in curr:
-            for j in i:
-                j[0] = j[0] * xfactor
-                j[1] = j[1] * yfactor
-        self.draw.Load(curr)
+        if found:
+            print(curr)
+            print(scale)
+            print(self.draw.size)
+            xl = scale[0]
+            xc = self.draw.size[0]
+            yl = scale[1]
+            yc = self.draw.size[1]
+            xfactor = float(xc/xl)
+            yfactor = float(yc/yl)
+            print(xfactor)
+            print(yfactor)
+            for i in curr:
+                for j in i:
+                    j[0] = j[0] * xfactor
+                    j[1] = j[1] * yfactor
+            self.draw.Load(curr)
 
     def addAux(self, pos, dest):
         if dest is 0:
