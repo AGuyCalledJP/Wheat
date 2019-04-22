@@ -46,7 +46,9 @@ stuff = JsonStore('Wheat/Notebook/PageState/childInfo.json')
 write = JsonStore('Wheat/Notebook/PageState/writing.json')
 
 #Load kv file
-Builder.load_file('home.kv')
+# Builder.load_file('home.kv')
+Builder.load_file('home3.kv')
+
 
 class DrawLayout(FloatLayout):
     def __init__(self, **kwargs):
@@ -513,7 +515,7 @@ class WheatScreen(Screen):
                         res = self.addTexAux(loc,0)
                         latex = self.layouts[res-1].children[0]
                         eq_text = discharged['eq_text']
-                        latex.Load(eq_text)                
+                        latex.Load(eq_text)
                 elif writeTo is 1:
                     elem = store.get(curr)
                     discharged = stuff.get(curr)

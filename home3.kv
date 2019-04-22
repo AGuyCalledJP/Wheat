@@ -1,0 +1,151 @@
+<WheatScreen>:
+    name: 'Wheat1'
+    id: Wheat
+    draw: pad
+    manager: space_manager
+    space1: one
+    space2: two
+    space3: three
+
+
+    ############################################################################
+    # FULL MENU CONTAINER
+    ############################################################################
+    GridLayout:
+        id: menu_container
+        rows: 2
+        size_hint: 1, .1
+        pos_hint: {'x': 0, 'y': .9}
+        spacing: 5
+
+        ############################################################################
+        # PRIMARY MENU BUTTONS
+        ############################################################################
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 5
+            id: toolbar_main
+            size_hint: 1, .5
+            pos_hint: {'x': 0, 'y': .5}
+
+# TODO: NOT BEING ABLE TO MOVE TO NEXT PAGE SHOULD RENDER THESE AS UNUSABLE IN SOME VISIBLE WAY
+            Button:
+                root: Wheat
+                text: '<<'
+                color: 1,1,1,1
+                font_size: '30sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    pad.pageBack()
+                    root.pageBack()
+                    space_manager.transition.direction = 'right'
+
+            ToggleButton:
+                text: 'Widgets'
+                id: widget_menu
+                group: "tools"
+                root: Wheat
+                color: 1,1,1,1
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_press:
+                    #switch visibility on toolbars
+
+            ToggleButton:
+                text: 'Drawing'
+                id: draw_menu
+                group: "tools"
+                root: Wheat
+                color: 1,1,1,1
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_press:
+                    #switch visibility on toolbars
+
+# TODO: NOT BEING ABLE TO MOVE TO NEXT PAGE SHOULD RENDER THESE AS UNUSABLE IN SOME VISIBLE WAY
+            Button
+                root: Wheat
+                text: '>>'
+                color: 1,1,1,1
+                font_size: '30sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    pad.pageForward()
+                    root.pageForward()
+                    space_manager.transition.direction = 'left'
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            id: toolbar_draw
+            size_hint: 1, .5
+            pos_hint: {'x': 0, 'y': 0}
+            spacing: 5
+
+            Button:
+                text: 'Save Drawings'
+            Button:
+                text: 'Load Drawings'
+            Button:
+                text: 'Clear Drawings'
+                on_release: Wheat.clear() ## TODO: fix call
+            Button:
+                text: 'Undo'
+                on_release: Wheat.undo()
+            Button:
+                text: 'Redo'
+                on_release: Wheat.redo()
+            Button:
+                text: 'Change Color'
+                on_release: Wheat.chColor()
+            Label:
+                text: 'Stroke Size: '
+            Button:
+                text: '+'
+                on_release: Wheat.sizeUp()
+            Button:
+                text: '-'
+                on_release: Wheat.sizeDown()
+
+
+        # BoxLayout:
+        #     orientation: 'horizontal'
+        #     id: toolbar_widgets
+        #     size_hint: 1, .5
+        #     pos_hint: {'x': 0, 'y': 0}
+
+
+    Draw:
+        id: pad
+        size_hint: 1, .9
+        pos_hint: {'x': 0, 'y': 0}
+        orientation: 'vertical'
+
+    LiveManager:
+        id: space_manager
+        WorkSpace1:
+            id: one
+            name: 'o'
+        WorkSpace2:
+            id: two
+            name: 't'
+        WorkSpace3:
+            id: three
+            name: "tr"
+
+<WorkSpace1>:
+    id: widgSpaceOne
+    FloatLayout:
+        id: flone
+
+<WorkSpace2>:
+    id: widgSpaceTwo
+    FloatLayout:
+        id: fltwo
+
+<WorkSpace3>:
+    id: widgSpaceThree
+    FloatLayout:
+        id: flthree
