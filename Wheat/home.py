@@ -194,7 +194,6 @@ class WheatScreen(Screen):
             self.SaveWriting()
             self.curr = self.curr - 1
             self.currSpace = (self.currSpace + 2) % self.numSpace
-            self.LoadWriting()
             if self.currSpace is 0:
                 self.manager.current = 'o'
             elif self.currSpace is 1:
