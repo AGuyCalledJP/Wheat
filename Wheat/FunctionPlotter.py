@@ -378,7 +378,6 @@ class FunctionPlotter(ScatterLayout):
         letsGo = []
         letsGo.append(self.equation_text)
         letsGo.append(self.compute_text)
-        # print(letsGo)
         return letsGo
 
     def Load(self, equation_text, compute_text):

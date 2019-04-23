@@ -49,10 +49,10 @@ class Calculator(ScatterLayout):
     keyboard = ObjectProperty()
 
     move_lock = False
-    scale_lock_left = False
-    scale_lock_right = False
-    scale_lock_top = False
-    scale_lock_bottom = False
+    scale_lock_left = True
+    scale_lock_right = True
+    scale_lock_top = True
+    scale_lock_bottom = True
     col = 1,1,1,1
     disp = 1
 
@@ -327,7 +327,6 @@ class Calculator(ScatterLayout):
         letsGo = []
         letsGo.append(self.equation_text)
         letsGo.append(self.compute_text)
-        print(letsGo)
         return letsGo
 
     def Load(self, equation_text, compute_text):

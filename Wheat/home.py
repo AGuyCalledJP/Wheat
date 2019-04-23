@@ -175,17 +175,14 @@ class WheatScreen(Screen):
         self.currSpace = (self.currSpace + 1) % self.numSpace
         if self.currSpace is 0 and self.curr is not 0:
             for i in self.layouts:
-                print(i)
                 self.space1.ids.flone.remove_widget(i)
             self.layouts = []
         elif self.currSpace is 1 and self.curr is not 1:
             for i in self.layouts2:
-                print(i)
                 self.space2.ids.fltwo.remove_widget(i)
             self.layouts2 = []
         elif self.currSpace is 2 and self.curr is not 2:
             for i in self.layouts3:
-                print(i)
                 self.space3.ids.flthree.remove_widget(i)
             self.layouts3 = []
         if self.currSpace is 0:
@@ -484,7 +481,6 @@ class WheatScreen(Screen):
                         widgType = 'latex'
                     it = it + 1
                     store.put(saveMe, location=local, wType = widgType)
-                    print(store.exists(saveMe))
                     #Save the information associated with said widget
                     bundle = []
                     if widgType is 'interp':
@@ -629,7 +625,6 @@ class WheatScreen(Screen):
                 #probably need to add another matrix to track which layout each is in
                 self.interpLoc = self.interpLoc[1:-1]
                 self.interpLoc.append(self.count)
-                print(self.interpLoc)
                 self.space1.ids.flone.remove_widget(self.layouts[rem])
                 del self.layouts[rem]
         elif dest is 1:
@@ -651,7 +646,6 @@ class WheatScreen(Screen):
                 rem = self.interpLoc[0]
                 self.interpLoc = self.interpLoc[1:-1]
                 self.interpLoc.append(self.count)
-                print(self.interpLoc)
                 self.space2.ids.fltwo.remove_widget(self.layouts2[rem])
                 del self.layouts2[rem]
         elif dest is 2:
@@ -673,7 +667,6 @@ class WheatScreen(Screen):
                 rem = self.interpLoc[0]
                 self.interpLoc = self.interpLoc[1:-1]
                 self.interpLoc.append(self.count)
-                print(self.interpLoc)
                 self.space3.ids.flthree.remove_widget(self.layouts3[rem])
                 del self.layouts3[rem]
 

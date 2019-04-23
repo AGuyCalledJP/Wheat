@@ -56,7 +56,6 @@ class Draw(BoxLayout):
         self.Load()
 
     def Save(self):
-        print(self.curr)
         sz = Window.size
         cwd = os.getcwd()
         i = self.pages[self.curr]
@@ -301,7 +300,6 @@ class Paint(Widget):
 
     def clear_canvas(self):
         if len(self.objects) > 0:
-            print(len(self.objects))
             for i in range(len(self.objects)):
                 self.undo()
 
