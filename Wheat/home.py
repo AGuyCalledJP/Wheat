@@ -606,37 +606,37 @@ class WheatScreen(Screen):
         currsz.append(self.draw.size[0])
         currsz.append(self.draw.size[1])
         save = "P" + str(self.curr)
-        write.put(save, writing = writing, sz = currsz)
+        write.put(save, writing = writing[0], color = writing[1], width = writing[2], sz = currsz)
 
     def LoadWriting(self):
         p = 'P' + str(self.curr)
         curr = None
+        color = None
+        width = None
         scale = None
         found = False
         for key in write.keys():
             if p in key:
                 found = True
                 written = write.get(p)
-                print(written)
                 curr = copy.deepcopy(written['writing'])
+                color = copy.deepcopy(written['color'])
+                width = copy.deepcopy(written['width'])
                 scale = written['sz']
         if found:
-            print(curr)
-            print(scale)
-            print(self.draw.size)
             xl = scale[0]
             xc = self.draw.size[0]
             yl = scale[1]
             yc = self.draw.size[1]
             xfactor = float(xc/xl)
             yfactor = float(yc/yl)
-            print(xfactor)
-            print(yfactor)
             for i in curr:
                 for j in i:
                     j[0] = j[0] * xfactor
                     j[1] = j[1] * yfactor
-            self.draw.Load(curr)
+            for i in width:
+                    i * ((xfactor + yfactor)/2)
+            self.draw.Load(curr, color, width)
 
     def addAux(self, pos, dest):
         if dest is 0:

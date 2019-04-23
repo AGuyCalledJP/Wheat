@@ -47,9 +47,9 @@ class Draw(BoxLayout):
         l = i.Save()
         return l
 
-    def Load(self, writing):
+    def Load(self, writing, color, width):
         page = self.pages[self.curr]
-        page.Load(writing)
+        page.Load(writing, color, width)
 
     def pageBack(self):
         if self.curr > 0:
@@ -113,8 +113,12 @@ class Draw(BoxLayout):
 class Paint(Widget):
     objects = None
     beenThere = None
+    colCurr = None
+    widCurr = None
     undolist = None
     doneThat = None
+    colUndo = None
+    widUndo = None
     points = None
     drawing = False
     me = -1
@@ -124,8 +128,12 @@ class Paint(Widget):
         if self.objects is None:
             self.objects = []
             self.beenThere = []
+            self.colCurr = []
+            self.widCurr = []
             self.undolist = []
             self.doneThat = []
+            self.colUndo = []
+            self.widUndo = []
             self.points = []
         with self.canvas:
                 self.bg = Rectangle(source=where, pos=self.pos, size=self.size)
@@ -166,11 +174,11 @@ class Paint(Widget):
                 self.obj.add(L)
                 self.objects.append(self.obj)
                 self.beenThere.append(self.points)
+                self.colCurr.append(color)
+                self.widCurr.append(sz)
                 self.canvas.add(self.obj)
 
-    def redrawLine(self, bundle):
-        global color
-        global sz
+    def redrawLine(self, bundle, color, width):
         coords = []
 
         for b in bundle:
@@ -182,7 +190,7 @@ class Paint(Widget):
             self.obj.add(Color(0,0,0))
         else:
             self.obj.add(Color(1,.4,.4))
-        self.obj.add(Line(points=coords, width = sz))
+        self.obj.add(Line(points=coords, width = width))
         line_draw = self.obj
         self.objects.append(self.obj)
         self.beenThere.append(bundle)
@@ -192,16 +200,24 @@ class Paint(Widget):
         if len(self.objects) > 0:
             item = self.objects.pop(-1)
             luggage = self.beenThere.pop(-1)
+            col = self.colCurr.pop(-1)
+            wid = self.widCurr.pop(-1)
             self.undolist.append(item)
             self.doneThat.append(luggage)
+            self.colUndo.append(col)
+            self.widUndo.append(wid)
             self.canvas.remove(item)
 
     def redo(self):
         if len(self.undolist) > 0:
             item = self.undolist.pop(-1)
             luggage = self.doneThat.pop(-1)
+            col = self.colUndo.pop(-1)
+            wid = self.widUndo.pop(-1)
             self.objects.append(item)
             self.beenThere.append(luggage)
+            self.colCurr.append(col)
+            self.widCurr.append(wid)
             self.canvas.add(item)
 
     def clear_canvas(self):
@@ -212,10 +228,12 @@ class Paint(Widget):
 
     def Save(self):
         curr = copy.deepcopy(self.beenThere)
-        return curr
+        color = copy.deepcopy(self.colCurr)
+        width = copy.deepcopy(self.widCurr)
+        return [curr, color, width]
 
-    def Load(self, writing):
+    def Load(self, writing, color, width):
         self.clear_canvas()
-        for i in writing:
-            self.redrawLine(i)
+        for i in range(0, len(writing)):
+            self.redrawLine(writing[i], color[i], width[i])
 
