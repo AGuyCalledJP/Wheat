@@ -140,7 +140,10 @@
                 font_size: '15sp'
                 background_normal: ''
                 background_color: 1, .3, .4 , 1
-                on_release: Wheat.chColor()
+                on_release:
+                    Wheat.chColor()
+                    # # TODO: try to make button's color reflect stroke color
+                    # background_color: [0,0,0,1] if pad.getColor == 'black' else [1,.4,.4,]
 
             StrokeLabel:
                 id: stroke_label
@@ -159,7 +162,7 @@
                 background_color: 1, .3, .4 , 1
                 on_release:
                     Wheat.sizeUp()
-                    stroke_label.update_stroke_label(pad.p.SZ)
+                    stroke_label.update_stroke_label(pad.getSize())
 
 
             Button:
@@ -170,7 +173,7 @@
                 background_color: 1, .3, .4 , 1
                 on_release:
                     Wheat.sizeDown()
-                    stroke_label.update_stroke_label(pad.p.SZ)
+                    stroke_label.update_stroke_label(pad.getSize())
 
 
 

@@ -109,6 +109,10 @@ class Draw(BoxLayout):
         else:
             color = 'black'
 
+    def getColor(self):
+        global color
+        return color
+
     def increaseSize(self):
         global sz
         sz = sz + .25
@@ -117,6 +121,10 @@ class Draw(BoxLayout):
         global sz
         if sz > .1:
             sz = sz - .25
+
+    def getSize(self):
+        global sz
+        return sz
 
 class Paint(Widget):
     objects = None
