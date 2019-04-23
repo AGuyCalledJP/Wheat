@@ -1,3 +1,4 @@
+#TODO - Add a place for the page number and total pages in the notebook to display
 <WheatScreen>:
     name: 'Wheat1'
     id: Wheat
@@ -40,6 +41,7 @@
                     pad.pageBack()
                     root.pageBack()
                     space_manager.transition.direction = 'right'
+                    pgn.update_Page_Num()
 
             ToggleButton:
                 text: 'Widgets'
@@ -53,6 +55,15 @@
                     #switch visibility on toolbars, and toggle drawing
                     toolbar_draw.visible = False
                     toolbar_widget.visible = True
+
+            PageNum:
+                id: pgn
+                color: 1, .3, .4 , 1
+                # padding: 5,0
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                font_size: '15sp'
 
             ToggleButton:
                 text: 'Drawing'
@@ -68,7 +79,7 @@
                     toolbar_widget.visible = False
 
             # TODO: NOT BEING ABLE TO MOVE TO NEXT PAGE SHOULD RENDER THESE AS UNUSABLE IN SOME VISIBLE WAY
-            Button
+            Button:
                 root: Wheat
                 text: '>>'
                 color: 1,1,1,1
@@ -79,7 +90,7 @@
                     pad.pageForward()
                     root.pageForward()
                     space_manager.transition.direction = 'left'
-
+                    pgn.update_Page_Num()
 
         BoxLayout:
             orientation: 'horizontal'
@@ -93,14 +104,6 @@
 
             pos_hint: {'x': 0, 'y': 0}
             spacing: 5
-
-            # Button:
-            #     text: 'Save Drawings'
-            #     color: 1,1,1,1
-            #     font_size: '15sp'
-            #     background_normal: ''
-            #     background_color: 1, .3, .4 , 1
-            #     on_release: pad.Save()
 
             Button:
                 text: 'Undo'

@@ -48,6 +48,11 @@ stuff = JsonStore('Wheat/Notebook/PageState/childInfo.json')
 #Load kv file
 # Builder.load_file('home.kv')
 Builder.load_file('home3.kv')
+tpgs = 0
+currpg = 0
+
+#TODO -> Need to make an initial load routine for widets, as well as making it load anything that is necessary when going forward/back
+# Do we make it an option to load? or do we sacrifice and make all widgets load upon each transition
 
 
 class DrawLayout(FloatLayout):
@@ -87,10 +92,14 @@ class WheatScreen(Screen):
     pgtype = 1
 
     def __init__(self, *args, **kwargs):
+        global tpgs
+        global currpg
         super(WheatScreen, self).__init__(*args, **kwargs)
         totalPgs = os.listdir('Wheat/Notebook/Pages')
         self.tpgs = len(totalPgs)
-        print(self.tpgs)
+        tpgs = self.tpgs
+        currpg = self.curr
+        #How to load the first widget space
 
     def remove(self):
         if self.currSpace is 0:
@@ -108,8 +117,6 @@ class WheatScreen(Screen):
                     getLost.append(it)
                 it = it + 1
             self.count = self.count - rem
-            print(len(self.layouts))
-            print(len(getLost))
             for i in getLost:
                 del self.layouts[i]
         elif self.currSpace is 1:
@@ -127,8 +134,6 @@ class WheatScreen(Screen):
                     getLost.append(it)
                 it = it + 1
             self.count2 = self.count2 - rem
-            print(len(self.layouts2))
-            print(len(getLost))
             for i in getLost:
                 del self.layouts2[i]
         else:
@@ -146,17 +151,19 @@ class WheatScreen(Screen):
                     getLost.append(it)
                 it = it + 1
             self.count3 = self.count3 - rem
-            print(len(self.layouts3))
-            print(len(getLost))
             for i in getLost:
                 del self.layouts3[i]
 
 
     def pageForward(self):
+        global tpgs
+        global currpg
         if self.curr is self.tpgs:
             self.Save()
             self.curr += 1
+            currpg += 1
             self.tpgs += 1
+            tpgs += 1
             if self.pgtype is 1:
                 pass
             else:
@@ -164,6 +171,7 @@ class WheatScreen(Screen):
         else:
             self.Save()
             self.curr += 1
+            currpg += 1
         self.currSpace = (self.currSpace + 1) % self.numSpace
         if self.currSpace is 0 and self.curr is not 0:
             for i in self.layouts:
@@ -188,9 +196,11 @@ class WheatScreen(Screen):
             self.manager.current = 'tr'
 
     def pageBack(self):
+        global currpg
         if self.curr > 0:
             self.Save()
             self.curr = self.curr - 1
+            currpg = currpg - 1
             self.currSpace = (self.currSpace + 2) % self.numSpace
             if self.currSpace is 0:
                 self.manager.current = 'o'
@@ -838,3 +848,16 @@ class DrawDropDownMenu(menu.MenuDropDown):
 
 class DrawDropDownMenuButton(menu.MenuButton):
     dropdown_cls = ObjectProperty(DrawDropDownMenu)
+
+class PageNum(Label):
+
+    def __init__(self, *args, **kwargs):
+        global currpg
+        global tpgs
+        super(PageNum, self).__init__(*args, **kwargs)
+        self.text = "Page: " + str(currpg + 1) + " of " + str(tpgs)
+
+    def update_Page_Num(self):
+        global currpg
+        global tpgs
+        self.text = "Page: " + str(currpg + 1) + " of " + str(tpgs)
