@@ -1,0 +1,280 @@
+<WheatScreen>:
+    name: 'Wheat1'
+    id: Wheat
+    draw: pad
+    manager: space_manager
+    space1: one
+    space2: two
+    space3: three
+
+
+    ############################################################################
+    # FULL MENU CONTAINER
+    ############################################################################
+    GridLayout:
+        id: menu_container
+        cols: 1
+        size_hint: 1, .1
+        pos_hint: {'x': 0, 'y': .9}
+        spacing: 5
+
+        ############################################################################
+        # PRIMARY MENU BUTTONS
+        ############################################################################
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 5
+            id: toolbar_main
+            size_hint: 1, .5
+            pos_hint: {'x': 0, 'y': .5}
+
+# TODO: NOT BEING ABLE TO MOVE TO NEXT PAGE SHOULD RENDER THESE AS UNUSABLE IN SOME VISIBLE WAY
+            Button:
+                root: Wheat
+                text: '<<'
+                color: 1,1,1,1
+                font_size: '30sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    pad.pageBack()
+                    root.pageBack()
+                    space_manager.transition.direction = 'right'
+
+            ToggleButton:
+                text: 'Widgets'
+                id: widget_menu
+                group: "tools"
+                root: Wheat
+                color: 1,1,1,1
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_press:
+                    #switch visibility on toolbars, and toggle drawing
+                    toolbar_draw.visible = False
+                    toolbar_widget.visible = True
+
+            ToggleButton:
+                text: 'Drawing'
+                id: draw_menu
+                group: "tools"
+                root: Wheat
+                color: 1,1,1,1
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_press:
+                    #switch visibility on toolbars, and toggle drawing
+                    toolbar_draw.visible = True
+                    toolbar_widget.visible = False
+
+            # TODO: NOT BEING ABLE TO MOVE TO NEXT PAGE SHOULD RENDER THESE AS UNUSABLE IN SOME VISIBLE WAY
+            Button
+                root: Wheat
+                text: '>>'
+                color: 1,1,1,1
+                font_size: '30sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    pad.pageForward()
+                    root.pageForward()
+                    space_manager.transition.direction = 'left'
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            id: toolbar_draw
+
+            visible: True
+            size_hint_x: 1 if self.visible == True else 0
+            size_hint_y: .5 if self.visible == True else 0
+            opacity: 1 if self.visible == True else 0
+            disabled: not self.visible
+
+            pos_hint: {'x': 0, 'y': 0}
+            spacing: 5
+
+            Button:
+                text: 'Save Drawings'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release: Wheat.SaveWriting()
+
+            Button:
+                text: 'Load Drawings'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release: Wheat.LoadWriting()
+
+            Button:
+                text: 'Clear Drawings'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release: Wheat.clear()
+
+            Button:
+                text: 'Undo'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release: Wheat.undo()
+
+            Button:
+                text: 'Redo'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release: Wheat.redo()
+
+            Button:
+                text: 'Change Color'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.chColor()
+                    # # TODO: try to make button's color reflect stroke color
+                    # background_color: [0,0,0,1] if pad.getColor == 'black' else [1,.4,.4,]
+
+            StrokeLabel:
+                id: stroke_label
+                color: 1, .3, .4 , 1
+                # padding: 5,0
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                font_size: '15sp'
+
+            Button:
+                text: '+'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.sizeUp()
+                    stroke_label.update_stroke_label(pad.getSize())
+
+
+            Button:
+                text: '-'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.sizeDown()
+                    stroke_label.update_stroke_label(pad.getSize())
+
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            id: toolbar_widget
+
+            visible: False
+            size_hint_x: 1 if self.visible == True else 0
+            size_hint_y: .5 if self.visible == True else 0
+            opacity: 1 if self.visible == True else 0
+            disabled: not self.visible
+
+            pos_hint: {'x': 0, 'y': 0}
+            spacing: 5
+
+            Button:
+                text: 'Python'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.add()
+
+            Button:
+                text: 'Function'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.addFunc()
+
+            Button:
+                text: 'Calculator'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.addCalc()
+
+            Button:
+                text: 'Geometry'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.addGeo()
+
+            Button:
+                text: 'LaTeX'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.addTex()
+
+            Button:
+                text: 'Remove'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.remove()
+        Widget:
+            size_hint_y: 0
+
+    Draw:
+        id: pad
+        size_hint: 1, .9
+        pos_hint: {'x': 0, 'y': 0}
+        orientation: 'vertical'
+
+    LiveManager:
+        id: space_manager
+        WorkSpace1:
+            id: one
+            name: 'o'
+        WorkSpace2:
+            id: two
+            name: 't'
+        WorkSpace3:
+            id: three
+            name: "tr"
+
+<WorkSpace1>:
+    id: widgSpaceOne
+    FloatLayout:
+        id: flone
+
+<WorkSpace2>:
+    id: widgSpaceTwo
+    FloatLayout:
+        id: fltwo
+
+<WorkSpace3>:
+    id: widgSpaceThree
+    FloatLayout:
+        id: flthree

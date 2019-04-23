@@ -1,0 +1,282 @@
+<WheatScreen>:
+    name: 'Wheat1'
+    id: Wheat
+    draw: pad
+    manager: space_manager
+    space1: one
+    space2: two
+    space3: three
+
+    ############################################################################
+    # FULL MENU CONTAINER
+    ############################################################################
+
+    GridLayout:
+        id: header
+        size_hint: 1, .2
+        pos_hint: {'x': 0, 'y': .9}
+        rows: 2
+        canvas.before:
+            Color:
+                rgba: 253/255, 253/255, 253/255, .1
+
+        ############################################################################
+        # PRIMARY MENU BUTTONS
+        ############################################################################
+
+        GridLayout:
+            id: menu_buttons
+            cols: 6
+            padding: 15
+            spacing: 15
+            size_hint: 1, .1
+
+            Button:
+                root: Wheat
+                text: 'Prev page'
+                color: 1, .3, .4 , .85
+                background_color: 1,1,1,1
+                # background_normal: ''
+                on_release:
+                    pad.pageBack()
+                    root.pageBack()
+                    space_manager.transition.direction = 'right'
+
+            ToggleButton:
+                text: 'Widgets'
+                id: widget_menu
+                root: Wheat
+                color: 1, .3, .4 , .85
+                # background_normal: 1, .3, .4 , .85
+                # background_down: 0.3, 0.3, 0.3, 1
+                color: 1, 1, 1, 1
+                on_press:
+                    toolbar_draw.visible = False
+                    toolbar_widget.visible = True
+                on_release:
+                    toolbar_draw.visible = True
+                    toolbar_widget.visible = False
+
+            ToggleButton:
+                text: 'Drawing'
+                id: draw_menu
+                root: Wheat
+                color: 1, .3, .4 , .85
+                # background_normal: 1, .3, .4 , .85
+                # background_down: 0.3, 0.3, 0.3, 1
+                color: 1, 1, 1, 1
+                on_press:
+                    Wheat.drawToggle()
+                    toolbar_draw.visible = True
+                    toolbar_widget.visible = False
+                on_release:
+                    Wheat.drawToggle()
+                    toolbar_draw.visible = False
+                    toolbar_widget.visible = True
+
+            ColouredButton:
+                root: Wheat
+                text: 'Save'
+                # color: 1,1,1,1.
+                background_color: 1, .3, .4 , .85
+                background_normal: ''
+                on_release: root.Save()
+
+            ColouredButton:
+                root: Wheat
+                text: 'Load'
+                # color: 1,1,1,1.
+                background_color: 1, .3, .4 , .85
+                background_normal: ''
+                on_release: root.Load()
+
+            ColouredButton:
+                root: Wheat
+                text: 'Next page'
+                color: 1, .3, .4 , .85
+                background_color: 1,1,1,1
+                background_normal: ''
+                on_release:
+                    pad.pageForward()
+                    root.pageForward()
+                    space_manager.transition.direction = 'left'
+
+        ############################################################################
+        # DRAW TOOLBAR
+        ############################################################################
+
+        GridLayout:
+            id: toolbar_draw
+            cols: 6
+            size_hint: 1, .1
+            pos_hint_y: .8
+            padding: 15
+            spacing: 15
+            visible: True
+            size_hint_x: 1 if self.visible else 0
+            opacity: 1 if self.visible else 0
+            disabled: not self.visible
+
+            Button:
+                text: 'Clear'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.clear()
+
+            Button:
+                text: 'Undo'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.undo()
+
+            Button:
+                text: 'Redo'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.redo()
+
+            Button:
+                text: 'Change color'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.chColor()
+
+            Button:
+                text: 'SizeUp'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.sizeUp()
+
+            Button:
+                text: 'SizeDown'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.sizeDown()
+
+
+
+        ############################################################################
+        # WIDGET TOOLBAR
+        ############################################################################
+
+        GridLayout:
+            id: toolbar_widget
+            cols: 6
+            padding: 15
+            spacing: 15
+            visible: False
+            size_hint: 1, .1
+            pos_hint_y: .8
+            size_hint_x: 1 if self.visible else 0
+            opacity: 1 if self.visible else 0
+            disabled: not self.visible
+
+            Button:
+                text: 'Python'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.add()
+
+            Button:
+                text: 'Function'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.addFunc()
+
+            Button:
+                text: 'Calculator'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.addCalc()
+
+            Button:
+                text: 'Geometry'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.addGeo()
+
+            Button:
+                text: 'LaTeX'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.addTex()
+
+            Button:
+                text: 'Remove'
+                size_hint_y: None
+                height: dp(40)
+                text_size: self.size
+                padding_x: dp(10)
+                valign: 'middle'
+                on_release: root.parent_obj.root.remove()
+
+    ############################################################################
+    # Drawspace
+    ############################################################################
+
+    Draw:
+        id: pad
+        size_hint: 1, .9
+        pos_hint: {'x': 0, 'y': 0}
+        orientation: 'vertical'
+
+    LiveManager:
+        id: space_manager
+        WorkSpace1:
+            id: one
+            name: 'o'
+        WorkSpace2:
+            id: two
+            name: 't'
+        WorkSpace3:
+            id: three
+            name: "tr"
+
+
+<WorkSpace1>:
+    id: widgSpaceOne
+    FloatLayout:
+        id: flone
+
+<WorkSpace2>:
+    id: widgSpaceTwo
+    FloatLayout:
+        id: fltwo
+
+<WorkSpace3>:
+    id: widgSpaceThree
+    FloatLayout:
+        id: flthree
