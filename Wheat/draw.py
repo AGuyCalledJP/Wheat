@@ -7,8 +7,13 @@ from kivy.properties import (ObjectProperty, NumericProperty,
                              OptionProperty, BooleanProperty,
                              StringProperty, ListProperty)
 import copy
-
+from shutil import copy2
 from kivy.uix.label import Label
+from kivy.storage.jsonstore import JsonStore
+from kivy.core.window import Window
+
+
+write = JsonStore('Wheat/Notebook/PageState/writing.json')
 
 Builder.load_file('draw.kv')
 
@@ -25,42 +30,85 @@ class Draw(BoxLayout):
     pages = []
     count = 0
     curr = 0
+    pt = None
 
     def __init__(self, *args, **kwargs):
         super(Draw, self).__init__(*args, **kwargs)
         cd = os.getcwd()
         pages = os.listdir(cd + folder)
         pages.sort()
+        if self.pt is None:
+            self.pt = 1
         if len(pages) > 0:
             for page in pages:
-                # p = Paint(cd + folder + page, self.count)
-                # self.pages.append(p)
-                self.p = Paint(cd + folder + page, self.count)
+                self.p = Paint(cd + folder + page, self.pt)
                 self.pages.append(self.p)
                 self.count = self.count + 1
             self.add_widget(self.pages[0])
         else:
-            # p = Paint(newPage, self.count)
-            # self.count += 1
-            # self.pages.append(p)
-            # self.add_widget(p)
-            self.p = Paint(newPage, self.count)
+            if self.pt is 1:
+                self.p = Paint(newPage, self.pt)
+            else:
+                self.p = Paint(newGraphPage, self.pt)
             self.count += 1
             self.pages.append(self.p)
             self.add_widget(self.p)
+        self.Load()
 
+    def Save(self):
+        print(self.curr)
+        sz = Window.size
+        cwd = os.getcwd()
+        i = self.pages[self.curr]
+        if i.myPt is 1:
+            src = cwd + "/Wheat/" + newPage
+        else:
+            src = cwd + "/Wheat/" + newGraphPage
+        dest = cwd + folder + f + str(self.curr) + suffix
+        exists = os.path.isfile(dest)
+        if not exists:
+            copy2(src, dest)
+        writing = i.Save()
+        currsz = []
+        currsz.append(sz[0])
+        currsz.append(sz[1])
+        save = "P" + str(self.curr)
+        write.put(save, writing = writing[0], color = writing[1], width = writing[2], sz = currsz)
 
-    def Save(self, where):
-        i = self.pages[where]
-        l = i.Save()
-        return l
+    def Load(self):
+        sz = Window.size
+        p = 'P' + str(self.curr)
+        curr = None
+        color = None
+        width = None
+        scale = None
+        found = False
+        for key in write.keys():
+            if p in key:
+                found = True
+                written = write.get(p)
+                curr = copy.deepcopy(written['writing'])
+                color = copy.deepcopy(written['color'])
+                width = copy.deepcopy(written['width'])
+                scale = written['sz']
+        if found:
+            xl = scale[0]
+            xc = sz[0]
+            yl = scale[1]
+            yc = sz[1]
+            xfactor = float(xc/xl)
+            yfactor = float(yc/yl)
+            for i in curr:
+                for j in i:
+                    j[0] = j[0] * xfactor
+                    j[1] = j[1] * yfactor
+            page = self.pages[self.curr]
+            page.Load(curr, color, width)
 
-    def Load(self, writing, color, width):
-        page = self.pages[self.curr]
-        page.Load(writing, color, width)
 
     def pageBack(self):
         if self.curr > 0:
+            self.Save()
             oldP = self.pages[self.curr]
             self.remove_widget(oldP)
             self.curr = self.curr - 1
@@ -68,13 +116,18 @@ class Draw(BoxLayout):
             self.add_widget(newP)
             oldP.update()
             newP.update()
+            self.Load()
 
     def pageForward(self):
         if self.curr == self.count - 1:
+            self.Save()
             oldP = self.pages[self.curr]
             oldP.rem()
             self.remove_widget(oldP)
-            newP = Paint(newPage, self.count)
+            if self.pt is 1:
+                newP = Paint(newPage, self.pt)
+            else:
+                newP = Paint(newGraphPage, self.pt)
             self.pages.append(newP)
             self.add_widget(newP)
             oldP.update()
@@ -82,6 +135,7 @@ class Draw(BoxLayout):
             self.curr = self.curr + 1
             self.count = self.count + 1
         else:
+            self.Save()
             oldP = self.pages[self.curr]
             oldP.rem()
             self.remove_widget(oldP)
@@ -90,6 +144,7 @@ class Draw(BoxLayout):
             self.add_widget(newP)
             oldP.update()
             newP.update()
+            self.Load()
         with self.canvas:
             self.canvas.ask_update()
 
@@ -125,6 +180,12 @@ class Draw(BoxLayout):
     def getSize(self):
         global sz
         return sz
+    
+    def pageType(self):
+        if self.pt is 1:
+            self.pt = 2
+        else:
+            self.pt = 1
 
 class Paint(Widget):
     objects = None
@@ -137,9 +198,9 @@ class Paint(Widget):
     widUndo = None
     points = None
     drawing = False
-    me = -1
+    myPt = None
 
-    def __init__(self, where, me, *args, **kwargs):
+    def __init__(self, where, myPt, *args, **kwargs):
         super(Paint, self).__init__(*args, **kwargs)
         if self.objects is None:
             self.objects = []
@@ -151,9 +212,9 @@ class Paint(Widget):
             self.colUndo = []
             self.widUndo = []
             self.points = []
+            self.myPt = myPt
         with self.canvas:
                 self.bg = Rectangle(source=where, pos=self.pos, size=self.size)
-        self.me = me
         self.bind(pos=self.update_bg)
         self.bind(size=self.update_bg)
 
@@ -210,6 +271,8 @@ class Paint(Widget):
         line_draw = self.obj
         self.objects.append(self.obj)
         self.beenThere.append(bundle)
+        self.colCurr.append(color)
+        self.widCurr.append(width)
         self.canvas.add(line_draw)
 
     def undo(self):
@@ -250,11 +313,14 @@ class Paint(Widget):
 
     def Load(self, writing, color, width):
         self.clear_canvas()
-        for i in range(0, len(writing)):
-            self.redrawLine(writing[i], color[i], width[i])
-
-
-
+        one = len(writing)
+        two = len(color)
+        three = len(width)
+        if one is two and one is three and two is three:
+            for i in range(0, len(writing)):
+                self.redrawLine(writing[i], color[i], width[i])
+        else:
+            print("something went wrong here sorry")
 
 class StrokeLabel(Label):
 

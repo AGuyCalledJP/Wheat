@@ -255,17 +255,6 @@
         size_hint_y: None
         height: dp(2)
     DropDownButton:
-        text: 'SizeUp'
-        size_hint_y: None
-        height: dp(40)
-        text_size: self.size
-        padding_x: dp(10)
-        valign: 'middle'
-        on_release: root.parent_obj.root.sizeUp()
-    Widget:
-        size_hint_y: None
-        height: dp(2)
-    DropDownButton:
         text: 'SizeDown'
         size_hint_y: None
         height: dp(40)
@@ -273,6 +262,17 @@
         padding_x: dp(10)
         valign: 'middle'
         on_release: root.parent_obj.root.sizeDown()
+    Widget:
+        size_hint_y: None
+        height: dp(2)
+    DropDownButton:
+        text: 'SizeUp'
+        size_hint_y: None
+        height: dp(40)
+        text_size: self.size
+        padding_x: dp(10)
+        valign: 'middle'
+        on_release: root.parent_obj.root.sizeUp()
     Widget:
         size_hint_y: None
         height: dp(2)

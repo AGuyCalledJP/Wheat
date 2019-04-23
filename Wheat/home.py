@@ -44,7 +44,6 @@ from kivy.storage.jsonstore import JsonStore
 
 store = JsonStore('Wheat/Notebook/PageState/children.json')
 stuff = JsonStore('Wheat/Notebook/PageState/childInfo.json')
-write = JsonStore('Wheat/Notebook/PageState/writing.json')
 
 #Load kv file
 # Builder.load_file('home.kv')
@@ -91,6 +90,7 @@ class WheatScreen(Screen):
         super(WheatScreen, self).__init__(*args, **kwargs)
         totalPgs = os.listdir('Wheat/Notebook/Pages')
         self.tpgs = len(totalPgs)
+        print(self.tpgs)
 
     def remove(self):
         if self.currSpace is 0:
@@ -155,7 +155,6 @@ class WheatScreen(Screen):
     def pageForward(self):
         if self.curr is self.tpgs:
             self.Save()
-            self.SaveWriting()
             self.curr += 1
             self.tpgs += 1
             if self.pgtype is 1:
@@ -164,9 +163,7 @@ class WheatScreen(Screen):
                 pass
         else:
             self.Save()
-            self.SaveWriting()
             self.curr += 1
-            self.LoadWriting()
         self.currSpace = (self.currSpace + 1) % self.numSpace
         if self.currSpace is 0 and self.curr is not 0:
             for i in self.layouts:
@@ -193,7 +190,6 @@ class WheatScreen(Screen):
     def pageBack(self):
         if self.curr > 0:
             self.Save()
-            self.SaveWriting()
             self.curr = self.curr - 1
             self.currSpace = (self.currSpace + 2) % self.numSpace
             if self.currSpace is 0:
@@ -601,44 +597,6 @@ class WheatScreen(Screen):
                         latex = self.layouts3[res-1].children[0]
                         eq_text = discharged['eq_text']
                         latex.Load(eq_text)
-
-    def SaveWriting(self):
-        writing = self.draw.Save(self.curr)
-        currsz = []
-        currsz.append(self.draw.size[0])
-        currsz.append(self.draw.size[1])
-        save = "P" + str(self.curr)
-        write.put(save, writing = writing[0], color = writing[1], width = writing[2], sz = currsz)
-
-    def LoadWriting(self):
-        p = 'P' + str(self.curr)
-        curr = None
-        color = None
-        width = None
-        scale = None
-        found = False
-        for key in write.keys():
-            if p in key:
-                found = True
-                written = write.get(p)
-                curr = copy.deepcopy(written['writing'])
-                color = copy.deepcopy(written['color'])
-                width = copy.deepcopy(written['width'])
-                scale = written['sz']
-        if found:
-            xl = scale[0]
-            xc = self.draw.size[0]
-            yl = scale[1]
-            yc = self.draw.size[1]
-            xfactor = float(xc/xl)
-            yfactor = float(yc/yl)
-            for i in curr:
-                for j in i:
-                    j[0] = j[0] * xfactor
-                    j[1] = j[1] * yfactor
-            for i in width:
-                    i * ((xfactor + yfactor)/2)
-            self.draw.Load(curr, color, width)
 
     def addAux(self, pos, dest):
         if dest is 0:
