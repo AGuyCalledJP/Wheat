@@ -8,6 +8,8 @@ from kivy.properties import (ObjectProperty, NumericProperty,
                              StringProperty, ListProperty)
 import copy
 
+from kivy.uix.label import Label
+
 Builder.load_file('draw.kv')
 
 f = "page"
@@ -28,15 +30,21 @@ class Draw(BoxLayout):
         pages.sort()
         if len(pages) > 0:
             for page in pages:
-                p = Paint(cd + folder + page, self.count)
-                self.pages.append(p)
+                # p = Paint(cd + folder + page, self.count)
+                # self.pages.append(p)
+                self.p = Paint(cd + folder + page, self.count)
+                self.pages.append(self.p)
                 self.count = self.count + 1
             self.add_widget(self.pages[0])
         else:
-            p = Paint(newPage, self.count)
+            # p = Paint(newPage, self.count)
+            # self.count += 1
+            # self.pages.append(p)
+            # self.add_widget(p)
+            self.p = Paint(newPage, self.count)
             self.count += 1
-            self.pages.append(p)
-            self.add_widget(p)
+            self.pages.append(self.p)
+            self.add_widget(self.p)
 
 
     def Save(self, where):
@@ -232,3 +240,14 @@ class Paint(Widget):
             print(i)
             self.redrawLine(i)
 
+
+
+
+class StrokeLabel(Label):
+
+    def __init__(self, *args, **kwargs):
+        super(StrokeLabel, self).__init__(*args, **kwargs)
+        self.text = "Stroke: " + str(2.5)
+
+    def update_stroke_label(self, new_size):
+        self.text = "Stroke: " + str(new_size)
