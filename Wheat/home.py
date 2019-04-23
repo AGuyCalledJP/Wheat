@@ -27,6 +27,7 @@ from kivy.uix.modalview import ModalView
 from time import time
 import traceback
 import menu
+import copy 
 
 import sys
 import os
@@ -83,9 +84,13 @@ class WheatScreen(Screen):
     numSpace = 3
     sStr = 'child'
     curr = 0
+    tpgs = 0
+    pgtype = 1
 
     def __init__(self, *args, **kwargs):
         super(WheatScreen, self).__init__(*args, **kwargs)
+        totalPgs = os.listdir('Wheat/Notebook/Pages')
+        self.tpgs = len(totalPgs)
 
     def remove(self):
         if self.currSpace is 0:
@@ -148,7 +153,20 @@ class WheatScreen(Screen):
 
 
     def pageForward(self):
-        self.curr = self.curr + 1
+        if self.curr is self.tpgs:
+            self.Save()
+            self.SaveWriting()
+            self.curr += 1
+            self.tpgs += 1
+            if self.pgtype is 1:
+                pass
+            else:
+                pass
+        else:
+            self.Save()
+            self.SaveWriting()
+            self.curr += 1
+            self.LoadWriting()
         self.currSpace = (self.currSpace + 1) % self.numSpace
         if self.currSpace is 0 and self.curr is not 0:
             for i in self.layouts:
@@ -174,6 +192,8 @@ class WheatScreen(Screen):
 
     def pageBack(self):
         if self.curr > 0:
+            self.Save()
+            self.SaveWriting()
             self.curr = self.curr - 1
             self.currSpace = (self.currSpace + 2) % self.numSpace
             if self.currSpace is 0:
@@ -182,7 +202,6 @@ class WheatScreen(Screen):
                 self.manager.current = 't'
             else:
                 self.manager.current = 'tr'
-
     def add(self):
         if self.currSpace is 0:
             if self.layouts==[]:
@@ -585,19 +604,41 @@ class WheatScreen(Screen):
 
     def SaveWriting(self):
         writing = self.draw.Save(self.curr)
+        currsz = []
+        currsz.append(self.draw.size[0])
+        currsz.append(self.draw.size[1])
         save = "P" + str(self.curr)
-        write.put(save, a = writing)
-        written = write.get(save)
+        write.put(save, writing = writing, sz = currsz)
 
     def LoadWriting(self):
-        writing = []
         p = 'P' + str(self.curr)
+        curr = None
+        scale = None
+        found = False
         for key in write.keys():
             if p in key:
+                found = True
                 written = write.get(p)
-                curr = written['a']
-                writing = curr
-        self.draw.Load(writing)
+                print(written)
+                curr = copy.deepcopy(written['writing'])
+                scale = written['sz']
+        if found:
+            print(curr)
+            print(scale)
+            print(self.draw.size)
+            xl = scale[0]
+            xc = self.draw.size[0]
+            yl = scale[1]
+            yc = self.draw.size[1]
+            xfactor = float(xc/xl)
+            yfactor = float(yc/yl)
+            print(xfactor)
+            print(yfactor)
+            for i in curr:
+                for j in i:
+                    j[0] = j[0] * xfactor
+                    j[1] = j[1] * yfactor
+            self.draw.Load(curr)
 
     def addAux(self, pos, dest):
         if dest is 0:
@@ -608,7 +649,7 @@ class WheatScreen(Screen):
                 self.interp = self.interp + 1
                 self.interpLoc.append(self.count)
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                w = InterpreterGui()
+                w = InterpreterGui(pos = pos)
                 w.restart_interpreter()
                 layout.add_widget(w)
                 self.count += 1
@@ -631,7 +672,7 @@ class WheatScreen(Screen):
                 self.interp = self.interp + 1
                 self.interpLoc.append(self.count)
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                w = InterpreterGui()
+                w = InterpreterGui(pos = pos)
                 w.restart_interpreter()
                 layout.add_widget(w)
                 self.count2 += 1
@@ -653,7 +694,7 @@ class WheatScreen(Screen):
                 self.interp = self.interp + 1
                 self.interpLoc.append(self.count)
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                w = InterpreterGui()
+                w = InterpreterGui(pos = pos)
                 w.restart_interpreter()
                 layout.add_widget(w)
                 self.count3 += 1
@@ -674,7 +715,7 @@ class WheatScreen(Screen):
                 self.space1.ids.flone.clear_widgets()
             if self.func < self.universalConstant:
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(FunctionPlotter());
+                layout.add_widget(FunctionPlotter(pos = pos));
                 self.count += 1
                 self.space1.ids.flone.add_widget(layout)
                 self.layouts.append(layout)
@@ -684,7 +725,7 @@ class WheatScreen(Screen):
                 self.space2.ids.fltwo.clear_widgets()
             if self.func < self.universalConstant:
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(FunctionPlotter());
+                layout.add_widget(FunctionPlotter(pos = pos));
                 self.count2 += 1
                 self.space2.ids.fltwo.add_widget(layout)
                 self.layouts2.append(layout)
@@ -694,7 +735,7 @@ class WheatScreen(Screen):
                 self.space1.ids.flone.clear_widgets()
             if self.func < self.universalConstant:
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(FunctionPlotter());
+                layout.add_widget(FunctionPlotter(pos = pos));
                 self.count += 1
                 self.space3.ids.flthree.add_widget(layout)
                 self.layouts3.append(layout)
@@ -706,7 +747,7 @@ class WheatScreen(Screen):
                 self.space1.ids.flone.clear_widgets()
             if self.calc < self.universalConstant:
                 layout =  FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(Calculator());
+                layout.add_widget(Calculator(pos = pos));
                 self.count += 1
                 self.space1.ids.flone.add_widget(layout)
                 self.layouts.append(layout)
@@ -716,7 +757,7 @@ class WheatScreen(Screen):
                 self.space2.ids.fltwo.clear_widgets()
             if self.calc < self.universalConstant:
                 layout =  FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(Calculator());
+                layout.add_widget(Calculator(pos = pos));
                 self.count2 += 1
                 self.space2.ids.fltwo.add_widget(layout)
                 self.layouts2.append(layout)
@@ -726,7 +767,7 @@ class WheatScreen(Screen):
                 self.space3.ids.flthree.clear_widgets()
             if self.func < self.universalConstant:
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(Calculator());
+                layout.add_widget(Calculator(pos = pos));
                 self.count3 += 1
                 self.space3.ids.flthree.add_widget(layout)
                 self.layouts3.append(layout)
@@ -738,7 +779,7 @@ class WheatScreen(Screen):
                 self.space1.ids.flone.clear_widgets()
             if self.geo < self.universalConstant:
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(Geometry());
+                layout.add_widget(Geometry(pos = pos));
                 self.count += 1
                 self.space1.ids.flone.add_widget(layout)
                 self.layouts.append(layout)
@@ -748,7 +789,7 @@ class WheatScreen(Screen):
                 self.space2.ids.fltwo.clear_widgets()
             if self.geo < self.universalConstant:
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(Geometry());
+                layout.add_widget(Geometry(pos = pos));
                 self.count2 += 1
                 self.space2.ids.fltwo.add_widget(layout)
                 self.layouts2.append(layout)
@@ -758,7 +799,7 @@ class WheatScreen(Screen):
                 self.space3.ids.flthree.clear_widgets()
             if self.geo < self.universalConstant:
                 layout = FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(Geometry());
+                layout.add_widget(Geometry(pos = pos));
                 self.count3 += 1
                 self.space3.ids.flthree.add_widget(layout)
                 self.layouts3.append(layout)
@@ -772,7 +813,7 @@ class WheatScreen(Screen):
 
             if self.tex < self.universalConstant:
                 layout =  FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(Tex());
+                layout.add_widget(Tex(pos = pos));
                 self.count += 1
                 self.space1.ids.flone.add_widget(layout)
                 self.layouts.append(layout)
@@ -782,7 +823,7 @@ class WheatScreen(Screen):
                 self.space2.ids.fltwo.clear_widgets()
             if self.tex < self.universalConstant:
                 layout =  FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(Tex());
+                layout.add_widget(Tex(pos = pos));
                 self.count2 += 1
                 self.space2.ids.fltow.add_widget(layout)
                 self.layouts2.append(layout)
@@ -792,7 +833,7 @@ class WheatScreen(Screen):
                 self.space3.ids.flthree.clear_widgets()
             if self.tex < self.universalConstant:
                 layout =  FloatLayout(size_hint=(None,None), size = self.size, pos = pos)
-                layout.add_widget(Tex());
+                layout.add_widget(Tex(pos = pos));
                 self.count3 += 1
                 self.space3.ids.flthree.add_widget(layout)
                 self.layouts3.append(layout)

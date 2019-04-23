@@ -15,7 +15,10 @@ Builder.load_file('draw.kv')
 f = "page"
 suffix = ".png"
 newPage = "visual_assets/wheat_bg_1_college.png"
+newGraphPage = "visual_assets/wheat_bg_1.png"
 folder = '/Wheat/Notebook/Pages/'
+color = 'black'
+sz = 2.5
 
 class Draw(BoxLayout):
 
@@ -48,8 +51,6 @@ class Draw(BoxLayout):
 
 
     def Save(self, where):
-        print("hello there")
-        print(where)
         i = self.pages[where]
         l = i.Save()
         return l
@@ -62,7 +63,6 @@ class Draw(BoxLayout):
         if self.curr > 0:
             oldP = self.pages[self.curr]
             self.remove_widget(oldP)
-            #oldP.rem()
             self.curr = self.curr - 1
             newP = self.pages[self.curr]
             self.add_widget(newP)
@@ -71,14 +71,11 @@ class Draw(BoxLayout):
 
     def pageForward(self):
         if self.curr == self.count - 1:
-            print(self.curr)
             oldP = self.pages[self.curr]
-            print(oldP)
             oldP.rem()
             self.remove_widget(oldP)
             newP = Paint(newPage, self.count)
             self.pages.append(newP)
-            print(self.pages)
             self.add_widget(newP)
             oldP.update()
             newP.update()
@@ -102,17 +99,24 @@ class Draw(BoxLayout):
     def redo(self):
         self.pages[self.curr].redo()
 
-    def chColor(self):
-        self.pages[self.curr].chColor()
-
     def clear_canvas(self):
         self.pages[self.curr].clear_canvas()
 
+    def chColor(self):
+        global color
+        if color == 'black':
+            color = 'red'
+        else:
+            color = 'black'
+
     def increaseSize(self):
-        self.pages[self.curr].increaseSize()
+        global sz
+        sz = sz + .25
 
     def decreaseSize(self):
-        self.pages[self.curr].decreaseSize()
+        global sz
+        if sz > .1:
+            sz = sz - .25
 
 class Paint(Widget):
     objects = None
@@ -121,9 +125,7 @@ class Paint(Widget):
     doneThat = None
     points = None
     drawing = False
-    color = 'black'
     me = -1
-    SZ = 2.5
 
     def __init__(self, where, me, *args, **kwargs):
         super(Paint, self).__init__(*args, **kwargs)
@@ -154,6 +156,8 @@ class Paint(Widget):
         self.drawing = False
 
     def on_touch_move(self, touch):
+        global sz
+        global color
         if self.collide_point(touch.x, touch.y):
             if self.drawing:
                 self.points.append([touch.x, touch.y])
@@ -162,17 +166,19 @@ class Paint(Widget):
                 self.drawing = True
                 self.points = [[touch.x, touch.y]]
                 self.obj = InstructionGroup()
-                if self.color == 'black':
+                if color == 'black':
                     self.obj.add(Color(0,0,0))
                 else:
                     self.obj.add(Color(1,.4,.4))
-                L = Line(width = self.SZ)
+                L = Line(width = sz)
                 self.obj.add(L)
                 self.objects.append(self.obj)
                 self.beenThere.append(self.points)
                 self.canvas.add(self.obj)
 
     def redrawLine(self, bundle):
+        global color
+        global sz
         coords = []
 
         for b in bundle:
@@ -180,11 +186,11 @@ class Paint(Widget):
             coords.append(b[1])
 
         self.obj = InstructionGroup()
-        if self.color == 'black':
+        if color == 'black':
             self.obj.add(Color(0,0,0))
         else:
             self.obj.add(Color(1,.4,.4))
-        self.obj.add(Line(points=coords, width = self.SZ))
+        self.obj.add(Line(points=coords, width = sz))
         line_draw = self.obj
         self.objects.append(self.obj)
         self.beenThere.append(bundle)
@@ -212,32 +218,13 @@ class Paint(Widget):
             for i in range(len(self.objects)):
                 self.undo()
 
-    def chColor(self):
-        if self.color == 'black':
-            self.color = 'red'
-        else:
-            self.color = 'black'
-
-    def increaseSize(self):
-        self.SZ = self.SZ + .25
-
-    def decreaseSize(self):
-        if self.SZ > .1:
-            self.SZ = self.SZ - .25
-
     def Save(self):
         curr = copy.deepcopy(self.beenThere)
         return curr
 
     def Load(self, writing):
-        self.objects = []
-        self.beenThere = []
-        self.undolist = []
-        self.doneThat = []
-        self.points = []
+        self.clear_canvas()
         for i in writing:
-            print("here")
-            print(i)
             self.redrawLine(i)
 
 
