@@ -12,4 +12,6 @@
 #DEPENDENCIES:
     - Kivy
     - Cython
+    - pdf2image
+    - pylatex
     
