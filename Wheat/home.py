@@ -205,6 +205,7 @@ class WheatScreen(Screen):
                 self.manager.current = 't'
             else:
                 self.manager.current = 'tr'
+                
     def add(self):
         if self.currSpace is 0:
             if self.layouts==[]:

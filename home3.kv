@@ -138,17 +138,20 @@
                 background_color: 1, .3, .4 , 1
                 on_release:
                     Wheat.chColor()
-                    # # TODO: try to make button's color reflect stroke color
-                    # background_color: [0,0,0,1] if pad.getColor == 'black' else [1,.4,.4,]
 
             StrokeLabel:
                 id: stroke_label
-                color: 1, .3, .4 , 1
-                # padding: 5,0
+                color: 1,1,1,1
                 text_size: self.size
                 halign: 'center'
                 valign: 'middle'
                 font_size: '15sp'
+                canvas.before:
+                    Color:
+                        rgba: 1, .3, .4 , 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
 
             Button:
                 text: '-'
