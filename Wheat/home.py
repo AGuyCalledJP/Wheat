@@ -87,7 +87,7 @@ class WheatScreen(Screen):
     currSpace = 0
     numSpace = 3
     sStr = 'child'
-    curr = 0
+    curr = 1
     tpgs = 0
     pgtype = 1
 
@@ -194,7 +194,7 @@ class WheatScreen(Screen):
 
     def pageBack(self):
         global currpg
-        if self.curr > 0:
+        if self.curr > 1:
             self.Save()
             self.curr = self.curr - 1
             currpg = currpg - 1
@@ -848,9 +848,9 @@ class PageNum(Label):
         global currpg
         global tpgs
         super(PageNum, self).__init__(*args, **kwargs)
-        self.text = "Page: " + str(currpg + 1) + " of " + str(tpgs)
+        self.text = "Page: " + str(currpg) + " of " + str(tpgs)
 
     def update_Page_Num(self):
         global currpg
         global tpgs
-        self.text = "Page: " + str(currpg + 1) + " of " + str(tpgs)
+        self.text = "Page: " + str(currpg) + " of " + str(tpgs)
