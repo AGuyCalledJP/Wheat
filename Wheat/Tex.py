@@ -42,8 +42,8 @@ class Display(FloatLayout):
     start = None
     def __init__(self, where, **kwargs):
         super(Display, self).__init__(**kwargs)
-        self.pos_hint = {'x' : 0.05, 'y' : 0.175}
-        self.size_hint = .9, 0.6
+        self.pos_hint = {'x' : 0.025, 'y' : 0.175}
+        self.size_hint = .95, 0.6
         if self.start is None:
             with self.canvas:
                 self.bg = Rectangle(source = where, pos=self.pos, size=self.size)
