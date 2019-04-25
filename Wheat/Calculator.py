@@ -30,6 +30,9 @@ Builder.load_file('Calculator.kv')
 class Keyboard(GridLayout):
     pass
 
+#ISSUE: DYNAMIC WIDTH ADJUSTMENT TO TEXT WIDTH
+##############################################
+
 class Calculator(ScatterLayout):
 
     c1 = NumericProperty()
@@ -37,12 +40,14 @@ class Calculator(ScatterLayout):
     c3 = NumericProperty()
     c4 = NumericProperty()
     fontSizer = NumericProperty()
+    text_width = NumericProperty()
 
     c1 = 1
     c2 = .3
     c3 = .4
     c4 = .85
     fontSizer = 24
+    text_width = 22
 
     equation_text = StringProperty()
     compute_text = StringProperty()
@@ -198,11 +203,13 @@ class Calculator(ScatterLayout):
         self.equation_text = ""
         self.compute_text = ""
     def Clicked0(self):
-        self.equation_text += "0"
-        self.compute_text += "0"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "0"
+            self.compute_text += "0"
     def ClickedPoint(self):
-        self.equation_text += "."
-        self.compute_text += "."
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "."
+            self.compute_text += "."
     def ClickedNeg(self):
         if (self.equation_text[0:1] == '-'):
             self.equation_text = self.equation_text[1:]
@@ -222,12 +229,12 @@ class Calculator(ScatterLayout):
         self.compute_text = result
         try:
             ans = eval(self.compute_text)
-            if(len(str(ans)) >= 10):
+            if str(ans).find(".") != -1 and len(str(ans)) >= 10:
                 self.equation_text = str(ans)[0:10]
                 self.compute_text = str(ans)[0:10]
-            else:
-                self.equation_text = str(ans)
-                self.compute_text = str(ans)
+            elif str(ans).find(".") == -1:
+                self.equation_text = str(ans)[0:self.text_width]
+                self.compute_text = str(ans)[0:self.text_width]
         except SyntaxError:
             self.equation_text = "SYNTAX Error"
             self.compute_text = "SYNTAX Error"
@@ -235,93 +242,118 @@ class Calculator(ScatterLayout):
     # Line 2
     ########
     def ClickedLn(self):
-        self.equation_text += "ln("
-        self.compute_text += "math.log("
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "ln("
+            self.compute_text += "math.log("
     def Clicked1(self):
-        self.equation_text += "1"
-        self.compute_text += "1"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "1"
+            self.compute_text += "1"
     def Clicked2(self):
-        self.equation_text += "2"
-        self.compute_text += "2"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "2"
+            self.compute_text += "2"
     def Clicked3(self):
-        self.equation_text += "3"
-        self.compute_text += "3"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "3"
+            self.compute_text += "3"
     def ClickedPlus(self):
-        self.equation_text += " + "
-        self.compute_text += "+"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += " + "
+            self.compute_text += "+"
 
     # Line 3
     ########
     def Clickede(self):
-        self.equation_text += "e"
-        self.compute_text += "math.e"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "e"
+            self.compute_text += "math.e"
     def Clicked4(self):
-        self.equation_text += "4"
-        self.compute_text += "4"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "4"
+            self.compute_text += "4"
     def Clicked5(self):
-        self.equation_text += "5"
-        self.compute_text += "5"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "5"
+            self.compute_text += "5"
     def Clicked6(self):
-        self.equation_text += "6"
-        self.compute_text += "6"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "6"
+            self.compute_text += "6"
     def ClickedMinus(self):
-        self.equation_text += " - "
-        self.compute_text += "-"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += " - "
+            self.compute_text += "-"
 
     # Line 4
     ########
     def ClickedSquared(self):
-        self.equation_text += u'\u00b2'
-        self.compute_text += "**2"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += u'\u00b2'
+            self.compute_text += "**2"
     def Clicked7(self):
-        self.equation_text += "7"
-        self.compute_text += "7"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "7"
+            self.compute_text += "7"
     def Clicked8(self):
-        self.equation_text += "8"
-        self.compute_text += "8"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "8"
+            self.compute_text += "8"
     def Clicked9(self):
-        self.equation_text += "9"
-        self.compute_text += "9"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "9"
+            self.compute_text += "9"
     def ClickedTimes(self):
-        self.equation_text += " " + u'\u00d7' + " "
-        self.compute_text += "*"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += " " + u'\u00d7' + " "
+            self.compute_text += "*"
 
     # Line 5
     ########
     def ClickedExp(self):
-        self.equation_text += "^"
-        self.compute_text += "**"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "^"
+            self.compute_text += "**"
     def ClickedInv(self):
-        self.equation_text += "^(-1)"
-        self.compute_text += "**(-1)"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "^(-1)"
+            self.compute_text += "**(-1)"
     def ClickedLeftP(self):
-        self.equation_text += "("
-        self.compute_text += "("
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "("
+            self.compute_text += "("
     def ClickedRightP(self):
-        self.equation_text += ")"
-        self.compute_text += ")"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += ")"
+            self.compute_text += ")"
     def ClickedDiv(self):
-        self.equation_text += " " + u'\u00f7' + " "
-        self.compute_text += "/"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += " " + u'\u00f7' + " "
+            self.compute_text += "/"
 
 
     # Line 6
     ########
     def ClickedSqrt(self):
-        self.equation_text +=  u'\u221a'
-        self.compute_text += "**(1/2)"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text +=  u'\u221a'
+            self.compute_text += "**(1/2)"
     def ClickedSin(self):
-        self.equation_text += "sin("
-        self.compute_text += "math.sin("
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "sin("
+            self.compute_text += "math.sin("
     def ClickedCos(self):
-        self.equation_text += "cos("
-        self.compute_text += "math.cos("
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "cos("
+            self.compute_text += "math.cos("
     def ClickedTan(self):
-        self.equation_text += "tan("
-        self.compute_text += "math.tan("
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += "tan("
+            self.compute_text += "math.tan("
     def ClickedPi(self):
-        self.equation_text += u'\u03c0'
-        self.compute_text += "math.pi"
+        if (len(self.equation_text) <= self.text_width):
+            self.equation_text += u'\u03c0'
+            self.compute_text += "math.pi"
 
     def Save(self):
         letsGo = []

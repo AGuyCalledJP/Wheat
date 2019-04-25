@@ -242,23 +242,28 @@ class Tex(ScatterLayout):
     def write(self):
         self.code = self.ids.equation.text
         doc = Document('latex')
-        self.fill_document(doc,self.code)
+        try:
+            self.fill_document(doc,self.code)
+            doc.generate_pdf(filepath='Wheat/Notebook/Tex/', clean_tex=False, compiler='pdflatex')
+            self.convert_image(False)
+        except:
+            self.convert_image(True)
 
-        doc.generate_pdf(filepath='Wheat/Notebook/Tex/', clean_tex=False, compiler='pdflatex')
+    def convert_image(self,tex_error):
 
-        self.convert_image()
+        if not tex_error:
+            pages = convert_from_path('Wheat/Notebook/Tex/latex.pdf', 500)
+            for page in pages:
+                page.save('Wheat/Notebook/Tex/output.png', 'PNG')
 
-    def convert_image(self):
+            self.crop('Wheat/Notebook/Tex/output.png')
+        else:
+            pass
+            #self.crop('Wheat/Notebook/Tex/error.png')
 
-        pages = convert_from_path('Wheat/Notebook/Tex/latex.pdf', 500)
-        for page in pages:
-            page.save('Wheat/Notebook/Tex/output.png', 'PNG')
+    def crop(self, filename):
 
-        self.crop()
-
-    def crop(self):
-
-        image_obj = Image.open('Wheat/Notebook/Tex/output.png')
+        image_obj = Image.open(filename)
         width, height = image_obj.size
         coords = (0.4*width, 0.17*height, 0.63*width, 0.21*height)
         cropped_image = image_obj.crop(coords)
