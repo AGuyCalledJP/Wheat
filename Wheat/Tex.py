@@ -244,7 +244,7 @@ class Tex(ScatterLayout):
         doc = Document('latex')
         try:
             self.fill_document(doc,self.code)
-            doc.generate_pdf(filepath='Wheat/Notebook/Tex/', clean_tex=False, compiler='pdflatex')
+            doc.generate_pdf(filepath='Wheat/Notebook/Tex/', clean_tex = True, compiler='pdflatex') #not good with error
             self.convert_image(False)
         except:
             self.convert_image(True)
@@ -258,8 +258,7 @@ class Tex(ScatterLayout):
 
             self.crop('Wheat/Notebook/Tex/output.png')
         else:
-            pass
-            #self.crop('Wheat/Notebook/Tex/error.png')
+            self.updateDisp('Wheat/Notebook/Tex/error.png')
 
     def crop(self, filename):
 
