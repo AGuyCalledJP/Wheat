@@ -4,6 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 
 import math
+import numpy as np
 
 from kivy.uix.button import Button
 from kivy.graphics import Color, Line, Rectangle
@@ -244,7 +245,7 @@ class Calculator(ScatterLayout):
     def ClickedLn(self):
         if (len(self.equation_text) <= self.text_width):
             self.equation_text += "ln("
-            self.compute_text += "math.log("
+            self.compute_text += "np.log("
     def Clicked1(self):
         if (len(self.equation_text) <= self.text_width):
             self.equation_text += "1"
@@ -267,7 +268,7 @@ class Calculator(ScatterLayout):
     def Clickede(self):
         if (len(self.equation_text) <= self.text_width):
             self.equation_text += "e"
-            self.compute_text += "math.e"
+            self.compute_text += "np.e"
     def Clicked4(self):
         if (len(self.equation_text) <= self.text_width):
             self.equation_text += "4"
@@ -305,7 +306,7 @@ class Calculator(ScatterLayout):
             self.compute_text += "9"
     def ClickedTimes(self):
         if (len(self.equation_text) <= self.text_width):
-            self.equation_text += " " + u'\u00d7' + " "
+            self.equation_text += "*"
             self.compute_text += "*"
 
     # Line 5
@@ -341,19 +342,19 @@ class Calculator(ScatterLayout):
     def ClickedSin(self):
         if (len(self.equation_text) <= self.text_width):
             self.equation_text += "sin("
-            self.compute_text += "math.sin("
+            self.compute_text += "np.sin("
     def ClickedCos(self):
         if (len(self.equation_text) <= self.text_width):
             self.equation_text += "cos("
-            self.compute_text += "math.cos("
+            self.compute_text += "np.cos("
     def ClickedTan(self):
         if (len(self.equation_text) <= self.text_width):
             self.equation_text += "tan("
-            self.compute_text += "math.tan("
+            self.compute_text += "np.tan("
     def ClickedPi(self):
         if (len(self.equation_text) <= self.text_width):
             self.equation_text += u'\u03c0'
-            self.compute_text += "math.pi"
+            self.compute_text += "np.pi"
 
     def Save(self):
         letsGo = []
