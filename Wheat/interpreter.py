@@ -40,8 +40,8 @@ if platform == 'android':
     import pydoc_data
     from jediinterface import get_completions, get_defs
 else:
-    from Wheat.interpreterwrapper import InterpreterWrapper
-    from Wheat.jediinterface import get_completions, get_defs
+    from interpreterwrapper import InterpreterWrapper
+    from jediinterface import get_completions, get_defs
 
 import menu
 

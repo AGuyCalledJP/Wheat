@@ -34,16 +34,17 @@ import os
 from os.path import abspath, join, dirname
 file_dir = os.path.dirname("Wheat")
 sys.path.append(file_dir)
-from Wheat.interpreter import InterpreterGui
-from Wheat.FunctionPlotter import FunctionPlotter
-from Wheat.draw import Draw
-from Wheat.Calculator import Calculator
-from Wheat.Geometry import Geometry
-from Wheat.Tex import Tex
+sys.path.append(os.getcwd())
+from interpreter import InterpreterGui
+from FunctionPlotter import FunctionPlotter
+from draw import Draw
+from Calculator import Calculator
+from Geometry import Geometry
+from Tex import Tex
 from kivy.storage.jsonstore import JsonStore
 
-store = JsonStore('Wheat/Notebook/PageState/children.json')
-stuff = JsonStore('Wheat/Notebook/PageState/childInfo.json')
+store = JsonStore('Notebook/PageState/children.json')
+stuff = JsonStore('Notebook/PageState/childInfo.json')
 
 #Load kv file
 # Builder.load_file('home.kv')
@@ -95,7 +96,7 @@ class WheatScreen(Screen):
         global tpgs
         global currpg
         super(WheatScreen, self).__init__(*args, **kwargs)
-        totalPgs = os.listdir('Wheat/Notebook/Pages')
+        totalPgs = os.listdir('Notebook/Pages')
         self.tpgs = len(totalPgs)
         tpgs = self.tpgs
         currpg = self.curr
@@ -205,7 +206,7 @@ class WheatScreen(Screen):
                 self.manager.current = 't'
             else:
                 self.manager.current = 'tr'
-                
+
     def add(self):
         if self.currSpace is 0:
             if self.layouts==[]:

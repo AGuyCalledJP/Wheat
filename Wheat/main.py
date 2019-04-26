@@ -19,8 +19,9 @@ from functools import partial
 from os.path import abspath, join, dirname
 file_dir = os.path.dirname("Wheat")
 sys.path.append(file_dir)
+sys.path.append(os.getcwd())
 
-from Wheat.home import WheatScreen as Wheat
+from home import WheatScreen as Wheat
 from kivy.lang import Builder
 
 Builder.load_file('main.kv')
@@ -36,13 +37,13 @@ if platform == 'android':
     from filechooser import FileChooserScreen
     # import pipinterface
 else:
-    import Wheat.widgets  # noqa
-    import Wheat.menu  # noqa
-    import Wheat.interpreter  # noqa
-    import Wheat.settings  # noqa
+    import widgets  # noqa
+    import menu  # noqa
+    import interpreter  # noqa
+    import settings  # noqa
     #import Wheat.editor  # noqa
-    import Wheat.utils  # noqa
-    from Wheat.filechooser import FileChooserScreen # noqa
+    import utils  # noqa
+    from filechooser import FileChooserScreen # noqa
     # from pyonic import pipinterface  # noqa
 
 openable_screen_index = {'filechooser': FileChooserScreen}
