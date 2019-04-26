@@ -118,8 +118,10 @@ class WheatScreen(Screen):
                     getLost.append(it)
                 it = it + 1
             self.count = self.count - rem
+            it = 0
             for i in getLost:
-                del self.layouts[i]
+                del self.layouts[i - it]
+                it += 1
         elif self.currSpace is 1:
             rem = 0
             getLost = []
@@ -135,8 +137,10 @@ class WheatScreen(Screen):
                     getLost.append(it)
                 it = it + 1
             self.count2 = self.count2 - rem
+            it = 0
             for i in getLost:
-                del self.layouts2[i]
+                del self.layouts2[i - it]
+                it += 1
         else:
             rem = 0
             getLost = []
@@ -152,8 +156,10 @@ class WheatScreen(Screen):
                     getLost.append(it)
                 it = it + 1
             self.count3 = self.count3 - rem
+            it = 0
             for i in getLost:
-                del self.layouts3[i]
+                del self.layouts3[i - it]
+                it += 1
 
 
     def pageForward(self):
