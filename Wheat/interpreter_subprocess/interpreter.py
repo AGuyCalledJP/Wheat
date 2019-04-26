@@ -75,8 +75,8 @@ if sys.version_info.major >= 3:
         import osc
         import utils
     else:
-        from Wheat import osc
-        from Wheat import utils
+        import osc
+        import utils
 else:
     unicode_type = unicode
     from kivy.lib import osc
