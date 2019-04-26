@@ -236,7 +236,7 @@ class Calculator(ScatterLayout):
             elif str(ans).find(".") == -1:
                 self.equation_text = str(ans)[0:self.text_width]
                 self.compute_text = str(ans)[0:self.text_width]
-        except SyntaxError:
+        except:
             self.equation_text = "SYNTAX Error"
             self.compute_text = "SYNTAX Error"
 

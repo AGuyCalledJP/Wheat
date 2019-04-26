@@ -3,6 +3,7 @@
     id: functionplotter
     function: func_plot
     keyboard: key
+    size_hint: 0.8,0.6
 
     FloatLayout:
         id: container
@@ -44,6 +45,7 @@
                     container.size_hint_x = input.hide_input()
                     display.size_hint_x = 0.95
 
+                    functionplotter.size_hint_x = 0.4
                     check.size_hint = .1,.05
                     toggle_container.size_hint = 0.2,0.05
                     toggle_container.pos_hint = {'x': 0.775, 'y': 0.925}
@@ -53,6 +55,7 @@
                     hide_keyboard.pos_hint= {'x': 0, 'y': 0}
                     display.size_hint_x = 0.475
 
+                    functionplotter.size_hint_x = 0.8
                     check.size_hint = .05,.05
                     toggle_container.size_hint = 0.1,0.05
                     toggle_container.pos_hint = {'x': 0.4, 'y': 0.925}

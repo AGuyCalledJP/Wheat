@@ -57,7 +57,7 @@ class Input(FloatLayout):
         elif dohide:
             wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
             wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
-            return .5
+            return 1
 
 class FunctionPlotter(ScatterLayout):
 
@@ -290,11 +290,15 @@ class FunctionPlotter(ScatterLayout):
             else:
                 result += split[x][0] + "**(1/2)" + split[x][1:]
         self.compute_text = result
-        x = self.i
-        ydata = eval(self.compute_text)
-        self.l.set_ydata(ydata)
-        self.ax.set_ylim(-10, 10)
-        plt.draw()
+        try:
+            x = self.i
+            ydata = eval(self.compute_text)
+            self.l.set_ydata(ydata)
+            self.ax.set_ylim(-10, 10)
+            plt.draw()
+        except:
+            self.equation_text = "SYNTAX Error"
+            self.compute_text = "SYNTAX Error"
 
     # Line 2
     ########
