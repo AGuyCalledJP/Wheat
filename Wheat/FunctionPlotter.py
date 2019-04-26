@@ -3,7 +3,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 
-import math 
+import math
 import matplotlib
 matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
 from matplotlib.figure import Figure
@@ -45,6 +45,19 @@ class Keyboard(GridLayout):
 
 class Equation(TextInput):
     pass
+
+class Input(FloatLayout):
+    def hide_input(wid, dohide=True):
+        if hasattr(wid, 'saved_attrs'):
+            if not dohide:
+                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+                del wid.saved_attrs
+                return 1
+
+        elif dohide:
+            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+            return .5
 
 class FunctionPlotter(ScatterLayout):
 
@@ -285,9 +298,9 @@ class FunctionPlotter(ScatterLayout):
 
     # Line 2
     ########
-    def ClickedDel(self):
-        self.equation_text = self.equation_text[:-1]
-        self.compute_text = self.compute_text[:-1]
+    def Clickedx(self):
+        self.equation_text += "x"
+        self.compute_text += "x"
     def Clicked1(self):
         self.equation_text += "1"
         self.compute_text += "1"
@@ -303,9 +316,9 @@ class FunctionPlotter(ScatterLayout):
 
     # Line 3
     ########
-    def Clickedx(self):
-        self.equation_text += "x"
-        self.compute_text += "x"
+    def Clickede(self):
+        self.equation_text += "e"
+        self.compute_text += "np.e"
     def Clicked4(self):
         self.equation_text += "4"
         self.compute_text += "4"
@@ -334,7 +347,7 @@ class FunctionPlotter(ScatterLayout):
         self.equation_text += "9"
         self.compute_text += "9"
     def ClickedTimes(self):
-        self.equation_text += u'\u2022'
+        self.equation_text += "*"
         self.compute_text += "*"
 
     # Line 5
@@ -343,7 +356,7 @@ class FunctionPlotter(ScatterLayout):
         self.equation_text += "^"
         self.compute_text += "**"
     def ClickedInv(self):
-        self.equation_text += "**(-1)"
+        self.equation_text += "^(-1)"
         self.compute_text += "**(-1)"
     def ClickedLeftP(self):
         self.equation_text += "("
@@ -362,17 +375,17 @@ class FunctionPlotter(ScatterLayout):
         self.equation_text +=  u'\u221a'
         self.compute_text += "**(1/2)"
     def ClickedSin(self):
-        self.equation_text += "sin"
-        self.compute_text += "math.sin"
+        self.equation_text += "sin("
+        self.compute_text += "np.sin("
     def ClickedCos(self):
-        self.equation_text += "cos"
-        self.compute_text += "math.cos"
+        self.equation_text += "cos("
+        self.compute_text += "np.cos("
     def ClickedTan(self):
-        self.equation_text += "tan"
-        self.compute_text += "math.tan"
+        self.equation_text += "tan("
+        self.compute_text += "np.tan("
     def ClickedPi(self):
         self.equation_text += u'\u03c0'
-        self.compute_text += "math.pi"
+        self.compute_text += "np.pi"
 
     def Save(self):
         letsGo = []

@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.widget import Widget
+from kivy.uix.label import Label
 from kivy.graphics import Color
 from kivy.graphics import Rectangle
 from kivy.graphics import Ellipse
@@ -19,21 +20,26 @@ from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
 from kivy.lang import Builder
 
+from math import acos
+
 from Point import *
 from GeomMenuing import *
 
 
 #big todos:
 # maybe make point moving not try to detect collision during movement, just check that we're grabbed?
-    #fix redraw bug, but this^ should do that
-# make operators do things
-# points should be labeled both with an identifier and coords
-# possibly allow adding points by numeric input?
-#switching off of add mode during figure creation, or canceling creation, should remove all points from the in_prog figure
 
-#selecting points should be added to some structure
-#switching off of select mode should de-select all points
-#selecting a selected point should remove it from the selection structure
+
+# point labels
+    # adjust position around centroid??
+    # coords?
+    # non numeric labeling?
+
+# angle calculation should be in degrees, not radians
+#fix(?) layout issues?
+#buttons should hide if we haven't selected the appropriate number of points for them
+    #maybe have cases in the operations themselves to prevent crashes
+# possibly allow adding points by numeric input?
 
 #removing points from figure?
 #clearing all figures?
@@ -49,7 +55,7 @@ class Geometry(FloatLayout):
 
 
     ########################################
-    ####    KV FORMATTING PROPERTIES    ####
+    ####         KV PROPERTIES          ####
 
     #Colours for use within geometry.kv
     white = [1,1,1,1]
@@ -58,10 +64,15 @@ class Geometry(FloatLayout):
     button_bg_color = [.8,.1,.2,1]
     left_pane_bg_color = [.4, 0, 0, 1.]
     separator_color = left_pane_bg_color
-    interactive_space = ObjectProperty()
+
     ########################################
     ########################################
 
+    def deselect_all(self):
+        for selected in self.selected_points:
+            selected.set_as_deselected()
+        self.num_selected = 0
+        self.selected_points = []
 
     def change_mode(self, mode):
         if (mode != 'adding') and (mode != 'selecting') and (mode != 'moving'):
@@ -75,12 +86,11 @@ class Geometry(FloatLayout):
 
             if self.mode_state == "selecting":
                 #if we switch off of selecting, deselect everything:
-                print("num to des " + str(len(self.selected_points)))
-                for selected in self.selected_points:
-                    selected.set_as_deselected()
-                    print("deselecting")
-                self.num_selected = 0
-                self.selected_points = []
+                # for selected in self.selected_points:
+                #     selected.set_as_deselected()
+                # self.num_selected = 0
+                # self.selected_points = []
+                self.deselect_all()
 
             self.mode_state = mode
             #resetting these just in case
@@ -128,7 +138,8 @@ class Geometry(FloatLayout):
                         self.interactive_space.add_widget(self.in_prog_figure)
 
                     #add point to it
-                    self.in_prog_figure.add_point(contact_point[0], contact_point[1])
+                    self.num_adds+=1
+                    self.in_prog_figure.add_point(contact_point[0], contact_point[1], self.num_adds)
                     ## TODO: maybe put a label on it? either here or somewhere in the point itself
             else:
                 #check if contact at point, if so continue
@@ -144,22 +155,89 @@ class Geometry(FloatLayout):
                     else:
                         print("ERROR: Invalid mode_state interaction") #FIXME: remove if it turns out this never happens (it shouldn't)
                 #otherwise, do nothing
-    
-    # def draw_fig(self):
-    #     #traverse points to draw line of figure
-    #     coords = []
 
-    #     for p in self.children:
-    #         coords.append(p.point_x)
-    #         coords.append(p.point_y)
 
-    #     self.canvas.remove(self.line_draw)
-    #     new_line = InstructionGroup()
-    #     new_line.add(Color(1,0,0))
-    #     new_line.add(Line(points=coords, close=True, width=1.1))
-    #     line_draw = new_line
-    #     self.canvas.add(line_draw)
-    #     return coords
+    def calculateArea(self):
+        if self.selected_points is None:
+            return 0.0
+        # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
+        # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
+        area = 0.0
+        result = "Area of "
+        for i, p in enumerate(self.selected_points): #for all points, enumerated as indices i
+            result += str(self.selected_points[i].p.get_lab()) + ", "
+            if i+2 > len(self.selected_points): break
+            x_diff = self.selected_points[i+1].point_x - self.selected_points[i].point_x
+            y_diff = self.selected_points[i+1].point_y - self.selected_points[i].point_y
+            area += self.selected_points[i].point_x * y_diff - self.selected_points[i].point_y * x_diff
+
+        area = '%.3f'%(area*.5)
+        result+= "= " + str(area*.5)
+        return result
+
+
+    def calculatePerimeter(self):
+        if self.selected_points is None:
+            return 0.0
+        # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
+        # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
+        perimeter = 0.0
+        result = "Perimeter of "
+        for i, p in enumerate(self.selected_points): #for all points, enumerated as indices i
+            result += str(self.selected_points[i].p.get_lab()) + ", "
+            if i+2 > len(self.selected_points): break
+            x_diff = self.selected_points[i+1].point_x - self.selected_points[i].point_x
+            y_diff = self.selected_points[i+1].point_y - self.selected_points[i].point_y
+            perimeter += perimeter + (x_diff * x_diff + y_diff * y_diff)**0.5
+        result+= '%.3f'%(perimeter)
+        return result
+
+    def calculateDistance(self):
+        if self.selected_points is None:
+            return 0.0
+        distance = 0.0
+        result = "Distance of " + str(self.selected_points[0].p.get_lab()) + ", "
+        for i in range(1, len(self.selected_points)):
+            x_diff = self.selected_points[i].point_x - self.selected_points[i-1].point_x
+            y_diff = self.selected_points[i].point_y - self.selected_points[i-1].point_y
+            distance+= (x_diff**2 + y_diff**2)**.5
+            result += str(self.selected_points[i].p.get_lab())+", "
+        distance = '%.3f'%(distance)
+        result+= "= " + str(distance)
+        return result
+
+    def calculateCentroid(self):
+        if self.selected_points is None:
+            return [0.0,0.0]
+        sum_x = 0.0
+        sum_y = 0.0
+        n = len(self.selected_points)
+        result = "Centroid of "
+        for i in range(0, n):
+            sum_x += self.selected_points[i].point_x
+            sum_y += self.selected_points[i].point_y
+            result+= str(self.selected_points[i].p.get_lab())+", "
+        centroid = [(float(sum_x)/n), (float(sum_y)/n)]
+        centroid = '%.3f'%(centroid)
+        result += "= " + str(centroid)
+        return result
+
+    def calculateAngle(self):
+        a = self.selected_points[0]
+        v = self.selected_points[1] #vertex
+        b = self.selected_points[2]
+        #construct string without value
+        result = "Angle of " + str(a.p.get_lab()) + ", " + str(v.p.get_lab()) + ", " + str(b.p.get_lab()) + "= "
+
+        #distance between vertex and each point, and those points themselves
+        ab = ((b.point_x - a.point_x)**2 + (b.point_y - a.point_y)**2)**.5
+        va = ((v.point_x - a.point_x)**2 + (v.point_y - a.point_y)**2)**.5
+        vb = ((v.point_x - b.point_x)**2 + (v.point_y - b.point_y)**2)**.5
+
+        angle = acos((va**2 + vb**2 - ab**2) / (2 * va * vb))
+        angle = '%.3f'%(angle)
+        result += str(angle)
+        return result
 
     def Save(self):
         figures = []
@@ -192,6 +270,7 @@ class Geometry(FloatLayout):
         self.mode_state = 'adding' #for some reason i can't get OptionProperty to behave correctly here, despite this being exactly the kind of situation you use it in.
         self.num_selected = 0 #number of points selected within select mode, not using NumericProperty for similar reasons as above
         self.selected_points = []
+        self.num_adds = 0
 
         # self.interactive_space = None
         self.in_prog_figure = None #If we're in the middle of making a figure, this points to that in some way
@@ -199,6 +278,11 @@ class Geometry(FloatLayout):
 
 class Interactive_Space(FloatLayout): #class used to describe space containing points
     pass
+
+class Result(Label):
+    def update_result(self, new_result):
+        self.text = str(new_result)
+        return True
 
 
 
@@ -221,7 +305,6 @@ class Figure(Widget):
 
     # def draw_line(self):
     def draw_fig(self):
-        print("im at least kinda trying")
         #traverse points to draw line of figure
         coords = []
 
@@ -235,35 +318,12 @@ class Figure(Widget):
         new_line.add(Line(points=coords, close=True, width=1.1))
         self.line_draw = new_line
         self.canvas.add(self.line_draw)
-        print(coords)
-        return 
+        return
 
-    def calculateArea(self):
-
-        # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
-        # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
-        area = 0.0
-        for i, p in enumerate(self.children): #for all points, enumerated as indices i
-            x_diff = self.children[i+1].point_x - self.children[i].point_x
-            y_diff = self.children[i+1].point_y - self.children[i].point_y
-            area += self.children[i].point_x * y_diff - self.children[i].point_y * x_diff
-        return 0.5 * area
-
-
-    def calculatePerimeter(self):
-        # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
-        # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
-        perimeter = 0.0
-        for i, p in enumerate(self.children): #for all points, enumerated as indices i
-            x_diff = self.children[i+1].point_x - self.children[i].point_x
-            y_diff = self.children[i+1].point_y - self.children[i].point_y
-            perimeter += perimeter + (x_diff * x_diff + y_diff * y_diff)**0.5
-        return perimeter
-
-
-    def add_point(self, new_x, new_y):
+    def add_point(self, new_x, new_y, new_lab):
         p = PointLayout(pos=[new_x-(img_size[0]/2), new_y-(img_size[0]/2)])
         self.add_widget(p)
+        p.set_lab(new_lab)
 
 
     # TODO: add content

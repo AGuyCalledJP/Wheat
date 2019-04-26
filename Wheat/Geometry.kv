@@ -4,45 +4,66 @@
     interactive_space: interactive_space
     FloatLayout:
         id: geo
-        FloatLayout:
-            id: header
-            padding: 5
+        # FloatLayout:
+        GridLayout:
+            cols: 2
+            id: headerbar
             pos_hint: {'x' : 0, 'y' : .9}
             size_hint: 1, 0.1
-            canvas.before:
-                Color:
-                    rgba: geometry.left_pane_bg_color
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            CheckBox:
-                id: check
-                pos_hint: {'x': 0,'y': 0}
-                size_hint: .1,1
+            # canvas.before:
+            #     Color:
+            #         rgba: geometry.left_pane_bg_color
+            #     Rectangle:
+            #         pos: self.pos
+            #         size: self.size
+            GridLayout:
+                rows: 1
+                id: header
+                padding: 5
+                spacing: 5
+                pos_hint: {'x' : 0, 'y' : .9}
+                size_hint: .66, 1
                 canvas.before:
                     Color:
-                        rgba: geometry.button_bg_color
+                        rgba: geometry.left_pane_bg_color
                     Rectangle:
                         pos: self.pos
                         size: self.size
-            ToggleButton:
-                state: "normal"
-                id: hide_right_button
-                pos_hint: {'x': .46, 'y': 0}
-                size_hint: .2, 1
-                text: "Hide Buttons"
-                background_color: geometry.button_bg_color
-                color: geometry.white
-                on_press:
-                    header.size_hint_x = right_pane.hide_pane()
-                    # hide_right_button.text = "Unhide"
-                    hide_right_button.size_hint_x = .303
-                    hide_right_button.pos_hint_x = .697 #FIXME: I'm not sure if this line actually does anything
-                on_release:
-                    header.size_hint_x = right_pane.hide_pane(dohide=False)
-                    # hide_right_button.text ="Hide Buttons"
-                    hide_right_button.pos_hint_x = .46
-                    hide_right_button.size_hint_x = .2
+                CheckBox:
+                    id: check
+                    pos_hint: {'x': 0,'y': 0}
+                    size_hint: .1,1
+                    canvas.before:
+                        Color:
+                            rgba: geometry.button_bg_color
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                ToggleButton:
+                    state: "normal"
+                    id: hide_right_button
+                    pos_hint: {'x': .46, 'y': 0}
+                    size_hint: .2, 1
+                    text: "Hide Buttons"
+                    background_color: geometry.button_bg_color
+                    color: geometry.white
+                    on_press:
+                        headerbar.size_hint_x: .66              if hide_right_button.state == "down" else 1
+                        right_pane.hide_pane()                  if hide_right_button.state == "down" else right_pane.hide_pane(dohide=False)
+                        # headerspace.size_hint_x: 0              if hide_right_button.state == "down" else .34
+                        hide_right_button.text: "Unhide"        if hide_right_button.state == "down" else "Hide Buttons"
+                        hide_right_button.size_hint_x: .303     if hide_right_button.state == "down" else .46
+                        hide_right_button.pos_hint_x: .697      if hide_right_button.state == "down" else .2
+
+            FloatLayout:
+                id: headerspace
+                size_hint_x: .33
+                # canvas.before:
+                #     Color:
+                #         rgba: geometry.left_pane_bg_color
+                #     Rectangle:
+                #         pos: self.pos
+                #         size: self.size
 
         FloatLayout:
             id: body
@@ -50,9 +71,11 @@
             size_hint: 1, 0.9
             BoxLayout:
                 id: left_pane
+                orientation: 'vertical'
                 pos_hint: {'x' : 0 ,'y' : 0}
                 size_hint: .66,1
-                padding: 30
+                padding: 20
+                spacing: 10
                 canvas.before:
                     Color:
                         rgba: geometry.left_pane_bg_color
@@ -61,6 +84,8 @@
                         size: self.size
                 Interactive_Space:
                     id: interactive_space
+                    pos_hint: {'x' : 0, 'y' : .1}
+                    size_hint: 1, 0.9
                     canvas.before:
                         Color:
                             rgba: geometry.white
@@ -70,7 +95,20 @@
                     on_touch_down:
                         # geometry.connect_interactive_space(interactive_space)
                         geometry.touch_interactive_space(*args)
-
+                Result:
+                    id: result_space
+                    pos_hint: {'x' : .1, 'y' : 0}
+                    size_hint: .9, 0.1
+                    text_size: self.size
+                    padding: 20,0
+                    halign: 'left'
+                    valign: 'middle'
+                    canvas.before:
+                        Color:
+                            rgba: geometry.white
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
 
                     # PointLayout:
 
@@ -113,7 +151,7 @@
                             angle_button.hide_opp()
                             area_button.hide_opp()
                             perimeter_button.hide_opp()
-                            center_button.hide_opp()
+                            centroid_button.hide_opp()
                             make_figure_button.hide_make(False)
                             cancel_figure_button.hide_make(False)
                     #TODO: figure out how to alter togglebuttons so they can't all be deselected.
@@ -130,7 +168,7 @@
                             angle_button.hide_opp()
                             area_button.hide_opp()
                             perimeter_button.hide_opp()
-                            center_button.hide_opp()
+                            centroid_button.hide_opp()
                             make_figure_button.hide_make()
                             cancel_figure_button.hide_make()
                     #TODO: figure out how to alter togglebuttons so they can't all be deselected.
@@ -147,7 +185,7 @@
                             angle_button.hide_opp(False)
                             area_button.hide_opp(False)
                             perimeter_button.hide_opp(False)
-                            center_button.hide_opp(False)
+                            centroid_button.hide_opp(False)
                             make_figure_button.hide_make()
                             cancel_figure_button.hide_make()
 
@@ -175,6 +213,7 @@
                         Rectangle:
                             pos: self.pos
                             size: self.size
+
                     MakeFigureButton:
                         id: make_figure_button
                         text: "Make Figure"
@@ -182,6 +221,7 @@
                         background_color: geometry.button_bg_color
                         on_press:
                             geometry.make_figure()
+
                     MakeFigureButton:
                         id: cancel_figure_button
                         text: "Cancel Figure Creation"
@@ -195,30 +235,45 @@
                         text: "Find Distance"
                         color: geometry.white
                         background_color: geometry.button_bg_color
+                        on_press:
+                            result_space.update_result(geometry.calculateDistance())
+                            # geometry.deselect_all()
 
                     OppButton:
                         id: angle_button
                         text: "Find Angle"
                         color: geometry.white
                         background_color: geometry.button_bg_color
+                        on_press:
+                            result_space.update_result(geometry.calculateAngle())
+                            # geometry.deselect_all()
 
                     OppButton:
                         id: area_button
                         text: "Find Area"
                         color: geometry.white
                         background_color: geometry.button_bg_color
+                        on_press:
+                            result_space.update_result(geometry.calculateArea())
+                            # geometry.deselect_all()
 
                     OppButton:
                         id: perimeter_button
                         text: "Find Perimeter"
                         color: geometry.white
                         background_color: geometry.button_bg_color
+                        on_press:
+                            result_space.update_result(geometry.calculatePerimeter())
+                            # geometry.deselect_all()
 
                     OppButton:
-                        id: center_button
-                        text: "Find Center"
+                        id: centroid_button
+                        text: "Find Centroid"
                         color: geometry.white
                         background_color: geometry.button_bg_color
+                        on_press:
+                            result_space.update_result(geometry.calculateCentroid())
+                            # geometry.deselect_all()
 <PointLayout>:
     # id: point
 

@@ -13,6 +13,17 @@
                 pos: self.pos
                 size: self.size
 
+        CheckBox:
+            id: check
+            pos_hint: {'x': 0.025,'y': 0.95}
+            size_hint: .1,0.05
+            canvas.before:
+                Color:
+                    rgba: root.c1,root.c2,root.c3,.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
 
         FloatLayout:
             pos_hint: {'x' : 0.025, 'y' : 0.05}
@@ -339,7 +350,7 @@
                                 pos: self.pos
                                 size: self.size
                         font_size: root.fontSizer
-                        text: 'Clear'
+                        text: 'Clr'
                         on_press: calculator.ClickedClear()
                     Button:
                         background_color: 0,0,0,0

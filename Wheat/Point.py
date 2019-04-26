@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.widget import Widget
+from kivy.uix.label import Label
 from kivy.graphics import Color
 from kivy.graphics import Rectangle
 from kivy.graphics import Ellipse
@@ -24,12 +25,28 @@ img_source_selected = 'visual_assets/fig_point_selected.png'
 img_source = 'visual_assets/fig_point.png'
 img_size = Image(source=img_source).texture.size
 
+class PointLabel(Label):
+    def __init__(self, **kwargs):
+        super(PointLabel, self).__init__(**kwargs)
+        self.pos_hint_x = None
+        self.pos_hint_y = None
+        self.pos = [-20, -20]
+
 class PointButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
         super(PointButton, self).__init__(**kwargs)
+        self.lab = PointLabel()
+        self.add_widget(self.lab)
         self.source = img_source
         self.size = Image(source=self.source).texture.size
         self.selected = False
+
+    def set_lab(self, new_lab):
+        self.lab.text = str(new_lab)
+
+    def get_lab(self):
+        return self.lab.text
+
 
     '''
         Checks if the button is selected or not, and flips to the other state, while updating the image to reflect whether the point is selected
@@ -42,12 +59,12 @@ class PointButton(ButtonBehavior, Image):
                 self.source = img_source_selected
                 geom.num_selected+=1
                 self.selected = True
-                geom.selected_points.append(self) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
+                geom.selected_points.append(self.parent.parent) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
             else:
                 self.source = img_source
                 geom.num_selected-=1
                 self.selected = False
-                geom.selected_points.remove(self) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
+                geom.selected_points.remove(self.parent.parent) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
 
     '''
         Forces a point to be deselected, without altering the selected points or num selected in Geometry.
@@ -73,7 +90,8 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
 
     def __init__(self, **kwargs):
         super(PointLayout, self).__init__(**kwargs)
-        self.add_widget(PointButton())
+        self.p = PointButton()
+        self.add_widget(self.p)
         self.source = img_source
         self.size = Image(source=self.source).texture.size
         self.radius = (Image(source=self.source).texture.size[0])/2 #radius of point, based off size of image (image is assumed to be a square canvas with a circle of diameter equal to image width and height)
@@ -82,6 +100,12 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
         self.point_x = self.pos[0] + self.radius # visual center of point (center of the image)
         self.point_y = self.pos[1] + self.radius # visual center of point (center of the image)
         self.last_touch = [0,0]
+
+    def set_lab(self, new_lab):
+        self.p.set_lab(new_lab)
+
+    def set_as_deselected(self):
+        self.p.set_as_deselected()
 
     '''
         Selects all (ideally, the singular) children of this layout container.
@@ -106,13 +130,19 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
                     self.last_touch = touch.pos # Need this line
         return super(PointLayout, self).on_touch_down(touch)
 
+    def correct_position(self, touch):
+        #TODO: move point away from edges
+        i_s = self.parent.parent.parent.parent.parent.parent.interactive_space
+        pass
 
     def on_touch_up(self, touch):
         if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
+            self.parent.draw_fig()
+             #NOTE: This DOESN'T check collision on point before running this, which may cause a major loss of performance.
+             #if so, check collision within the geometry widget as a whole
             if self.collide_point(*touch.pos):
                 if touch.button == 'left':
-                    # move complete TODO: find some way to have figure update for this
-                    self.parent.draw_fig()
+                    self.correct_position(touch)
                     pass
         return super(PointLayout, self).on_touch_up(touch)
 
