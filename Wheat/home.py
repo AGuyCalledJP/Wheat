@@ -383,13 +383,13 @@ class WheatScreen(Screen):
             self.d = 1
 
     def Save(self):
-        if self.curr >= 0:
+        if self.curr >= 1:
             writeTo = self.currSpace % self.numSpace
             if writeTo is 0:
                 for i in self.layouts:
                     it = 0
                     #Save the widget itself
-                    saveMe = "P" + str(self.curr) + str(self.sStr) + str(it)
+                    saveMe = "P" + str(self.curr - 1) + str(self.sStr) + str(it)
                     local = i.children[0].pos
                     widgType = ''
                     a = i.children[0].ids
@@ -426,7 +426,7 @@ class WheatScreen(Screen):
                 for i in self.layouts2:
                     it = 0
                     #Save the widget itself
-                    saveMe = "P" + str(self.curr) + str(self.sStr) + str(it)
+                    saveMe = "P" + str(self.curr - 1) + str(self.sStr) + str(it)
                     local = i.children[0].pos
                     widgType = ''
                     a = i.children[0].ids
@@ -465,7 +465,7 @@ class WheatScreen(Screen):
                 for i in self.layouts3:
                     it = 0
                     #Save the widget itself
-                    saveMe = "P" + str(self.curr) + str(self.sStr) + str(it)
+                    saveMe = "P" + str(self.curr - 1) + str(self.sStr) + str(it)
                     local = i.children[0].pos
                     widgType = ''
                     a = i.children[0].ids
@@ -503,8 +503,8 @@ class WheatScreen(Screen):
 
     def Load(self):
         for curr in store.keys():
-            pageStr = "P" + str(self.curr)
-            writeTo = self.curr % self.numSpace
+            pageStr = "P" + str(self.curr - 1)
+            writeTo = self.curr - 1 % self.numSpace
             if pageStr in curr:
                 if writeTo is 0:
                     elem = store.get(curr)
