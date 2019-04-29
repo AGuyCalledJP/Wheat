@@ -14,16 +14,18 @@ from kivy.properties import (ObjectProperty, NumericProperty,
 
 from kivy.uix.scatter import Scatter
 from kivy.uix.button import Button
+from kivy.uix.switch import Switch
 from kivy.uix.floatlayout import FloatLayout
 from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
 from kivy.lang import Builder
 
-from math import acos
+from math import acos, degrees, atan2
 
 from Point import *
 from GeomMenuing import *
+from Style import *
 
 
 #big todos:
@@ -31,9 +33,7 @@ from GeomMenuing import *
 
 
 # point labels
-    # adjust position around centroid??
     # coords?
-    # non numeric labeling?
 
 # angle calculation should be in degrees, not radians
 #fix(?) layout issues?
@@ -48,6 +48,7 @@ from GeomMenuing import *
 
 
 
+operations = ['distance_button','angle_button','area_button','perimeter_button','centroid_button','coords_button', 'deselect_all']
 
 Builder.load_file('Geometry.kv')
 
@@ -65,6 +66,7 @@ class Geometry(FloatLayout):
     left_pane_bg_color = [.4, 0, 0, 1.]
     separator_color = left_pane_bg_color
 
+     #ids from geometry.kv associated with operations (calculateX functions)
     ########################################
     ########################################
 
@@ -73,6 +75,7 @@ class Geometry(FloatLayout):
             selected.set_as_deselected()
         self.num_selected = 0
         self.selected_points = []
+        self.select_event()
 
     def change_mode(self, mode):
         if (mode != 'adding') and (mode != 'selecting') and (mode != 'moving'):
@@ -81,15 +84,10 @@ class Geometry(FloatLayout):
         elif self.mode_state != mode: #don't change mode if the new mode is the same as the current mode (prevents accidental resets)
             if self.mode_state == "adding":
                 #if we switch off of adding and there's a figure in process, we need to address it
-                # self.cancel_figure()
                 self.make_figure()
 
             if self.mode_state == "selecting":
                 #if we switch off of selecting, deselect everything:
-                # for selected in self.selected_points:
-                #     selected.set_as_deselected()
-                # self.num_selected = 0
-                # self.selected_points = []
                 self.deselect_all()
 
             self.mode_state = mode
@@ -117,9 +115,6 @@ class Geometry(FloatLayout):
         self.in_prog_figure = None
         return True
 
-    # def connect_interactive_space(self, interactive_space):
-    #     self.interactive_space = interactive_space
-
     def touch_interactive_space(self, *args):
         #retrieve touch event
         contact_point = args[1].pos
@@ -140,13 +135,11 @@ class Geometry(FloatLayout):
                     #add point to it
                     self.num_adds+=1
                     self.in_prog_figure.add_point(contact_point[0], contact_point[1], self.num_adds)
-                    ## TODO: maybe put a label on it? either here or somewhere in the point itself
+                    self.add_event()
             else:
                 #check if contact at point, if so continue
                 if True:
                     if self.mode_state == 'selecting':
-                         #if so select and add to some structure
-                         #REMOVE: handled within pointbutton
                         pass
                     elif self.mode_state == 'moving':
                         #move point position, redraw figure
@@ -156,7 +149,97 @@ class Geometry(FloatLayout):
                         print("ERROR: Invalid mode_state interaction") #FIXME: remove if it turns out this never happens (it shouldn't)
                 #otherwise, do nothing
 
+    def add_event(self):
+        if self.num_adds == 0:
+            self.ids['make_figure_button'].hide_make()
+            self.ids['cancel_figure_button'].hide_make()
+        elif self.num_adds > 0:
+            self.ids['make_figure_button'].hide_make(False)
+            self.ids['cancel_figure_button'].hide_make(False)
+        else:
+            print("ERROR: Negative num_adds, this should never happen.")
 
+    def select_event(self):
+        if self.num_selected == 0:
+            self.hide_all_opps()
+        elif self.num_selected == 1:
+            self.hide_all_opps()
+            self.ids['coords_button'].hide_opp(False)
+            self.ids['deselect_all'].hide_opp(False)
+        elif self.num_selected == 2:
+            #only distance and centroid
+            self.hide_all_opps()
+            self.ids['deselect_all'].hide_opp(False)
+            self.ids['distance_button'].hide_opp(False)
+            self.ids['centroid_button'].hide_opp(False)
+        elif self.num_selected == 3:
+            #everything but coords
+            self.hide_all_opps()
+            self.ids['deselect_all'].hide_opp(False)
+            self.ids['distance_button'].hide_opp(False)
+            self.ids['centroid_button'].hide_opp(False)
+            self.ids['angle_button'].hide_opp(False)
+            self.ids['area_button'].hide_opp(False)
+            self.ids['perimeter_button'].hide_opp(False)
+        else:
+            #everything but angles and coords
+            self.hide_all_opps()
+            self.ids['deselect_all'].hide_opp(False)
+            self.ids['distance_button'].hide_opp(False)
+            self.ids['centroid_button'].hide_opp(False)
+            self.ids['area_button'].hide_opp(False)
+            self.ids['perimeter_button'].hide_opp(False)
+
+        # print(self.ids['angle_button'])
+        pass
+
+    def hide_all_opps(self):
+        for opp in operations:
+            self.ids[opp].hide_opp()
+
+
+    def calculateCoords(self):
+        if self.num_selected != 1:
+            return "More than/less than one point coordinates requested, this should never happen."
+        point = self.selected_points[0]
+        result = "Coordinates of " + str(point.p.get_lab()) + " : (" + str('%.3f'%point.v_point_x) + ", " + str('%.3f'%point.v_point_y) + ")"
+        return result
+
+
+    def __centerOf__(self):
+        if self.selected_points is None:
+            return [0.0,0.0]
+        sum_x = 0.0
+        sum_y = 0.0
+        n = len(self.selected_points)
+        for i in range(0, n):
+            sum_x += self.selected_points[i].v_point_x
+            sum_y += self.selected_points[i].v_point_y
+        center = ((float(sum_x)/n), (float(sum_y)/n))
+        return center
+
+    # def __ccwCompare__(self,center):
+    #     a1 = (degrees(atan2(a.v_point_x - center[0], a.v_point_y - center[1])) + 360) % 360
+    #     a2 = (degrees(atan2(b.v_point_x - center[0], b.v_point_y - center[1])) + 360) % 360
+    #     return int(a1-a2)
+
+    def __ccwCompare__(self, center):
+        for i, p in enumerate(self.selected_points):
+            if i+2 > len(self.selected_points): break
+            a = self.selected_points[i]
+            b = self.selected_points[i+1]
+            a1 = (degrees(atan2(a.v_point_x - center[0], a.v_point_y - center[1])) + 360) % 360
+            a2 = (degrees(atan2(b.v_point_x - center[0], b.v_point_y - center[1])) + 360) % 360
+            a.compare = int(a1-a2)
+
+    def __sortCCW__(self):
+        center = self.__centerOf__()
+        self.__ccwCompare__(center)
+        ccw = sorted(self.selected_points, key=lambda x: x.compare)
+        return ccw
+
+
+    #FIXME: calculation is sometimes negative, needs points to be listed counterclockwise
     def calculateArea(self):
         if self.selected_points is None:
             return 0.0
@@ -164,18 +247,20 @@ class Geometry(FloatLayout):
         # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
         area = 0.0
         result = "Area of "
-        for i, p in enumerate(self.selected_points): #for all points, enumerated as indices i
-            result += str(self.selected_points[i].p.get_lab()) + ", "
-            if i+2 > len(self.selected_points): break
-            x_diff = self.selected_points[i+1].point_x - self.selected_points[i].point_x
-            y_diff = self.selected_points[i+1].point_y - self.selected_points[i].point_y
-            area += self.selected_points[i].point_x * y_diff - self.selected_points[i].point_y * x_diff
+        ccw = self.__sortCCW__()
+        for i, p in enumerate(ccw): #for all points, enumerated as indices i
+            result += str(ccw[i].p.get_lab()) + ", "
+            print(ccw[i].p.get_lab())
+            if i+2 > len(ccw): break
+            x_diff = ccw[i+1].v_point_x - ccw[i].v_point_x
+            y_diff = ccw[i+1].v_point_y - ccw[i].v_point_y
+            area += ccw[i].v_point_x * y_diff - ccw[i].v_point_y * x_diff
 
         area = '%.3f'%(area*.5)
-        result+= "= " + str(area*.5)
+        result+= "= " + str(area)
         return result
 
-
+    #FIXME: calculation needs points to be listed counterclockwise
     def calculatePerimeter(self):
         if self.selected_points is None:
             return 0.0
@@ -186,8 +271,8 @@ class Geometry(FloatLayout):
         for i, p in enumerate(self.selected_points): #for all points, enumerated as indices i
             result += str(self.selected_points[i].p.get_lab()) + ", "
             if i+2 > len(self.selected_points): break
-            x_diff = self.selected_points[i+1].point_x - self.selected_points[i].point_x
-            y_diff = self.selected_points[i+1].point_y - self.selected_points[i].point_y
+            x_diff = self.selected_points[i+1].v_point_x - self.selected_points[i].v_point_x
+            y_diff = self.selected_points[i+1].v_point_y - self.selected_points[i].v_point_y
             perimeter += perimeter + (x_diff * x_diff + y_diff * y_diff)**0.5
         result+= '%.3f'%(perimeter)
         return result
@@ -198,8 +283,8 @@ class Geometry(FloatLayout):
         distance = 0.0
         result = "Distance of " + str(self.selected_points[0].p.get_lab()) + ", "
         for i in range(1, len(self.selected_points)):
-            x_diff = self.selected_points[i].point_x - self.selected_points[i-1].point_x
-            y_diff = self.selected_points[i].point_y - self.selected_points[i-1].point_y
+            x_diff = self.selected_points[i].v_point_x - self.selected_points[i-1].v_point_x
+            y_diff = self.selected_points[i].v_point_y - self.selected_points[i-1].v_point_y
             distance+= (x_diff**2 + y_diff**2)**.5
             result += str(self.selected_points[i].p.get_lab())+", "
         distance = '%.3f'%(distance)
@@ -214,15 +299,16 @@ class Geometry(FloatLayout):
         n = len(self.selected_points)
         result = "Centroid of "
         for i in range(0, n):
-            sum_x += self.selected_points[i].point_x
-            sum_y += self.selected_points[i].point_y
+            sum_x += self.selected_points[i].v_point_x
+            sum_y += self.selected_points[i].v_point_y
             result+= str(self.selected_points[i].p.get_lab())+", "
-        centroid = [(float(sum_x)/n), (float(sum_y)/n)]
-        centroid = '%.3f'%(centroid)
+        centroid = ('%.3f'%(float(sum_x)/n), '%.3f'%(float(sum_y)/n))
         result += "= " + str(centroid)
         return result
 
     def calculateAngle(self):
+        if(self.num_selected > 3):
+            return "ERROR: More than 3 points selected, this should never happen"
         a = self.selected_points[0]
         v = self.selected_points[1] #vertex
         b = self.selected_points[2]
@@ -230,12 +316,12 @@ class Geometry(FloatLayout):
         result = "Angle of " + str(a.p.get_lab()) + ", " + str(v.p.get_lab()) + ", " + str(b.p.get_lab()) + "= "
 
         #distance between vertex and each point, and those points themselves
-        ab = ((b.point_x - a.point_x)**2 + (b.point_y - a.point_y)**2)**.5
-        va = ((v.point_x - a.point_x)**2 + (v.point_y - a.point_y)**2)**.5
-        vb = ((v.point_x - b.point_x)**2 + (v.point_y - b.point_y)**2)**.5
+        ab = ((b.v_point_x - a.v_point_x)**2 + (b.v_point_y - a.v_point_y)**2)**.5
+        va = ((v.v_point_x - a.v_point_x)**2 + (v.v_point_y - a.v_point_y)**2)**.5
+        vb = ((v.v_point_x - b.v_point_x)**2 + (v.v_point_y - b.v_point_y)**2)**.5
 
         angle = acos((va**2 + vb**2 - ab**2) / (2 * va * vb))
-        angle = '%.3f'%(angle)
+        angle = '%.3f'%(degrees(angle))
         result += str(angle)
         return result
 
@@ -300,8 +386,6 @@ class Result(Label):
     A Figure contains a series of points that make up the shape they are meant to form. This can be a fully closed polygon, line segment, or point.
 """
 class Figure(Widget):
-    def draw_points(self):
-        pass
 
     # def draw_line(self):
     def draw_fig(self):
@@ -309,13 +393,13 @@ class Figure(Widget):
         coords = []
 
         for p in self.children:
-            coords.append(p.point_x)
-            coords.append(p.point_y)
+            coords.append(p.a_point_x)
+            coords.append(p.a_point_y)
 
         self.canvas.remove(self.line_draw)
         new_line = InstructionGroup()
-        new_line.add(Color(1,0,0))
-        new_line.add(Line(points=coords, close=True, width=1.1))
+        new_line.add(Color(rose_50[0], rose_50[1], rose_50[2], rose_50[3], mode='rgba'))
+        new_line.add(Line(points=coords, close=True, width=2))
         self.line_draw = new_line
         self.canvas.add(self.line_draw)
         return
@@ -323,6 +407,7 @@ class Figure(Widget):
     def add_point(self, new_x, new_y, new_lab):
         p = PointLayout(pos=[new_x-(img_size[0]/2), new_y-(img_size[0]/2)])
         self.add_widget(p)
+        p.set_relative_pos()
         p.set_lab(new_lab)
 
 

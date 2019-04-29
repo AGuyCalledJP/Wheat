@@ -28,9 +28,7 @@ img_size = Image(source=img_source).texture.size
 class PointLabel(Label):
     def __init__(self, **kwargs):
         super(PointLabel, self).__init__(**kwargs)
-        self.pos_hint_x = None
-        self.pos_hint_y = None
-        self.pos = [-20, -20]
+        self.pos = [-40, -20]
 
 class PointButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
@@ -42,10 +40,12 @@ class PointButton(ButtonBehavior, Image):
         self.selected = False
 
     def set_lab(self, new_lab):
+        self.lab.identifier = str(new_lab)
+        # self.lab.text = str(new_lab) + "(" + str('%.3f'%(self.parent.parent.v_point_x)) + ", " + str('%.3f'%(self.parent.parent.v_point_y)) + ")"
         self.lab.text = str(new_lab)
 
     def get_lab(self):
-        return self.lab.text
+        return self.lab.identifier
 
 
     '''
@@ -65,6 +65,8 @@ class PointButton(ButtonBehavior, Image):
                 geom.num_selected-=1
                 self.selected = False
                 geom.selected_points.remove(self.parent.parent) #we add/remove the parent of the pointbutton, the layout containing it, since that has the proper coordinates
+            #send a select event
+            geom.select_event()
 
     '''
         Forces a point to be deselected, without altering the selected points or num selected in Geometry.
@@ -97,9 +99,18 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
         self.radius = (Image(source=self.source).texture.size[0])/2 #radius of point, based off size of image (image is assumed to be a square canvas with a circle of diameter equal to image width and height)
         self.size_hint_x = None
         self.size_hint_y = None
-        self.point_x = self.pos[0] + self.radius # visual center of point (center of the image)
-        self.point_y = self.pos[1] + self.radius # visual center of point (center of the image)
+
+        # virtual visual center of point (center of the image)
+        self.v_point_x = None
+        self.v_point_y = None
+        self.i_s = None # this will point to the interactive space after we've been added to a figure
+
+        # actual visual center of point (center of the image)
+        self.a_point_x = self.pos[0] + self.radius
+        self.a_point_y = self.pos[1] + self.radius
+
         self.last_touch = [0,0]
+        self.compare = 0 #THIS VALUE IS USED EXCLUSIVELY FOR CCW SORTING ABOUT CENTER OF AN ARBITRARY SERIES OF POINTS
 
     def set_lab(self, new_lab):
         self.p.set_lab(new_lab)
@@ -115,7 +126,7 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
             child.select()
 
     def collide_point(self, x, y): #Checks for contact within the radius of the point
-        if((x - self.point_x)**2 + (y - self.point_y)**2 < self.radius**2):
+        if((x - self.a_point_x)**2 + (y - self.a_point_y)**2 < self.radius**2):
             return True
         return False
 
@@ -130,10 +141,21 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
                     self.last_touch = touch.pos # Need this line
         return super(PointLayout, self).on_touch_down(touch)
 
-    def correct_position(self, touch):
-        #TODO: move point away from edges
-        i_s = self.parent.parent.parent.parent.parent.parent.interactive_space
+
+    def correct_position(self, coords):
         pass
+
+    def set_relative_pos(self):
+    #     #TODO: move point away from edges
+        self.i_s = self.parent.parent.parent.parent.parent.parent.interactive_space
+
+    #     sw = i_s.pos
+    #     nw = [i_s.pos[0], i_s.pos[1] + i_s.size[1]]
+    #     se = [i_s.pos[0] + i_s.size[0], i_s.pos[1]]
+    #     ne = [i_s.pos[0] + i_s.size[0], i_s.pos[1] + i_s.size[1]]
+
+        self.v_point_x = self.a_point_x - self.i_s.pos[0]
+        self.v_point_y = self.a_point_y - self.i_s.pos[1]
 
     def on_touch_up(self, touch):
         if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
@@ -153,7 +175,17 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
                 if touch.button == 'left':
                     self.x = self.x + touch.pos[0] - self.last_touch[0] # Add the x distance between this mouse event and the last
                     self.y = self.y + touch.pos[1] - self.last_touch[1] # Add the y distance between this mouse event and the last
-                    self.point_x = self.pos[0] + self.radius
-                    self.point_y = self.pos[1] + self.radius
+
+                    #update virtual
+                    self.v_point_x = (self.pos[0] + self.radius) - self.i_s.pos[0]
+                    self.v_point_y = (self.pos[1] + self.radius) - self.i_s.pos[1]
+
+                    #update actual
+                    self.a_point_x = self.pos[0] + self.radius
+                    self.a_point_y = self.pos[1] + self.radius
+
                     self.last_touch = touch.pos # Update the last position of the mouse
         return super(PointLayout, self).on_touch_move(touch)
+
+    # def __str__(self):
+    #     return "Actuals: ("+str(self.a_point_x)+","+str(self.a_point_y)+") \t \t \t Virtuals: ("+str(self.v_point_x)+","+str(self.v_point_y)+") \t \t \t Compare: " + str(self.compare)

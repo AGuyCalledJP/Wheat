@@ -34,6 +34,10 @@ class RightPane(FloatLayout):
             return .66 #return values indicate size the header should be in th kv file, which runs this and sets header's size_hint to this value
 
 
+
+
+
+
 #this might need to live somewhere else
 
 class OppButton(Button):
@@ -50,7 +54,7 @@ class OppButton(Button):
 
     def __init__(self, **kwargs):
         super(OppButton, self).__init__(**kwargs)
-        self.hide_opp() #start hidden, use when we have add functionality working
+        self.hide_opp() #start hidden
 
 
 
@@ -67,4 +71,4 @@ class MakeFigureButton(Button):
 
     def __init__(self, **kwargs):
         super(MakeFigureButton, self).__init__(**kwargs)
-        # self.hide_make() #start hidden, use when we have add functionality working
+        self.hide_make() #start hidden, use when we have add functionality working
