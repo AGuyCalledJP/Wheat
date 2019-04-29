@@ -156,12 +156,14 @@ class Draw(BoxLayout):
     def clear_canvas(self):
         self.pages[self.curr].clear_canvas()
 
-    def chColor(self):
+    def chColor(self, col):
+        # global color
+        # if color == 'black':
+        #     color = 'red'
+        # else:
+        #     color = 'black'
         global color
-        if color == 'black':
-            color = 'red'
-        else:
-            color = 'black'
+        color = col
 
     def getColor(self):
         global color
@@ -179,7 +181,7 @@ class Draw(BoxLayout):
     def getSize(self):
         global sz
         return sz
-    
+
     def pageType(self):
         if self.pt is 1:
             self.pt = 2

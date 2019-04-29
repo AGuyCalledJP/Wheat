@@ -47,29 +47,16 @@ from Style import *
 
 
 
-
+#list of ids for operation buttons
 operations = ['distance_button','angle_button','area_button','perimeter_button','centroid_button','coords_button', 'deselect_all']
 
 Builder.load_file('Geometry.kv')
 
 class Geometry(FloatLayout):
 
-
-    ########################################
-    ####         KV PROPERTIES          ####
-
-    #Colours for use within geometry.kv
-    white = [1,1,1,1]
-    black = [0,0,0,1]
-
-    button_bg_color = [.8,.1,.2,1]
-    left_pane_bg_color = [.4, 0, 0, 1.]
-    separator_color = left_pane_bg_color
-
-     #ids from geometry.kv associated with operations (calculateX functions)
-    ########################################
-    ########################################
-
+    '''
+    Sets all selected points to be unselected, and resets backend values to match
+    '''
     def deselect_all(self):
         for selected in self.selected_points:
             selected.set_as_deselected()
@@ -77,6 +64,9 @@ class Geometry(FloatLayout):
         self.selected_points = []
         self.select_event()
 
+    '''
+    Changes current mode of Geometry widget, performing book-keeping on backend values as needed
+    '''
     def change_mode(self, mode):
         if (mode != 'adding') and (mode != 'selecting') and (mode != 'moving'):
             print("ERROR: Invalid move change attempted, this should never happen.")
@@ -99,22 +89,33 @@ class Geometry(FloatLayout):
         else:
             return False
 
+    '''
+    Completes figure by drawing a line for it, then resetting backend values
+    '''
     def make_figure(self):
         if self.in_prog_figure is None:
             return False
         self.in_prog_figure.draw_fig()
         #set the in progress figure pointer back to None
         self.in_prog_figure = None
+        self.num_adds = 0
         return True
 
+    '''
+    Cancels creation of current figure, removing all points from the incomplete figure and resetting backend values
+    '''
     def cancel_figure(self):
         #don't try to cancel a figure creation with no actual points
         if self.in_prog_figure is None:
             return False
         self.in_prog_figure.clear_widgets()
         self.in_prog_figure = None
+        self.num_adds = 0
         return True
 
+    '''
+    Used in processing touch events on the interactive space of Geometry. Some of this functionality is within the Points themselves.
+    '''
     def touch_interactive_space(self, *args):
         #retrieve touch event
         contact_point = args[1].pos
@@ -140,15 +141,18 @@ class Geometry(FloatLayout):
                 #check if contact at point, if so continue
                 if True:
                     if self.mode_state == 'selecting':
+                        #REMOVE: handled within pointlayout
                         pass
                     elif self.mode_state == 'moving':
-                        #move point position, redraw figure
                         #REMOVE: handled within pointlayout
                         pass
                     else:
                         print("ERROR: Invalid mode_state interaction") #FIXME: remove if it turns out this never happens (it shouldn't)
                 #otherwise, do nothing
 
+    '''
+    Used to alter visibility on make and cancel figure buttons based off how many points are present in the in_progress figure
+    '''
     def add_event(self):
         if self.num_adds == 0:
             self.ids['make_figure_button'].hide_make()
@@ -159,7 +163,11 @@ class Geometry(FloatLayout):
         else:
             print("ERROR: Negative num_adds, this should never happen.")
 
+    '''
+    Used to alter visibility on operation buttons based off how many points are selected
+    '''
     def select_event(self):
+        #WARNING: make sure operations variable is up to date if using this function
         if self.num_selected == 0:
             self.hide_all_opps()
         elif self.num_selected == 1:
@@ -193,11 +201,18 @@ class Geometry(FloatLayout):
         # print(self.ids['angle_button'])
         pass
 
+    '''
+    Hides all operation buttons
+    '''
     def hide_all_opps(self):
+        #WARNING: make sure operations variable is up to date if using this function
         for opp in operations:
             self.ids[opp].hide_opp()
 
 
+    '''
+    Returns string for the coordinates of a single point.
+    '''
     def calculateCoords(self):
         if self.num_selected != 1:
             return "More than/less than one point coordinates requested, this should never happen."
@@ -238,7 +253,9 @@ class Geometry(FloatLayout):
         ccw = sorted(self.selected_points, key=lambda x: x.compare)
         return ccw
 
-
+    '''
+    Returns string of the area of a series of points, treating them as a polygon
+    '''
     #FIXME: calculation is sometimes negative, needs points to be listed counterclockwise
     def calculateArea(self):
         if self.selected_points is None:
@@ -259,7 +276,9 @@ class Geometry(FloatLayout):
         area = '%.3f'%(area*.5)
         result+= "= " + str(area)
         return result
-
+    '''
+    Returns string of the perimeter of a series of points, treating them as a polygon
+    '''
     #FIXME: calculation needs points to be listed counterclockwise
     def calculatePerimeter(self):
         if self.selected_points is None:
@@ -277,6 +296,9 @@ class Geometry(FloatLayout):
         result+= '%.3f'%(perimeter)
         return result
 
+    '''
+    Returns string of the dstance of a series of points in the order they were selected
+    '''
     def calculateDistance(self):
         if self.selected_points is None:
             return 0.0
@@ -291,6 +313,9 @@ class Geometry(FloatLayout):
         result+= "= " + str(distance)
         return result
 
+    '''
+    Returns string of the centroid of a series of points
+    '''
     def calculateCentroid(self):
         if self.selected_points is None:
             return [0.0,0.0]
@@ -306,6 +331,9 @@ class Geometry(FloatLayout):
         result += "= " + str(centroid)
         return result
 
+    '''
+    Returns string of the angle formed by 3 points, with the second selected point as the vertex
+    '''
     def calculateAngle(self):
         if(self.num_selected > 3):
             return "ERROR: More than 3 points selected, this should never happen"

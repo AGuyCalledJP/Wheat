@@ -1,5 +1,6 @@
 from kivy.uix.scatter import Scatter
 from kivy.uix.button import Button
+
 from kivy.uix.floatlayout import FloatLayout
 from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
@@ -27,7 +28,7 @@ from kivy.uix.modalview import ModalView
 from time import time
 import traceback
 import menu
-import copy 
+import copy
 
 import sys
 import os
@@ -817,8 +818,8 @@ class WheatScreen(Screen):
     def redo(self):
         self.ids.pad.redo()
 
-    def chColor(self):
-        self.ids.pad.chColor()
+    def chColor(self, col):
+        self.ids.pad.chColor(col)
 
     def sizeUp(self):
         self.ids.pad.increaseSize()
@@ -862,3 +863,13 @@ class PageNum(Label):
         global currpg
         global tpgs
         self.text = "Page: " + str(currpg) + " of " + str(tpgs)
+
+class ColorButton(Label):
+    def on_press(self):
+        print('whoohoo')
+
+# class ColouredButton(ButtonBehavior, Label):
+#     background_normal = ListProperty([1, 1, 1, 1])
+#     background_down = ListProperty([0.5, 0.5, 0.5, 1])
+#     padding = NumericProperty(0)
+#     radius = NumericProperty(0)

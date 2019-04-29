@@ -60,4 +60,9 @@ class MenuButton(ColouredButton):
             self.dropdown.open(self)
 
 class DropDownButton(ColouredButton):
+    def set_text_color(self, col, source):
+        print(self.parent.parent.parent)
+        self.parent.parent.color = col
+        source.color = col
+        print(self.parent.parent.parent)
     pass

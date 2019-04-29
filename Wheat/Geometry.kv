@@ -15,8 +15,8 @@
             GridLayout:
                 rows: 1
                 id: header
-                padding: 5
-                spacing: 5
+                padding: 10
+                spacing: 10
                 pos_hint: {'x' : 0, 'y' : .9}
                 size_hint: .66, 1
                 canvas.before:
@@ -32,7 +32,7 @@
                     canvas.before:
                         Color:
                             rgba: style.pink_rose
-                        Rectangle:
+                        RoundedRectangle:
                             pos: self.pos
                             size: self.size
                 # ToggleButton:
@@ -106,12 +106,6 @@
             FloatLayout:
                 id: headerspace
                 size_hint_x: .33
-                # canvas.before:
-                #     Color:
-                #         rgba: geometry.left_pane_bg_color
-                #     Rectangle:
-                #         pos: self.pos
-                #         size: self.size
 
         FloatLayout:
             id: body
@@ -127,7 +121,7 @@
                 canvas.before:
                     Color:
                         rgba: style.rose
-                    Rectangle:
+                    RoundedRectangle:
                         pos: self.pos
                         size: self.size
                 Interactive_Space:
@@ -186,8 +180,18 @@
                     #     Rectangle:
                     #         pos: self.pos
                     #         size: self.size
+                    # Label:
+                    #     id: separating_line_top
+                    #     pos_hint: {'x' : .1, 'y' : .981}
+                    #     size_hint: .8, .019
+                    #     canvas.before:
+                    #         Color:
+                    #             rgba: style.rose
+                    #         RoundedRectangle:
+                    #             pos: self.pos
+                    #             size: self.size
                     #TODO: figure out how to alter togglebuttons so they can't all be deselected.
-                    #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
+                    #NOTE: behavior isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
                     ToggleButton:
                         id: add_mode_button
                         state: 'down'
@@ -268,7 +272,7 @@
 
 
                 Label:
-                    id: separating_line
+                    id: separating_line_mid
                     pos_hint: {'x' : .1, 'y' : .655}
                     size_hint: .8, .019
                     canvas.before:
@@ -417,7 +421,7 @@
                                 size: self.size
                         on_press:
                             result_space.update_result(geometry.calculateCentroid())
-                            
+
                     OppButton:
                         id: deselect_all
                         text: "Deselect All Points"
@@ -432,6 +436,17 @@
                                 size: self.size
                         on_press:
                             geometry.deselect_all()
+
+                # Label:
+                #     id: separating_line_bot
+                #     pos_hint: {'x' : .1, 'y' : .655}
+                #     size_hint: .8, .019
+                #     canvas.before:
+                #         Color:
+                #             rgba: style.rose
+                #         RoundedRectangle:
+                #             pos: self.pos
+                #             size: self.size
 # <PointLayout>:
 #
 # <PointButton>:
