@@ -132,28 +132,34 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
 
 
     def on_touch_down(self, touch):
+        geom = self.parent.parent.parent.parent.parent.parent
         #include check for move mode
-        if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
+        if(geom.mode_state == "moving"):
             if self.collide_point(*touch.pos):
                 if touch.button == 'left':
-
                     # Hold value of touch downed pos
                     self.last_touch = touch.pos # Need this line
         return super(PointLayout, self).on_touch_down(touch)
 
 
     def correct_position(self, coords):
-        pass
+        south = self.i_s.pos[1] + 2*self.radius
+        west = self.i_s.pos[0] + 2*self.radius
+        north = self.i_s.pos[1] + self.i_s.size[1] - 2*self.radius
+        east = self.i_s.pos[0] + self.i_s.size[0] - 2*self.radius
+
+        x = coords[0]
+        y = coords[1]
+
+        if x < west:    x = west
+        if x > east:    x = east
+        if y < south:   y = south
+        if y > north:   y = north
+
+        self.pos = [x,y]
 
     def set_relative_pos(self):
-    #     #TODO: move point away from edges
         self.i_s = self.parent.parent.parent.parent.parent.parent.interactive_space
-
-    #     sw = i_s.pos
-    #     nw = [i_s.pos[0], i_s.pos[1] + i_s.size[1]]
-    #     se = [i_s.pos[0] + i_s.size[0], i_s.pos[1]]
-    #     ne = [i_s.pos[0] + i_s.size[0], i_s.pos[1] + i_s.size[1]]
-
         self.v_point_x = self.a_point_x - self.i_s.pos[0]
         self.v_point_y = self.a_point_y - self.i_s.pos[1]
 
@@ -164,7 +170,6 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
              #if so, check collision within the geometry widget as a whole
             if self.collide_point(*touch.pos):
                 if touch.button == 'left':
-                    self.correct_position(touch)
                     pass
         return super(PointLayout, self).on_touch_up(touch)
 
@@ -175,6 +180,8 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
                 if touch.button == 'left':
                     self.x = self.x + touch.pos[0] - self.last_touch[0] # Add the x distance between this mouse event and the last
                     self.y = self.y + touch.pos[1] - self.last_touch[1] # Add the y distance between this mouse event and the last
+
+                    correction = self.correct_position([self.x, self.y])
 
                     #update virtual
                     self.v_point_x = (self.pos[0] + self.radius) - self.i_s.pos[0]

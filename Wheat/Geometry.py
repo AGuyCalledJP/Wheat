@@ -31,15 +31,8 @@ from Style import *
 #big todos:
 # maybe make point moving not try to detect collision during movement, just check that we're grabbed?
 
-
-# point labels
-    # coords?
-
-# angle calculation should be in degrees, not radians
-#fix(?) layout issues?
-#buttons should hide if we haven't selected the appropriate number of points for them
-    #maybe have cases in the operations themselves to prevent crashes
 # possibly allow adding points by numeric input?
+# possibly tweak virtual coordinates to let the boundary for point placement include the origin
 
 #removing points from figure?
 #clearing all figures?
@@ -135,7 +128,8 @@ class Geometry(FloatLayout):
 
                     #add point to it
                     self.num_adds+=1
-                    self.in_prog_figure.add_point(contact_point[0], contact_point[1], self.num_adds)
+                    self.num_total_adds+=1
+                    self.in_prog_figure.add_point(contact_point[0], contact_point[1], self.num_total_adds)
                     self.add_event()
             else:
                 #check if contact at point, if so continue
@@ -384,9 +378,8 @@ class Geometry(FloatLayout):
         self.mode_state = 'adding' #for some reason i can't get OptionProperty to behave correctly here, despite this being exactly the kind of situation you use it in.
         self.num_selected = 0 #number of points selected within select mode, not using NumericProperty for similar reasons as above
         self.selected_points = []
-        self.num_adds = 0
-
-        # self.interactive_space = None
+        self.num_adds = 0 # the number of points currently being added, resets to 0 when no longer adding
+        self.num_total_adds = 0 # the number of points that HAVE been added, never is reset to 0
         self.in_prog_figure = None #If we're in the middle of making a figure, this points to that in some way
 
 
@@ -436,6 +429,7 @@ class Figure(Widget):
         p = PointLayout(pos=[new_x-(img_size[0]/2), new_y-(img_size[0]/2)])
         self.add_widget(p)
         p.set_relative_pos()
+        p.correct_position(p.pos)
         p.set_lab(new_lab)
 
 

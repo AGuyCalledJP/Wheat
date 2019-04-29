@@ -44,6 +44,8 @@ from Geometry import Geometry
 from Tex import Tex
 from kivy.storage.jsonstore import JsonStore
 
+from Style import *
+
 store = JsonStore('Notebook/PageState/children.json')
 stuff = JsonStore('Notebook/PageState/childInfo.json')
 
@@ -863,13 +865,3 @@ class PageNum(Label):
         global currpg
         global tpgs
         self.text = "Page: " + str(currpg) + " of " + str(tpgs)
-
-class ColorButton(Label):
-    def on_press(self):
-        print('whoohoo')
-
-# class ColouredButton(ButtonBehavior, Label):
-#     background_normal = ListProperty([1, 1, 1, 1])
-#     background_down = ListProperty([0.5, 0.5, 0.5, 1])
-#     padding = NumericProperty(0)
-#     radius = NumericProperty(0)
