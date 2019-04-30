@@ -212,6 +212,10 @@ class FunctionPlotter(ScatterLayout):
         return changed
 
     def on_touch_down(self, touch):
+        parent = self.parent.parent
+        me = self.parent
+        parent.remove_widget(me)
+        parent.add_widget(me)
         self.size_hint = None,None
         x, y = touch.x, touch.y
         self.prev_x = touch.x
