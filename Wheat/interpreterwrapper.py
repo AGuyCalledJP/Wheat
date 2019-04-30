@@ -238,7 +238,7 @@ class InterpreterWrapper(EventDispatcher):
             raise ValueError('Tried to finish restarting, but was not restarting')
         self.interpreter_state = 'waiting'
         self.lock_input = False
-        self.dispatch('on_notification', '[b]interpreter restarted: variable context lost[/b]')
+        #self.dispatch('on_notification', '[b]interpreter restarted: variable context lost[/b]')
 
     def check_interpreter(self, *args):
         print('checking interpreter')
