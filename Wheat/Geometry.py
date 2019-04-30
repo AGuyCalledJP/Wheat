@@ -46,7 +46,7 @@ operations = ['distance_button','angle_button','area_button','perimeter_button',
 Builder.load_file('Geometry.kv')
 
 class Geometry(FloatLayout):
-
+    
     '''
     Sets all selected points to be unselected, and resets backend values to match
     '''
@@ -359,16 +359,13 @@ class Geometry(FloatLayout):
     def Load(self, bringItBack):
         print(bringItBack)
         for i in bringItBack:
-            print(i)
             f = Figure()
             self.in_prog_figure = f
             self.interactive_space.add_widget(self.in_prog_figure)
             for j in i:
-                self.in_prog_figure.add_point(j[0], j[1])
+                self.num_total_adds += 1
+                self.in_prog_figure.load_point(j[0], j[1], self.num_total_adds)
             self.make_figure()
-        print(len(self.children))
-
-
 
     def __init__(self, *args, **kwargs):
         super(Geometry, self).__init__(*args, **kwargs)
@@ -432,6 +429,15 @@ class Figure(Widget):
         p.correct_position(p.pos)
         p.set_lab(new_lab)
 
+    def load_point(self, new_x, new_y, new_lab):
+        print(new_x,new_y)
+        p = PointLayout(pos=[new_x,new_y])
+        print("huh")
+        print(p.pos)
+        self.add_widget(p)
+        # p.set_relative_pos()
+        # p.correct_position(p.pos)
+        p.set_lab(new_lab)
 
     # TODO: add content
     def __init__(self, points = [], **kwargs):
