@@ -46,8 +46,8 @@ from kivy.storage.jsonstore import JsonStore
 
 from Style import *
 
-store = JsonStore('Notebook/PageState/children.json')
-stuff = JsonStore('Notebook/PageState/childInfo.json')
+store = JsonStore('Wheat/Notebook/PageState/children.json')
+stuff = JsonStore('Wheat/Notebook/PageState/childInfo.json')
 
 #Load kv file
 # Builder.load_file('home.kv')
@@ -99,7 +99,7 @@ class WheatScreen(Screen):
         global tpgs
         global currpg
         super(WheatScreen, self).__init__(*args, **kwargs)
-        totalPgs = os.listdir('Notebook/Pages')
+        totalPgs = os.listdir('Wheat/Notebook/Pages')
         self.tpgs = len(totalPgs)
         tpgs = self.tpgs
         currpg = self.curr

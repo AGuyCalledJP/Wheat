@@ -13,7 +13,7 @@ from kivy.storage.jsonstore import JsonStore
 from kivy.core.window import Window
 
 
-write = JsonStore('Notebook/PageState/writing.json')
+write = JsonStore('Wheat/Notebook/PageState/writing.json')
 
 Builder.load_file('draw.kv')
 
@@ -21,7 +21,7 @@ f = "page"
 suffix = ".png"
 newPage = "visual_assets/wheat_bg_1_college.png"
 newGraphPage = "visual_assets/wheat_bg_1.png"
-folder = '/Notebook/Pages/'
+folder = '/Wheat/Notebook/Pages/'
 color = 'black'
 sz = 2.5
 

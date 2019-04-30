@@ -780,6 +780,8 @@ class InterpreterGui(ScatterLayout):
         return changed
 
     def on_touch_down(self, touch):
+        parent = self.parent.parent
+        print(parent)
         self.size_hint = None,None
         x, y = touch.x, touch.y
         self.prev_x = touch.x
