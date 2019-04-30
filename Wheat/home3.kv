@@ -59,6 +59,7 @@
                     #switch visibility on toolbars, and toggle drawing
                     toolbar_draw.visible = False
                     toolbar_widget.visible = True
+                    Wheat.drawToggle(1)
 
             PageNum:
                 id: pgn
@@ -82,6 +83,7 @@
                     #switch visibility on toolbars, and toggle drawing
                     toolbar_draw.visible = True
                     toolbar_widget.visible = False
+                    Wheat.drawToggle(0)
 
             # TODO: NOT BEING ABLE TO MOVE TO NEXT PAGE SHOULD RENDER THESE AS UNUSABLE IN SOME VISIBLE WAY
             Button:

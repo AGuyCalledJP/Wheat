@@ -383,8 +383,8 @@ class WheatScreen(Screen):
                 self.space3.ids.flthree.add_widget(layout)
                 self.layouts3.append(layout)
 
-    def drawToggle(self):
-        if self.d == 1:
+    def drawToggle(self, on):
+        if on is 1:
             self.draw.disabled = True
             self.d = 0
         else:
