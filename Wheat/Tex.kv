@@ -49,11 +49,13 @@
                 text: "H"
                 on_press:
                     hide_bot_button.pos_hint= {'x': 0.5, 'y': 0.0}
-                    container.size_hint_y = input.hide_input()
+                    container.size_hint = 1,0.85
+                    input.hide_input(dohide=True)
                     toggle_container.size_hint = 0.1,0.125
                     hide_bot_button.text = "U"
                 on_release:
-                    container.size_hint_y = input.hide_input(dohide=False)
+                    container.size_hint = 1,1
+                    input.hide_input(dohide=False)
                     hide_bot_button.pos_hint= {'x': 0.0, 'y': 0.0}
                     toggle_container.size_hint = 0.1,0.1
                     hide_bot_button.text = "H"

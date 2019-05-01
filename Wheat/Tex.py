@@ -67,12 +67,12 @@ class Input(FloatLayout):
             if not dohide:
                 wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
                 del wid.saved_attrs
-                return 1
+                #return 1
 
         elif dohide:
             wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
             wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
-            return .85
+            #return .85
 
 
 class Tex(ScatterLayout):
