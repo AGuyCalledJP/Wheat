@@ -6,6 +6,11 @@
     interactive_space: interactive_space
     FloatLayout:
         id: geo
+        #moving this widget
+        on_touch_down:
+            geometry.allow_move()
+        on_touch_up:
+            geometry.disallow_move()
         GridLayout:
             cols: 2
             id: headerbar
@@ -209,6 +214,25 @@
                             cancel_figure_button.hide_make()
                             result_space.update_result("Click points to select them!")
 
+                    MakeFigureButton:
+                        id: clear_figs
+                        text: "Delete All Figures"
+                        font_size: style.fontSizer
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+                        color: style.white
+                        background_color: style.clear
+                        canvas.before:
+                            Color:
+                                rgba: style.red_rose
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                        on_press:
+                            geometry.clear_all_figures()
+
+
 
                 Label:
                     id: separating_line_mid
@@ -264,6 +288,49 @@
                                 size: self.size
                         on_press:
                             geometry.cancel_figure()
+
+                    GridLayout:
+                        id: manual_entry
+                        cols: 1
+                        padding: 5
+                        spacing: 3
+                        size_hint_y: .5
+                        background_color: style.clear
+                        canvas.before:
+                            Color:
+                                rgba: style.pink_rose
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                        GridLayout:
+                            rows: 1
+                            id: x_entry
+                            Label:
+                                text: 'X:'
+                                font_size: style.fontSizer
+                                size_hint_x: .2
+                            FloatInput:
+                                id: x_input
+                        GridLayout:
+                            rows: 1
+                            id: y_entry
+                            Label:
+                                text: 'Y:'
+                                font_size: style.fontSizer
+                                size_hint_x: .2
+                            FloatInput:
+                                id: y_input
+
+                        Button:
+                            background_color: style.clear
+                            canvas.before:
+                                Color:
+                                    rgba: style.red_rose
+                                RoundedRectangle:
+                                    pos: self.pos
+                                    size: self.size
+                            on_release:
+                                geometry.manual_point_create(x_input.text, y_input.text)
 
                     OppButton:
                         id: coords_button

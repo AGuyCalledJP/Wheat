@@ -52,7 +52,7 @@ class PointButton(ButtonBehavior, Image):
         Checks if the button is selected or not, and flips to the other state, while updating the image to reflect whether the point is selected
     '''
     def select(self):
-        geom = self.parent.parent.parent.parent.parent.parent.parent.parent
+        geom = self.parent.parent.parent.parent.parent.parent.parent.parent.parent
 
         if(geom.mode_state == "selecting"):
             if(self.selected == False):
@@ -132,11 +132,11 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
 
 
     def on_touch_down(self, touch):
-        geom = self.parent.parent.parent.parent.parent.parent
+        geom = self.parent.parent.parent.parent.parent.parent.parent
         #include check for move mode
         if(geom.mode_state == "moving"):
             if self.collide_point(*touch.pos):
-                if touch.button == 'left':
+                if touch.button == 'left' or True:
                     # Hold value of touch downed pos
                     self.last_touch = touch.pos # Need this line
         return super(PointLayout, self).on_touch_down(touch)
@@ -159,25 +159,25 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
         self.pos = [x,y]
 
     def set_relative_pos(self):
-        self.i_s = self.parent.parent.parent.parent.parent.parent.interactive_space
+        self.i_s = self.parent.parent.parent.parent.parent.parent.parent.interactive_space
         self.v_point_x = self.a_point_x - self.i_s.pos[0]
         self.v_point_y = self.a_point_y - self.i_s.pos[1]
 
     def on_touch_up(self, touch):
-        if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
+        if(self.parent.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
             self.parent.draw_fig()
              #NOTE: This DOESN'T check collision on point before running this, which may cause a major loss of performance.
              #if so, check collision within the geometry widget as a whole
             if self.collide_point(*touch.pos):
-                if touch.button == 'left':
+                if touch.button == 'left' or True:
                     pass
         return super(PointLayout, self).on_touch_up(touch)
 
 
     def on_touch_move(self, touch):
-        if(self.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
+        if(self.parent.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
             if self.collide_point(*touch.pos):
-                if touch.button == 'left':
+                if touch.button == 'left' or True:
                     self.x = self.x + touch.pos[0] - self.last_touch[0] # Add the x distance between this mouse event and the last
                     self.y = self.y + touch.pos[1] - self.last_touch[1] # Add the y distance between this mouse event and the last
 

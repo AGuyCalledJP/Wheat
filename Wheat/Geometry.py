@@ -45,7 +45,7 @@ operations = ['distance_button','angle_button','area_button','perimeter_button',
 
 Builder.load_file('Geometry.kv')
 
-class Geometry(FloatLayout):
+class Geometry(ScatterLayout):
 
     '''
     Sets all selected points to be unselected, and resets backend values to match
@@ -56,6 +56,10 @@ class Geometry(FloatLayout):
         self.num_selected = 0
         self.selected_points = []
         self.select_event()
+
+    def clear_all_figures(self):
+        self.cancel_figure()
+        self.interactive_space.clear_widgets()
 
     '''
     Changes current mode of Geometry widget, performing book-keeping on backend values as needed
@@ -83,6 +87,14 @@ class Geometry(FloatLayout):
             return False
 
     '''
+    Adds a point to the in_progress figure by inputted coordinates, for use with manual point entry
+    '''
+    def manual_point_create(self, x_in, y_in):
+        x = float(x_in)
+        y = float(x_in)
+        self.do_add(x,y)
+
+    '''
     Completes figure by drawing a line for it, then resetting backend values
     '''
     def make_figure(self):
@@ -106,6 +118,19 @@ class Geometry(FloatLayout):
         self.num_adds = 0
         return True
 
+    def do_add(self, x, y):
+        #are we in the middle of making a figure?
+        if self.in_prog_figure is None:
+            #if not, create new figure
+            f = Figure()
+            self.in_prog_figure = f
+            self.interactive_space.add_widget(self.in_prog_figure)
+
+        #add point to it
+        self.num_adds+=1
+        self.num_total_adds+=1
+        self.in_prog_figure.add_point(x, y, self.num_total_adds)
+        self.add_event()
     '''
     Used in processing touch events on the interactive space of Geometry. Some of this functionality is within the Points themselves.
     '''
@@ -117,28 +142,15 @@ class Geometry(FloatLayout):
         if self.interactive_space.collide_point(contact_point[0], contact_point[1]):
             #check mode
             if self.mode_state == 'adding':
-                ## TODO: if the point we'd add is too close to the edge of interactive space, move it inwards more
-
-                    #are we in the middle of making a figure?
-                    if self.in_prog_figure is None:
-                        #if not, create new figure
-                        f = Figure()
-                        self.in_prog_figure = f
-                        self.interactive_space.add_widget(self.in_prog_figure)
-
-                    #add point to it
-                    self.num_adds+=1
-                    self.num_total_adds+=1
-                    self.in_prog_figure.add_point(contact_point[0], contact_point[1], self.num_total_adds)
-                    self.add_event()
+                self.do_add(contact_point[0], contact_point[1])
             else:
                 #check if contact at point, if so continue
                 if True:
                     if self.mode_state == 'selecting':
-                        #REMOVE: handled within pointlayout
+                        #handled within pointlayout/pointbutton
                         pass
                     elif self.mode_state == 'moving':
-                        #REMOVE: handled within pointlayout
+                        #handled within pointlayout/pointbutton
                         pass
                     else:
                         print("ERROR: Invalid mode_state interaction") #FIXME: remove if it turns out this never happens (it shouldn't)
@@ -151,9 +163,11 @@ class Geometry(FloatLayout):
         if self.num_adds == 0:
             self.ids['make_figure_button'].hide_make()
             self.ids['cancel_figure_button'].hide_make()
+            self.ids['clear_figs'].hide_make()
         elif self.num_adds > 0:
             self.ids['make_figure_button'].hide_make(False)
             self.ids['cancel_figure_button'].hide_make(False)
+            self.ids['clear_figs'].hide_make(False)
         else:
             print("ERROR: Negative num_adds, this should never happen.")
 
@@ -368,11 +382,17 @@ class Geometry(FloatLayout):
             self.make_figure()
         print(len(self.children))
 
+    # used in moving widget
+    def allow_move(self):
+        self.do_translation = True
 
+    def disallow_move(self):
+        self.do_translation = False
 
     def __init__(self, *args, **kwargs):
         super(Geometry, self).__init__(*args, **kwargs)
         self.size_hint = .7,.7
+        self.do_translation = False
 
         #the different modes the user can be in within the geometry app, defaults to adding
         self.mode_state = 'adding' #for some reason i can't get OptionProperty to behave correctly here, despite this being exactly the kind of situation you use it in.
