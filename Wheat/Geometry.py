@@ -431,7 +431,7 @@ class Figure(Widget):
         #traverse points to draw line of figure
         coords = []
 
-        for p in self.children:
+        for p in self.points_as_added:
             coords.append(p.a_point_x)
             coords.append(p.a_point_y)
 
@@ -449,6 +449,7 @@ class Figure(Widget):
         p.set_relative_pos()
         p.correct_position(p.pos)
         p.set_lab(new_lab)
+        self.points_as_added.append(p)
 
     def load_point(self, new_x, new_y, new_lab):
         print(new_x,new_y)
@@ -464,6 +465,7 @@ class Figure(Widget):
     def __init__(self, points = [], **kwargs):
         super(Figure, self).__init__(**kwargs)
         self.line_draw = InstructionGroup()
+        self.points_as_added = []
 
 
 
