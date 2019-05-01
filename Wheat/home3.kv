@@ -59,6 +59,7 @@
                     #switch visibility on toolbars, and toggle drawing
                     toolbar_draw.visible = False
                     toolbar_widget.visible = True
+                    Wheat.drawToggle(1)
 
             PageNum:
                 id: pgn
@@ -82,6 +83,7 @@
                     #switch visibility on toolbars, and toggle drawing
                     toolbar_draw.visible = True
                     toolbar_widget.visible = False
+                    Wheat.drawToggle(0)
 
             # TODO: NOT BEING ABLE TO MOVE TO NEXT PAGE SHOULD RENDER THESE AS UNUSABLE IN SOME VISIBLE WAY
             Button:
@@ -202,6 +204,15 @@
 
             pos_hint: {'x': 0, 'y': 0}
             spacing: 5
+
+            Button:
+                text: 'Resume'
+                color: 1,1,1,1
+                font_size: '15sp'
+                background_normal: ''
+                background_color: 1, .3, .4 , 1
+                on_release:
+                    Wheat.Load()
 
             Button:
                 text: 'Python'
