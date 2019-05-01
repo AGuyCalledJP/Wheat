@@ -24,7 +24,7 @@ from kivy.properties import (ObjectProperty, NumericProperty,
                              StringProperty, ListProperty)
 
 from pdf2image import convert_from_path
-from pylatex import Document, Section, Subsection, Command, Math, Alignat
+from pylatex import Document, Section, Subsection, Command, Math, Alignat, errors
 from PIL import Image
 import os
 import sys
@@ -82,6 +82,8 @@ class Tex(ScatterLayout):
     c3 = NumericProperty()
     c4 = NumericProperty()
     fontSizer = NumericProperty()
+    counter = NumericProperty()
+    counter = 0
 
     c1 = 1
     c2 = .3
@@ -91,6 +93,8 @@ class Tex(ScatterLayout):
 
     code = StringProperty()
     disp = ObjectProperty()
+    docname = StringProperty()
+    docname = "latex"
 
     move_lock = False
     scale_lock_left = False
@@ -240,18 +244,30 @@ class Tex(ScatterLayout):
 
     def fill_document(self,doc,code):
         with doc.create(Alignat(numbering=False, escape=False)) as agn:
+                agn.append(r"\nonstopmode")
                 agn.append(code)
 
 
     def write(self):
+        if os.path.exists("latex.aux"):
+            os.remove("latex.aux")
+            os.remove("latex.log")
+            os.remove("latex.tex")
+            os.remove("latex.pdf")
+        else:
+            print("The file does not exist")
+
+        print(self.counter)
         self.code = self.ids.equation.text
-        doc = Document('latex')
+        doc = Document(self.docname)
+        self.fill_document(doc,self.code)
         try:
-            self.fill_document(doc,self.code)
-            doc.generate_pdf(filepath='Wheat/Notebook/Tex/', clean_tex = True, compiler='pdflatex') #not good with error
+            print("it tried")
+            doc.generate_pdf(filepath='Wheat/Notebook/Tex/', clean_tex = True, compiler='lualatex') #not good with error
+            print("it tried2")
             self.convert_image(False)
         except:
-            self.convert_image(True)
+            pass
 
     def convert_image(self,tex_error):
 
@@ -263,6 +279,7 @@ class Tex(ScatterLayout):
             self.crop('Wheat/Notebook/Tex/output.png')
         else:
             self.updateDisp('Wheat/Notebook/Tex/error.png')
+            print('here')
 
     def crop(self, filename):
 
