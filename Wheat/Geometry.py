@@ -90,9 +90,12 @@ class Geometry(ScatterLayout):
     Adds a point to the in_progress figure by inputted coordinates, for use with manual point entry
     '''
     def manual_point_create(self, x_in, y_in):
+        if (len(x_in) == 0) or (len(y_in) == 0):
+            return False
         x = float(x_in)
         y = float(x_in)
         self.do_add(x,y)
+        return True
 
     '''
     Completes figure by drawing a line for it, then resetting backend values
@@ -240,11 +243,6 @@ class Geometry(ScatterLayout):
             sum_y += self.selected_points[i].v_point_y
         center = ((float(sum_x)/n), (float(sum_y)/n))
         return center
-
-    # def __ccwCompare__(self,center):
-    #     a1 = (degrees(atan2(a.v_point_x - center[0], a.v_point_y - center[1])) + 360) % 360
-    #     a2 = (degrees(atan2(b.v_point_x - center[0], b.v_point_y - center[1])) + 360) % 360
-    #     return int(a1-a2)
 
     def __ccwCompare__(self, center):
         for i, p in enumerate(self.selected_points):

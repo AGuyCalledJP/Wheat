@@ -294,7 +294,8 @@
                         cols: 1
                         padding: 5
                         spacing: 3
-                        size_hint_y: .5
+                        size_hint_y: None
+                        height: style.fontSizer * 3.8
                         background_color: style.clear
                         canvas.before:
                             Color:
@@ -311,6 +312,7 @@
                                 size_hint_x: .2
                             FloatInput:
                                 id: x_input
+                                font_size: style.fontSizer/2
                         GridLayout:
                             rows: 1
                             id: y_entry
@@ -320,8 +322,10 @@
                                 size_hint_x: .2
                             FloatInput:
                                 id: y_input
-
+                                font_size: style.fontSizer/2
                         Button:
+                            text: "Create Point"
+                            color: style.white
                             background_color: style.clear
                             canvas.before:
                                 Color:
@@ -331,6 +335,8 @@
                                     size: self.size
                             on_release:
                                 geometry.manual_point_create(x_input.text, y_input.text)
+                                x_input.text = ""
+                                y_input.text = ""
 
                     OppButton:
                         id: coords_button
