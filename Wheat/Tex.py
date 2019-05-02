@@ -263,7 +263,7 @@ class Tex(ScatterLayout):
         self.fill_document(doc,self.code)
         try:
             print("it tried")
-            doc.generate_pdf(filepath='Wheat/Notebook/Tex/', clean_tex = True, compiler='lualatex') #not good with error
+            doc.generate_pdf(filepath='Wheat/Notebook/Tex/', clean_tex = True, compiler='pdflatex') #not good with error
             print("it tried2")
             self.convert_image(False)
         except:
