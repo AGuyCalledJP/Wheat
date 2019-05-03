@@ -168,8 +168,7 @@
                         on_press:
                             geometry.change_mode('adding')
                             geometry.hide_all_opps()
-                            make_figure_button.hide_make(False)
-                            cancel_figure_button.hide_make(False)
+                            manual_entry.hide_entry(False)
                             result_space.update_result("Click within the canvas to add Points!")
                     #TODO: figure out how to alter togglebuttons so they can't all be deselected.
                     #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
@@ -191,6 +190,7 @@
                             geometry.hide_all_opps()
                             make_figure_button.hide_make()
                             cancel_figure_button.hide_make()
+                            manual_entry.hide_entry()
                             result_space.update_result("Click and drag points to move them!")
                     #TODO: figure out how to alter togglebuttons so they can't all be deselected.
                     #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
@@ -212,6 +212,7 @@
                             geometry.select_event()
                             make_figure_button.hide_make()
                             cancel_figure_button.hide_make()
+                            manual_entry.hide_entry()
                             result_space.update_result("Click points to select them!")
 
                     MakeFigureButton:
@@ -253,43 +254,7 @@
                     size_hint: 1, .66
                     spacing: 3
 
-                    MakeFigureButton:
-                        id: make_figure_button
-                        text: "Make Figure"
-                        text_size: self.size
-                        halign: 'center'
-                        valign: 'middle'
-                        font_size: style.fontSizer
-                        color: style.black
-                        background_color: style.clear
-                        canvas.before:
-                            Color:
-                                rgba: style.pink_rose
-                            RoundedRectangle:
-                                pos: self.pos
-                                size: self.size
-                        on_press:
-                            geometry.make_figure()
-
-                    MakeFigureButton:
-                        id: cancel_figure_button
-                        text: "Cancel Figure\nCreation"
-                        font_size: style.fontSizer
-                        text_size: self.size
-                        halign: 'center'
-                        valign: 'middle'
-                        color: style.black
-                        background_color: style.clear
-                        canvas.before:
-                            Color:
-                                rgba: style.pink_rose
-                            RoundedRectangle:
-                                pos: self.pos
-                                size: self.size
-                        on_press:
-                            geometry.cancel_figure()
-
-                    GridLayout:
+                    ManualEntryLayout:
                         id: manual_entry
                         cols: 1
                         padding: 5
@@ -337,6 +302,42 @@
                                 geometry.manual_point_create(x_input.text, y_input.text)
                                 x_input.text = ""
                                 y_input.text = ""
+
+                    MakeFigureButton:
+                        id: make_figure_button
+                        text: "Make Figure"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+                        font_size: style.fontSizer
+                        color: style.black
+                        background_color: style.clear
+                        canvas.before:
+                            Color:
+                                rgba: style.pink_rose
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                        on_press:
+                            geometry.make_figure()
+
+                    MakeFigureButton:
+                        id: cancel_figure_button
+                        text: "Cancel Figure\nCreation"
+                        font_size: style.fontSizer
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+                        color: style.black
+                        background_color: style.clear
+                        canvas.before:
+                            Color:
+                                rgba: style.pink_rose
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                        on_press:
+                            geometry.cancel_figure()
 
                     OppButton:
                         id: coords_button

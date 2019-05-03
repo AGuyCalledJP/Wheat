@@ -93,7 +93,9 @@ class Geometry(ScatterLayout):
         if (len(x_in) == 0) or (len(y_in) == 0):
             return False
         x = float(x_in)
-        y = float(x_in)
+        y = float(y_in)
+        x = self.interactive_space.pos[0] + x
+        y = self.interactive_space.pos[1] + y
         self.do_add(x,y)
         return True
 
@@ -140,6 +142,7 @@ class Geometry(ScatterLayout):
     def touch_interactive_space(self, *args):
         #retrieve touch event
         contact_point = args[1].pos
+        self.disallow_move()
 
         #are we in contact with the interactive space of the geometry widget?
         if self.interactive_space.collide_point(contact_point[0], contact_point[1]):
@@ -158,6 +161,7 @@ class Geometry(ScatterLayout):
                     else:
                         print("ERROR: Invalid mode_state interaction") #FIXME: remove if it turns out this never happens (it shouldn't)
                 #otherwise, do nothing
+        self.allow_move()
 
     '''
     Used to alter visibility on make and cancel figure buttons based off how many points are present in the in_progress figure
@@ -233,8 +237,6 @@ class Geometry(ScatterLayout):
 
 
     def __centerOf__(self):
-        if self.selected_points is None:
-            return [0.0,0.0]
         sum_x = 0.0
         sum_y = 0.0
         n = len(self.selected_points)
@@ -255,6 +257,7 @@ class Geometry(ScatterLayout):
 
     def __sortCCW__(self):
         center = self.__centerOf__()
+        print(center)
         self.__ccwCompare__(center)
         ccw = sorted(self.selected_points, key=lambda x: x.compare)
         return ccw
@@ -293,11 +296,13 @@ class Geometry(ScatterLayout):
         # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
         perimeter = 0.0
         result = "Perimeter of "
-        for i, p in enumerate(self.selected_points): #for all points, enumerated as indices i
-            result += str(self.selected_points[i].p.get_lab()) + ", "
-            if i+2 > len(self.selected_points): break
-            x_diff = self.selected_points[i+1].v_point_x - self.selected_points[i].v_point_x
-            y_diff = self.selected_points[i+1].v_point_y - self.selected_points[i].v_point_y
+        ccw = self.__sortCCW__()
+        print(ccw)
+        for i, p in enumerate(ccw): #for all points, enumerated as indices i
+            result += str(ccw[i].p.get_lab()) + ", "
+            if i+2 > len(ccw): break
+            x_diff = ccw[i+1].v_point_x - ccw[i].v_point_x
+            y_diff = ccw[i+1].v_point_y - ccw[i].v_point_y
             perimeter += perimeter + (x_diff * x_diff + y_diff * y_diff)**0.5
         result+= '%.3f'%(perimeter)
         return result
@@ -418,8 +423,11 @@ class Result(Label):
 
 
 
-
-
+##################################################################################################################################################
+##################################################################################################################################################
+#            FIGURE
+##################################################################################################################################################
+##################################################################################################################################################
 
 """
     A Figure contains a series of points that make up the shape they are meant to form. This can be a fully closed polygon, line segment, or point.
@@ -442,6 +450,10 @@ class Figure(Widget):
         self.line_draw = new_line
         self.canvas.add(self.line_draw)
         return
+
+    def remove_widget(self, w):
+        super(Figure, self).remove_widget(w)
+        # self.points_as_added.remove(w)
 
     def add_point(self, new_x, new_y, new_lab):
         p = PointLayout(pos=[new_x-(img_size[0]/2), new_y-(img_size[0]/2)])

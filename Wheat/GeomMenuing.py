@@ -12,6 +12,7 @@ from kivy.graphics import InstructionGroup
 from kivy.uix.scatter import Scatter
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.app import App
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
@@ -76,10 +77,22 @@ class MakeFigureButton(Button):
         self.hide_make() #start hidden, use when we have add functionality working
 
 
+class ManualEntryLayout(GridLayout):
+    def hide_entry(wid, dohide=True):
+        if hasattr(wid, 'saved_attrs'):
+            if not dohide:
+                wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+                del wid.saved_attrs
+        #capture sizing information, opacity, disabled status, and set to 0's/None/True to hide the pane
+        elif dohide:
+            wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
+            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+
+
 class FloatInput(TextInput):
 
     pat = re.compile('[^0-9]')
-    def insert_text(self, substring, from_undo=False):
+    def insert_text(self, substring, from_undo=False, multiline = False):
         pat = self.pat
         if '.' in self.text:
             s = re.sub(pat, '', substring)
