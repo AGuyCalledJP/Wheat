@@ -145,6 +145,8 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
 
     def on_touch_down(self, touch):
         geom = self.parent.parent.parent.parent.parent.parent.parent
+        if self.i_s is None:
+            self.i_s = geom.interactive_space
         #include check for move mode
         if(geom.mode_state == "moving"):
             if self.collide_point(*touch.pos):
