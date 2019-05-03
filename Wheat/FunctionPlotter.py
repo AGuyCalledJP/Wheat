@@ -8,7 +8,7 @@ import matplotlib
 matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
 from matplotlib.figure import Figure
 from matplotlib.widgets import TextBox
-from kivy.garden.matplotlib.backend_kivyagg import FigureCanvas,\
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg,\
                                                 NavigationToolbar2Kivy
 from matplotlib.transforms import Bbox
 import matplotlib.pyplot as plt
@@ -32,7 +32,7 @@ from kivy.lang import Builder
 from kivy.base import runTouchApp
 from kivy.properties import (ObjectProperty, NumericProperty,
                              OptionProperty, BooleanProperty,
-                             StringProperty, ListProperty)
+                             StringProperty, ListProperty, Property)
 
 Builder.load_file('FunctionPlotter.kv')
 
@@ -43,7 +43,7 @@ class Function(FloatLayout):
 class Keyboard(GridLayout):
     pass
 
-class Equation(TextInput):
+class Equation(Label):
     pass
 
 class Input(FloatLayout):
@@ -76,6 +76,14 @@ class FunctionPlotter(ScatterLayout):
 
     equation_text = StringProperty()
     compute_text = StringProperty()
+    x_a = NumericProperty()
+    x_a = -10
+    x_b = NumericProperty()
+    x_b = 10
+    y_a = NumericProperty()
+    y_a = -10
+    y_b = NumericProperty()
+    y_b = 10
     #use this to reference the keyboard that exists in the kivy through the code
     keyboard = ObjectProperty()
     function = ObjectProperty()
@@ -98,32 +106,32 @@ class FunctionPlotter(ScatterLayout):
         ##########################################################################
         # Actual MatPlotLib Graphing                                             #
         ##########################################################################
-        fig, self.ax = plt.subplots()
+
+        fig, self.ax = plt.subplots(1)
 
         #setting distance from bottom for plot
         plt.subplots_adjust(bottom=0.2)
 
         #setting initial x limits and precision
-        self.i = np.arange(-100.0, 100.0, 0.001)
+        self.i = np.arange(self.x_a, self.x_b, 0.001)
 
         #setting initial function and plotting
-        def callback(instance):
-            autolabel(rects1)
-            canvas.draw()
         self.f = self.i ** 2
         initial_text = "x ** 2"
-        self.l, = plt.plot(self.i, self.f, color = 'r', linewidth=3)
+        self.l, = plt.plot(self.i, self.f, color = 'r', linewidth=1)
 
-        self.ax.set_ylim(-10, 10)
-        self.ax.set_xlim(-10, 10)
+        self.ax.set_ylim(self.y_a, self.y_b)
+        self.ax.set_xlim(self.x_a, self.x_b)
         self.ax.grid(linestyle='-', linewidth='0.1')
 
-        canvas = fig.canvas
-        self.ids.destination.add_widget(canvas)
+        canvas = FigureCanvasKivyAgg(plt.gcf())
+        #canvas.pos_hint = {'x' : 0.025, 'y' : 0.025}
+        self.ids.display.add_widget(canvas)
+        #plt.show()
+        canvas.draw
 
 
         ##########################################################################
-
 
     def clickedSubmit(self):
         x = self.i
@@ -295,11 +303,18 @@ class FunctionPlotter(ScatterLayout):
                 result += split[x][0] + "**(1/2)" + split[x][1:]
         self.compute_text = result
         try:
+            plt.ion()
             x = self.i
             ydata = eval(self.compute_text)
             self.l.set_ydata(ydata)
             self.ax.set_ylim(-10, 10)
             plt.draw()
+            #self.ids.display.remove_widget(self.ids.canvas)
+            #canvas = FigureCanvas(fig)
+            #canvas.pos_hint = {'x' : 0.025, 'y' : 0.025}
+            #self.ids.display.add_widget(canvas)
+            #canvas.draw()
+            plt.ioff()
         except:
             self.equation_text = "SYNTAX Error"
             self.compute_text = "SYNTAX Error"

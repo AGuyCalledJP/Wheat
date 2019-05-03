@@ -466,12 +466,11 @@ class Figure(Widget):
     def load_point(self, new_x, new_y, new_lab):
         print(new_x,new_y)
         p = PointLayout(pos=[new_x,new_y])
-        print("huh")
-        print(p.pos)
         self.add_widget(p)
         # p.set_relative_pos()
         # p.correct_position(p.pos)
         p.set_lab(new_lab)
+        self.points_as_added.append(p)
 
     # TODO: add content
     def __init__(self, points = [], **kwargs):
