@@ -28,7 +28,8 @@ img_size = Image(source=img_source).texture.size
 class PointLabel(Label):
     def __init__(self, **kwargs):
         super(PointLabel, self).__init__(**kwargs)
-        self.pos = [-40, -20]
+        self.pos = [img_size[0]*-1, 0]
+        # [-40, -20] #for use with 22x22
 
 class PointButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
@@ -39,11 +40,15 @@ class PointButton(ButtonBehavior, Image):
         self.size = Image(source=self.source).texture.size
         self.selected = False
 
+    '''
+        Sets point label's text
+    '''
     def set_lab(self, new_lab):
         self.lab.identifier = str(new_lab)
-        # self.lab.text = str(new_lab) + "(" + str('%.3f'%(self.parent.parent.v_point_x)) + ", " + str('%.3f'%(self.parent.parent.v_point_y)) + ")"
         self.lab.text = str(new_lab)
-
+    '''
+    Retrieves label's text
+    '''
     def get_lab(self):
         return self.lab.identifier
 
@@ -86,9 +91,7 @@ class PointButton(ButtonBehavior, Image):
 
 
 class PointLayout(ScatterLayout): #container for individual point, controls movement
-    do_scale = False
-    do_rotation = False
-    do_translation = False
+
 
     def __init__(self, **kwargs):
         super(PointLayout, self).__init__(**kwargs)
@@ -112,9 +115,15 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
         self.last_touch = [0,0]
         self.compare = 0 #THIS VALUE IS USED EXCLUSIVELY FOR CCW SORTING ABOUT CENTER OF AN ARBITRARY SERIES OF POINTS
 
+    '''
+        Sets point label's text
+    '''
     def set_lab(self, new_lab):
         self.p.set_lab(new_lab)
 
+    '''
+        Deselects point.
+    '''
     def set_as_deselected(self):
         self.p.set_as_deselected()
 
@@ -125,7 +134,10 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
         for child in self.content.children: #NOTE: Because this was originally a ScatterLayout, we need to use content.children instead of children
             child.select()
 
-    def collide_point(self, x, y): #Checks for contact within the radius of the point
+    '''
+        Checks for contact within the radius of the point
+    '''
+    def collide_point(self, x, y):
         if((x - self.a_point_x)**2 + (y - self.a_point_y)**2 < self.radius**2):
             return True
         return False
@@ -136,15 +148,16 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
         #include check for move mode
         if(geom.mode_state == "moving"):
             if self.collide_point(*touch.pos):
-                if touch.button == 'left' or True:
-                    # Hold value of touch downed pos
-                    self.last_touch = touch.pos # Need this line
+                # Hold value of touch downed pos
+                self.last_touch = touch.pos # Need this line
         return super(PointLayout, self).on_touch_down(touch)
 
-
+    '''
+        Moves point to stay into the interactive space boundaries.
+    '''
     def correct_position(self, coords):
-        south = self.i_s.pos[1] + 2*self.radius
-        west = self.i_s.pos[0] + 2*self.radius
+        south = self.i_s.pos[1]
+        west = self.i_s.pos[0]
         north = self.i_s.pos[1] + self.i_s.size[1] - 2*self.radius
         east = self.i_s.pos[0] + self.i_s.size[0] - 2*self.radius
 
@@ -158,6 +171,9 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
 
         self.pos = [x,y]
 
+    '''
+        Sets 'Virtual Coordinates'
+    '''
     def set_relative_pos(self):
         self.i_s = self.parent.parent.parent.parent.parent.parent.parent.interactive_space
         self.v_point_x = self.a_point_x - self.i_s.pos[0]
@@ -169,30 +185,25 @@ class PointLayout(ScatterLayout): #container for individual point, controls move
              #NOTE: This DOESN'T check collision on point before running this, which may cause a major loss of performance.
              #if so, check collision within the geometry widget as a whole
             if self.collide_point(*touch.pos):
-                if touch.button == 'left' or True:
-                    pass
+                pass
         return super(PointLayout, self).on_touch_up(touch)
 
 
     def on_touch_move(self, touch):
         if(self.parent.parent.parent.parent.parent.parent.parent.mode_state == "moving"):
             if self.collide_point(*touch.pos):
-                if touch.button == 'left' or True:
-                    self.x = self.x + touch.pos[0] - self.last_touch[0] # Add the x distance between this mouse event and the last
-                    self.y = self.y + touch.pos[1] - self.last_touch[1] # Add the y distance between this mouse event and the last
+                self.x = self.x + touch.pos[0] - self.last_touch[0] # Add the x distance between this mouse event and the last
+                self.y = self.y + touch.pos[1] - self.last_touch[1] # Add the y distance between this mouse event and the last
 
-                    correction = self.correct_position([self.x, self.y])
+                correction = self.correct_position([self.x, self.y])
 
-                    #update virtual
-                    self.v_point_x = (self.pos[0] + self.radius) - self.i_s.pos[0]
-                    self.v_point_y = (self.pos[1] + self.radius) - self.i_s.pos[1]
+                #update virtual
+                self.v_point_x = (self.pos[0] + self.radius) - self.i_s.pos[0]
+                self.v_point_y = (self.pos[1] + self.radius) - self.i_s.pos[1]
 
-                    #update actual
-                    self.a_point_x = self.pos[0] + self.radius
-                    self.a_point_y = self.pos[1] + self.radius
+                #update actual
+                self.a_point_x = self.pos[0] + self.radius
+                self.a_point_y = self.pos[1] + self.radius
 
-                    self.last_touch = touch.pos # Update the last position of the mouse
+                self.last_touch = touch.pos # Update the last position of the mouse
         return super(PointLayout, self).on_touch_move(touch)
-
-    # def __str__(self):
-    #     return "Actuals: ("+str(self.a_point_x)+","+str(self.a_point_y)+") \t \t \t Virtuals: ("+str(self.v_point_x)+","+str(self.v_point_y)+") \t \t \t Compare: " + str(self.compare)

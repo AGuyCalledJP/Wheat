@@ -149,15 +149,14 @@
                     id: mode_buttons
                     pos_hint: {'x' : 0, 'y' : .67}
                     size_hint: 1, .33
-                    #TODO: figure out how to alter togglebuttons so they can't all be deselected.
-                    #NOTE: behavior isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
+
                     ToggleButton:
                         id: add_mode_button
                         state: 'down'
                         group: "modes"
                         text: "Add Mode"
                         font_size: style.fontSizer
-                        color: style.black
+                        color: style.white
                         background_color: style.clear
                         canvas.before:
                             Color:
@@ -167,11 +166,13 @@
                                 size: self.size
                         on_press:
                             geometry.change_mode('adding')
+                            add_mode_button.color = style.white
+                            move_mode_button.color = style.black
+                            select_mode_button.color = style.black
                             geometry.hide_all_opps()
                             manual_entry.hide_entry(False)
                             result_space.update_result("Click within the canvas to add Points!")
-                    #TODO: figure out how to alter togglebuttons so they can't all be deselected.
-                    #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
+
                     ToggleButton:
                         id: move_mode_button
                         group: "modes"
@@ -186,14 +187,16 @@
                                 pos: self.pos
                                 size: self.size
                         on_press:
+                            add_mode_button.color = style.black
+                            move_mode_button.color = style.white
+                            select_mode_button.color = style.black
                             geometry.change_mode('moving')
                             geometry.hide_all_opps()
                             make_figure_button.hide_make()
                             cancel_figure_button.hide_make()
                             manual_entry.hide_entry()
                             result_space.update_result("Click and drag points to move them!")
-                    #TODO: figure out how to alter togglebuttons so they can't all be deselected.
-                    #NOTE: behavior likely isn't actually leaving the mode_state invalid, it's just not displaying correctly to the user end
+
                     ToggleButton:
                         id: select_mode_button
                         group: "modes"
@@ -208,6 +211,9 @@
                                 pos: self.pos
                                 size: self.size
                         on_press:
+                            add_mode_button.color = style.black
+                            move_mode_button.color = style.black
+                            select_mode_button.color = style.white
                             geometry.change_mode('selecting')
                             geometry.select_event()
                             make_figure_button.hide_make()
@@ -384,35 +390,35 @@
                         on_press:
                             result_space.update_result(geometry.calculateAngle())
 
-                    OppButton:
-                        id: area_button
-                        text: "Find Area"
-                        font_size: style.fontSizer
-                        color: style.black
-                        background_color: style.clear
-                        canvas.before:
-                            Color:
-                                rgba: style.pink_rose
-                            RoundedRectangle:
-                                pos: self.pos
-                                size: self.size
-                        on_press:
-                            result_space.update_result(geometry.calculateArea())
-
-                    OppButton:
-                        id: perimeter_button
-                        text: "Find Perimeter"
-                        font_size: style.fontSizer
-                        color: style.black
-                        background_color: style.clear
-                        canvas.before:
-                            Color:
-                                rgba: style.pink_rose
-                            RoundedRectangle:
-                                pos: self.pos
-                                size: self.size
-                        on_press:
-                            result_space.update_result(geometry.calculatePerimeter())
+                    # OppButton:
+                    #     id: area_button
+                    #     text: "Find Area"
+                    #     font_size: style.fontSizer
+                    #     color: style.black
+                    #     background_color: style.clear
+                    #     canvas.before:
+                    #         Color:
+                    #             rgba: style.pink_rose
+                    #         RoundedRectangle:
+                    #             pos: self.pos
+                    #             size: self.size
+                    #     on_press:
+                    #         result_space.update_result(geometry.calculateArea())
+                    #
+                    # OppButton:
+                    #     id: perimeter_button
+                    #     text: "Find Perimeter"
+                    #     font_size: style.fontSizer
+                    #     color: style.black
+                    #     background_color: style.clear
+                    #     canvas.before:
+                    #         Color:
+                    #             rgba: style.pink_rose
+                    #         RoundedRectangle:
+                    #             pos: self.pos
+                    #             size: self.size
+                    #     on_press:
+                    #         result_space.update_result(geometry.calculatePerimeter())
 
                     OppButton:
                         id: centroid_button

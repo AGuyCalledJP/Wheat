@@ -23,7 +23,9 @@ import re
 from Point import *
 
 class RightPane(FloatLayout):
-
+    '''
+    Hides right pane of geometry menu.
+    '''
     def hide_pane(wid, dohide=True):
         if hasattr(wid, 'saved_attrs'):
             if not dohide:
@@ -40,11 +42,10 @@ class RightPane(FloatLayout):
 
 
 
-
-#this might need to live somewhere else
-
 class OppButton(Button):
-
+    '''
+    Hides operation button.
+    '''
     def hide_opp(wid, dohide=True):
         if hasattr(wid, 'saved_attrs'):
             if not dohide:
@@ -62,6 +63,9 @@ class OppButton(Button):
 
 
 class MakeFigureButton(Button):
+    '''
+    Hides make operation button.
+    '''
     def hide_make(wid, dohide=True):
         if hasattr(wid, 'saved_attrs'):
             if not dohide:
@@ -78,6 +82,9 @@ class MakeFigureButton(Button):
 
 
 class ManualEntryLayout(GridLayout):
+    '''
+    Hides container for manual point input.
+    '''
     def hide_entry(wid, dohide=True):
         if hasattr(wid, 'saved_attrs'):
             if not dohide:
@@ -92,6 +99,9 @@ class ManualEntryLayout(GridLayout):
 class FloatInput(TextInput):
 
     pat = re.compile('[^0-9]')
+    '''
+    Filters text input to accept only numbers and a single decimal point.
+    '''
     def insert_text(self, substring, from_undo=False, multiline = False):
         pat = self.pat
         if '.' in self.text:

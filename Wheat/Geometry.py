@@ -28,27 +28,20 @@ from GeomMenuing import *
 from Style import *
 
 
-#big todos:
-# maybe make point moving not try to detect collision during movement, just check that we're grabbed?
-
-# possibly allow adding points by numeric input?
-# possibly tweak virtual coordinates to let the boundary for point placement include the origin
-
-#removing points from figure?
-#clearing all figures?
-
-
 
 
 #list of ids for operation buttons
-operations = ['distance_button','angle_button','area_button','perimeter_button','centroid_button','coords_button', 'deselect_all']
+# operations = ['distance_button','angle_button','area_button','perimeter_button','centroid_button','coords_button', 'deselect_all']
+operations = ['distance_button','angle_button','centroid_button','coords_button', 'deselect_all']
 
 Builder.load_file('Geometry.kv')
 
 class Geometry(ScatterLayout):
+    do_scale = False
+    do_rotation = False
 
     '''
-    Sets all selected points to be unselected, and resets backend values to match
+        Sets all selected points to be unselected, and resets backend values to match
     '''
     def deselect_all(self):
         for selected in self.selected_points:
@@ -57,12 +50,16 @@ class Geometry(ScatterLayout):
         self.selected_points = []
         self.select_event()
 
+    '''
+        Removes all figures and associated points.
+    '''
     def clear_all_figures(self):
         self.cancel_figure()
+        self.num_total_adds = 0
         self.interactive_space.clear_widgets()
 
     '''
-    Changes current mode of Geometry widget, performing book-keeping on backend values as needed
+        Changes current mode of Geometry widget, performing book-keeping on backend values as needed
     '''
     def change_mode(self, mode):
         if (mode != 'adding') and (mode != 'selecting') and (mode != 'moving'):
@@ -87,7 +84,7 @@ class Geometry(ScatterLayout):
             return False
 
     '''
-    Adds a point to the in_progress figure by inputted coordinates, for use with manual point entry
+        Adds a point to the in_progress figure by inputted coordinates, for use with manual point entry
     '''
     def manual_point_create(self, x_in, y_in):
         if (len(x_in) == 0) or (len(y_in) == 0):
@@ -100,7 +97,7 @@ class Geometry(ScatterLayout):
         return True
 
     '''
-    Completes figure by drawing a line for it, then resetting backend values
+        Completes figure by drawing a line for it, then resetting backend values
     '''
     def make_figure(self):
         if self.in_prog_figure is None:
@@ -112,7 +109,7 @@ class Geometry(ScatterLayout):
         return True
 
     '''
-    Cancels creation of current figure, removing all points from the incomplete figure and resetting backend values
+        Cancels creation of current figure, removing all points from the incomplete figure and resetting backend values
     '''
     def cancel_figure(self):
         #don't try to cancel a figure creation with no actual points
@@ -137,7 +134,7 @@ class Geometry(ScatterLayout):
         self.in_prog_figure.add_point(x, y, self.num_total_adds)
         self.add_event()
     '''
-    Used in processing touch events on the interactive space of Geometry. Some of this functionality is within the Points themselves.
+        Used in processing touch events on the interactive space of Geometry. Some of this functionality is within the Points themselves.
     '''
     def touch_interactive_space(self, *args):
         #retrieve touch event
@@ -164,7 +161,7 @@ class Geometry(ScatterLayout):
         self.allow_move()
 
     '''
-    Used to alter visibility on make and cancel figure buttons based off how many points are present in the in_progress figure
+        Used to alter visibility on make and cancel figure buttons based off how many points are present in the in_progress figure
     '''
     def add_event(self):
         if self.num_adds == 0:
@@ -179,7 +176,7 @@ class Geometry(ScatterLayout):
             print("ERROR: Negative num_adds, this should never happen.")
 
     '''
-    Used to alter visibility on operation buttons based off how many points are selected
+        Used to alter visibility on operation buttons based off how many points are selected
     '''
     def select_event(self):
         #WARNING: make sure operations variable is up to date if using this function
@@ -202,22 +199,19 @@ class Geometry(ScatterLayout):
             self.ids['distance_button'].hide_opp(False)
             self.ids['centroid_button'].hide_opp(False)
             self.ids['angle_button'].hide_opp(False)
-            self.ids['area_button'].hide_opp(False)
-            self.ids['perimeter_button'].hide_opp(False)
+            # self.ids['area_button'].hide_opp(False)
+            # self.ids['perimeter_button'].hide_opp(False)
         else:
             #everything but angles and coords
             self.hide_all_opps()
             self.ids['deselect_all'].hide_opp(False)
             self.ids['distance_button'].hide_opp(False)
             self.ids['centroid_button'].hide_opp(False)
-            self.ids['area_button'].hide_opp(False)
-            self.ids['perimeter_button'].hide_opp(False)
-
-        # print(self.ids['angle_button'])
-        pass
+            # self.ids['area_button'].hide_opp(False)
+            # self.ids['perimeter_button'].hide_opp(False)
 
     '''
-    Hides all operation buttons
+        Hides all operation buttons
     '''
     def hide_all_opps(self):
         #WARNING: make sure operations variable is up to date if using this function
@@ -226,7 +220,7 @@ class Geometry(ScatterLayout):
 
 
     '''
-    Returns string for the coordinates of a single point.
+        Returns string for the coordinates of a single point.
     '''
     def calculateCoords(self):
         if self.num_selected != 1:
@@ -236,79 +230,79 @@ class Geometry(ScatterLayout):
         return result
 
 
-    def __centerOf__(self):
-        sum_x = 0.0
-        sum_y = 0.0
-        n = len(self.selected_points)
-        for i in range(0, n):
-            sum_x += self.selected_points[i].v_point_x
-            sum_y += self.selected_points[i].v_point_y
-        center = ((float(sum_x)/n), (float(sum_y)/n))
-        return center
-
-    def __ccwCompare__(self, center):
-        for i, p in enumerate(self.selected_points):
-            if i+2 > len(self.selected_points): break
-            a = self.selected_points[i]
-            b = self.selected_points[i+1]
-            a1 = (degrees(atan2(a.v_point_x - center[0], a.v_point_y - center[1])) + 360) % 360
-            a2 = (degrees(atan2(b.v_point_x - center[0], b.v_point_y - center[1])) + 360) % 360
-            a.compare = int(a1-a2)
-
-    def __sortCCW__(self):
-        center = self.__centerOf__()
-        print(center)
-        self.__ccwCompare__(center)
-        ccw = sorted(self.selected_points, key=lambda x: x.compare)
-        return ccw
+    # def __centerOf__(self):
+    #     sum_x = 0.0
+    #     sum_y = 0.0
+    #     n = len(self.selected_points)
+    #     for i in range(0, n):
+    #         sum_x += self.selected_points[i].v_point_x
+    #         sum_y += self.selected_points[i].v_point_y
+    #     center = ((float(sum_x)/n), (float(sum_y)/n))
+    #     return center
+    #
+    # def __ccwCompare__(self, center):
+    #     for i, p in enumerate(self.selected_points):
+    #         if i+2 > len(self.selected_points): break
+    #         a = self.selected_points[i]
+    #         b = self.selected_points[i+1]
+    #         a1 = (degrees(atan2(a.v_point_x - center[0], a.v_point_y - center[1])) + 360) % 360
+    #         a2 = (degrees(atan2(b.v_point_x - center[0], b.v_point_y - center[1])) + 360) % 360
+    #         a.compare = int(a1-a2)
+    #
+    # def __sortCCW__(self):
+    #     center = self.__centerOf__()
+    #     print(center)
+    #     self.__ccwCompare__(center)
+    #     ccw = sorted(self.selected_points, key=lambda x: x.compare)
+    #     return ccw
+    #
+    # '''
+    # Returns string of the area of a series of points, treating them as a polygon
+    # '''
+    # #FIXME: calculation is sometimes negative, needs points to be listed counterclockwise
+    # def calculateArea(self):
+    #     if self.selected_points is None:
+    #         return 0.0
+    #     # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
+    #     # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
+    #     area = 0.0
+    #     result = "Area of "
+    #     ccw = self.__sortCCW__()
+    #     for i, p in enumerate(ccw): #for all points, enumerated as indices i
+    #         result += str(ccw[i].p.get_lab()) + ", "
+    #         print(ccw[i].p.get_lab())
+    #         if i+2 > len(ccw): break
+    #         x_diff = ccw[i+1].v_point_x - ccw[i].v_point_x
+    #         y_diff = ccw[i+1].v_point_y - ccw[i].v_point_y
+    #         area += ccw[i].v_point_x * y_diff - ccw[i].v_point_y * x_diff
+    #
+    #     area = '%.3f'%(area*.5)
+    #     result+= "= " + str(area)
+    #     return result
+    # '''
+    # Returns string of the perimeter of a series of points, treating them as a polygon
+    # '''
+    # #FIXME: calculation needs points to be listed counterclockwise
+    # def calculatePerimeter(self):
+    #     if self.selected_points is None:
+    #         return 0.0
+    #     # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
+    #     # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
+    #     perimeter = 0.0
+    #     result = "Perimeter of "
+    #     ccw = self.__sortCCW__()
+    #     print(ccw)
+    #     for i, p in enumerate(ccw): #for all points, enumerated as indices i
+    #         result += str(ccw[i].p.get_lab()) + ", "
+    #         if i+2 > len(ccw): break
+    #         x_diff = ccw[i+1].v_point_x - ccw[i].v_point_x
+    #         y_diff = ccw[i+1].v_point_y - ccw[i].v_point_y
+    #         perimeter += perimeter + (x_diff * x_diff + y_diff * y_diff)**0.5
+    #     result+= '%.3f'%(perimeter)
+    #     return result
 
     '''
-    Returns string of the area of a series of points, treating them as a polygon
-    '''
-    #FIXME: calculation is sometimes negative, needs points to be listed counterclockwise
-    def calculateArea(self):
-        if self.selected_points is None:
-            return 0.0
-        # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
-        # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
-        area = 0.0
-        result = "Area of "
-        ccw = self.__sortCCW__()
-        for i, p in enumerate(ccw): #for all points, enumerated as indices i
-            result += str(ccw[i].p.get_lab()) + ", "
-            print(ccw[i].p.get_lab())
-            if i+2 > len(ccw): break
-            x_diff = ccw[i+1].v_point_x - ccw[i].v_point_x
-            y_diff = ccw[i+1].v_point_y - ccw[i].v_point_y
-            area += ccw[i].v_point_x * y_diff - ccw[i].v_point_y * x_diff
-
-        area = '%.3f'%(area*.5)
-        result+= "= " + str(area)
-        return result
-    '''
-    Returns string of the perimeter of a series of points, treating them as a polygon
-    '''
-    #FIXME: calculation needs points to be listed counterclockwise
-    def calculatePerimeter(self):
-        if self.selected_points is None:
-            return 0.0
-        # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
-        # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
-        perimeter = 0.0
-        result = "Perimeter of "
-        ccw = self.__sortCCW__()
-        print(ccw)
-        for i, p in enumerate(ccw): #for all points, enumerated as indices i
-            result += str(ccw[i].p.get_lab()) + ", "
-            if i+2 > len(ccw): break
-            x_diff = ccw[i+1].v_point_x - ccw[i].v_point_x
-            y_diff = ccw[i+1].v_point_y - ccw[i].v_point_y
-            perimeter += perimeter + (x_diff * x_diff + y_diff * y_diff)**0.5
-        result+= '%.3f'%(perimeter)
-        return result
-
-    '''
-    Returns string of the dstance of a series of points in the order they were selected
+        Returns string of the dstance of a series of points in the order they were selected
     '''
     def calculateDistance(self):
         if self.selected_points is None:
@@ -325,7 +319,7 @@ class Geometry(ScatterLayout):
         return result
 
     '''
-    Returns string of the centroid of a series of points
+        Returns string of the centroid of a series of points
     '''
     def calculateCentroid(self):
         if self.selected_points is None:
@@ -343,7 +337,7 @@ class Geometry(ScatterLayout):
         return result
 
     '''
-    Returns string of the angle formed by 3 points, with the second selected point as the vertex
+        Returns string of the angle formed by 3 points, with the second selected point as the vertex
     '''
     def calculateAngle(self):
         if(self.num_selected > 3):
@@ -385,10 +379,15 @@ class Geometry(ScatterLayout):
             self.make_figure()
         print(len(self.children))
 
-    # used in moving widget
+    '''
+        Allows movement of full Geometry widget.
+    '''
     def allow_move(self):
         self.do_translation = True
 
+    '''
+        Disallows movement of full Geometry widget.
+    '''
     def disallow_move(self):
         self.do_translation = False
 
@@ -410,6 +409,9 @@ class Interactive_Space(FloatLayout): #class used to describe space containing p
     pass
 
 class Result(Label):
+    '''
+        Updates result field with inputted text.
+    '''
     def update_result(self, new_result):
         self.text = str(new_result)
         return True
@@ -453,7 +455,6 @@ class Figure(Widget):
 
     def remove_widget(self, w):
         super(Figure, self).remove_widget(w)
-        # self.points_as_added.remove(w)
 
     def add_point(self, new_x, new_y, new_lab):
         p = PointLayout(pos=[new_x-(img_size[0]/2), new_y-(img_size[0]/2)])
@@ -467,8 +468,6 @@ class Figure(Widget):
         print(new_x,new_y)
         p = PointLayout(pos=[new_x,new_y])
         self.add_widget(p)
-        # p.set_relative_pos()
-        # p.correct_position(p.pos)
         p.set_lab(new_lab)
         self.points_as_added.append(p)
 
