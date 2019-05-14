@@ -405,20 +405,20 @@
                     #     on_press:
                     #         result_space.update_result(geometry.calculateArea())
                     #
-                    # OppButton:
-                    #     id: perimeter_button
-                    #     text: "Find Perimeter"
-                    #     font_size: style.fontSizer
-                    #     color: style.black
-                    #     background_color: style.clear
-                    #     canvas.before:
-                    #         Color:
-                    #             rgba: style.pink_rose
-                    #         RoundedRectangle:
-                    #             pos: self.pos
-                    #             size: self.size
-                    #     on_press:
-                    #         result_space.update_result(geometry.calculatePerimeter())
+                    OppButton:
+                        id: perimeter_button
+                        text: "Find Perimeter"
+                        font_size: style.fontSizer
+                        color: style.black
+                        background_color: style.clear
+                        canvas.before:
+                            Color:
+                                rgba: style.pink_rose
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                        on_press:
+                            result_space.update_result(geometry.calculatePerimeter())
 
                     OppButton:
                         id: centroid_button

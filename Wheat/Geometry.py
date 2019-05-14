@@ -32,7 +32,8 @@ from Style import *
 
 #list of ids for operation buttons
 # operations = ['distance_button','angle_button','area_button','perimeter_button','centroid_button','coords_button', 'deselect_all']
-operations = ['distance_button','angle_button','centroid_button','coords_button', 'deselect_all']
+# operations = ['distance_button','angle_button','centroid_button','coords_button', 'deselect_all']
+operations = ['distance_button','angle_button','perimeter_button','centroid_button','coords_button', 'deselect_all']
 
 Builder.load_file('Geometry.kv')
 
@@ -200,7 +201,7 @@ class Geometry(ScatterLayout):
             self.ids['centroid_button'].hide_opp(False)
             self.ids['angle_button'].hide_opp(False)
             # self.ids['area_button'].hide_opp(False)
-            # self.ids['perimeter_button'].hide_opp(False)
+            self.ids['perimeter_button'].hide_opp(False)
         else:
             #everything but angles and coords
             self.hide_all_opps()
@@ -208,7 +209,7 @@ class Geometry(ScatterLayout):
             self.ids['distance_button'].hide_opp(False)
             self.ids['centroid_button'].hide_opp(False)
             # self.ids['area_button'].hide_opp(False)
-            # self.ids['perimeter_button'].hide_opp(False)
+            self.ids['perimeter_button'].hide_opp(False)
 
     '''
         Hides all operation buttons
@@ -279,27 +280,22 @@ class Geometry(ScatterLayout):
     #     area = '%.3f'%(area*.5)
     #     result+= "= " + str(area)
     #     return result
-    # '''
-    # Returns string of the perimeter of a series of points, treating them as a polygon
-    # '''
-    # #FIXME: calculation needs points to be listed counterclockwise
-    # def calculatePerimeter(self):
-    #     if self.selected_points is None:
-    #         return 0.0
-    #     # Based off of dszarkow's implementation of the Surveyor's Formula on codeproject.
-    #     # Available at: https://www.codeproject.com/Articles/13467/A-JavaScript-Implementation-of-the-Surveyor-s-Form
-    #     perimeter = 0.0
-    #     result = "Perimeter of "
-    #     ccw = self.__sortCCW__()
-    #     print(ccw)
-    #     for i, p in enumerate(ccw): #for all points, enumerated as indices i
-    #         result += str(ccw[i].p.get_lab()) + ", "
-    #         if i+2 > len(ccw): break
-    #         x_diff = ccw[i+1].v_point_x - ccw[i].v_point_x
-    #         y_diff = ccw[i+1].v_point_y - ccw[i].v_point_y
-    #         perimeter += perimeter + (x_diff * x_diff + y_diff * y_diff)**0.5
-    #     result+= '%.3f'%(perimeter)
-    #     return result
+    '''
+    Returns string of the perimeter of a series of points, treating them as a polygon
+    '''
+    def calculatePerimeter(self):
+        if self.selected_points is None:
+            return 0.0
+        perimeter = 0.0
+        result = "Perimeter of "
+        for i, p in enumerate(self.selected_points): #for all points, enumerated as indices i
+            result += str(self.selected_points[i].p.get_lab()) + ", "
+            if i+2 > len(self.selected_points): break
+            x_diff = self.selected_points[i+1].v_point_x - self.selected_points[i].v_point_x
+            y_diff = self.selected_points[i+1].v_point_y - self.selected_points[i].v_point_y
+            perimeter += perimeter + (x_diff **2 + y_diff **2)**0.5
+        result+= '%.3f'%(perimeter)
+        return result
 
     '''
         Returns string of the dstance of a series of points in the order they were selected
