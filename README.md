@@ -1,5 +1,5 @@
 ###WHEAT
-##@AUTHOR: Brad Olson, Conor Muldoon, David Smith, Jared Polonitza
+##@AUTHOR: Brad Olson, Conor Muldoon, David S. Smith, Jared Polonitza
 
 #OVERVIEW:
     - Wheat is an assisted learning tool for Mathematics, Computer Science, and Physics students. 
